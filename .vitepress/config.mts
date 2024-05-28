@@ -5,6 +5,7 @@ export default defineConfig({
   title: "ERBx",
   description: "ERBx specification and documentation",
   srcDir: "./docs",
+  base: "/erbx/",
   themeConfig: {
 
     // https://vitepress.dev/reference/default-theme-config
