@@ -25,6 +25,7 @@ export default defineConfig({
           // { text: "EJS", link: "/specification/ejs" },
           // { text: "Handlebars", link: "/specification/handlebars" },
           // { text: "Jinja", link: "/specification/jinja" },
+          // { text: "Liquid", link: "/specification/liquid" },
         ]
       }
     ],
