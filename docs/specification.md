@@ -92,7 +92,7 @@
 }
 ```
 
-```html+erb
+```html
 <span
   id="1"
   <% if post.title.length < 10 %>
@@ -121,12 +121,6 @@
 Parser.parse_html_erb("<html><%= 'Hello' %></html>")
 Parser.parse_html_ejs("<html><% console.log('Hello') %></html>")
 Parser.parse_html_blade("<html>{{ $message }}</html>")
-```
-
-```html
-<div {{ $attributes->merge(["data-controller" => "this-should-autocomplete"]) }}>
-  {{ $message }}
-</div>
 ```
 
 ```html
