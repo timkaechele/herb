@@ -80,6 +80,27 @@ outline: deep
 ```
 :::
 
+
+### Namespaced tags
+
+::: code-group
+```html [HTML]
+<ns:table></ns:table>
+```
+
+```json [AST]
+{
+  type: "element",
+  tagName: "ns:table",
+  attributes: [],
+  children: [],
+  void: true,
+  closed: true,
+  namespaced: true // maybe?
+}
+```
+:::
+
 ## Attributes
 
 ### Double quoted attribute
