@@ -21,9 +21,10 @@ export default defineConfig({
           { text: "General", link: "/specification" },
           { text: "HTML", link: "/specification/html" },
           { text: "ERB", link: "/specification/erb" },
-          { text: "EJS", link: "/specification/ejs" },
-          { text: "Handlebars", link: "/specification/handlebars" },
-          { text: "Jinja", link: "/specification/jinja" },
+          { text: "Blade", link: "/specification/blade" },
+          // { text: "EJS", link: "/specification/ejs" },
+          // { text: "Handlebars", link: "/specification/handlebars" },
+          // { text: "Jinja", link: "/specification/jinja" },
         ]
       }
     ],
