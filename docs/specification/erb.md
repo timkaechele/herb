@@ -42,7 +42,7 @@ outline: deep
 ```
 :::
 
-### Raw output Tag (`<%==`)
+### Raw text output Tag (`<%==`)
 
 ::: code-group
 ```html [ERB]
@@ -217,9 +217,29 @@ Can also be seen as `<% #`.
 
 ## Attributes Interpolation
 
+### Output
+
 ::: code-group
 ```html [ERB]
-<input <% if true %> type="text" aria-label="Search" <% end %> />
+<input <%= "type='text' %> />
+```
+
+```json [AST]
+{
+  type: "erb-???",
+  language: "ruby",
+  value: {
+    // Prism return value
+  }
+}
+```
+:::
+
+### Conditional
+
+::: code-group
+```html [ERB]
+<input <% if true %> type="text" <% end %> />
 ```
 
 ```json [AST]
@@ -235,6 +255,8 @@ Can also be seen as `<% #`.
 
 
 ## Conditionals
+
+### Tag Children
 
 ::: code-group
 ```html [ERB]
@@ -256,6 +278,8 @@ Can also be seen as `<% #`.
 
 ## Loops
 
+### Tag Children
+
 ::: code-group
 ```html [ERB]
 <% @posts.each do |post| %>
@@ -274,8 +298,12 @@ Can also be seen as `<% #`.
 ```
 :::
 
+## Blocks
 
-## Rails tag helpers
+TODO
+
+
+## Rails Tag Helpers
 
 ### `content_tag`
 
@@ -366,5 +394,26 @@ Can also be seen as `<% #`.
     // Prism return value
   }
 }
+```
+:::
+
+
+## Disallowed
+
+We should disallow/discourage the following patterns
+
+### Dynamic tag names
+
+::: code-group
+```html [ERB]
+<<%= "input" %> required />
+```
+:::
+
+### Dynamic Attribute names
+
+::: code-group
+```html [ERB]
+<input <%= "type" %>="text" />
 ```
 :::
