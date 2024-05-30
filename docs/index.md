@@ -41,4 +41,7 @@ features:
   - title: Language-Independent
     details: Versatile enough to be utilized via bindings from high-level programming languages such as Ruby and JavaScript, providing broad compatibility and flexibility.
 
+  - title: HTML-aware
+    details: Designed to recognize and interpret HTML context, ensuring seamless integration and accurate parsing of HTML elements within ERB templates
+
 ---
