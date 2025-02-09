@@ -31,7 +31,7 @@ token_T* token_init(char* value, int type, lexer_T* lexer) {
   return token;
 }
 
-const char* token_type_to_string(int type) {
+const char* token_type_string(int type) {
   switch(type) {
     case TOKEN_ATTRIBUTE_NAME: return "TOKEN_ATTRIBUTE_NAME";
     case TOKEN_ATTRIBUTE_VALUE: return "TOKEN_ATTRIBUTE_VALUE";
@@ -62,7 +62,7 @@ const char* token_type_to_string(int type) {
 }
 
 char* token_to_string(token_T* token) {
-  const char* type_string = token_type_to_string(token->type);
+  const char* type_string = token_type_string(token->type);
   const char* template = "#<Token type=%s value='%s' range=[%d, %d] start=%d:%d end=%d:%d>";
 
   char* string = calloc(strlen(type_string) + strlen(template) + 8, sizeof(char));
@@ -74,4 +74,12 @@ char* token_to_string(token_T* token) {
   free(escaped);
 
   return string;
+}
+
+char* token_value(token_T* token) {
+  return token->value;
+}
+
+int token_type(token_T* token) {
+  return token->type;
 }

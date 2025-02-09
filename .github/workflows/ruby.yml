@@ -1,0 +1,32 @@
+name: Ruby Tests
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: sudo apt-get install check
+
+      - name: make
+        run: make
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true
+
+      - name: Setup extension
+        working-directory: ./ext/erbx
+        run: bundle install
+
+      - name: Build extension
+        working-directory: ./ext/erbx
+        run: bundle exec rake
+
+      - name: Test extension
+        run: bundle exec ruby ext/erbx/test.rb
