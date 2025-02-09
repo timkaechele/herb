@@ -17,23 +17,24 @@ Rake::TestTask.new(:test) do |t|
 end
 
 Rake::Task[:compile].enhance do
-   IO.popen("make") do |output|
-     output.each_line do |line|
-       puts "#{line}"
-     end
-   end
+  IO.popen("make") do |output|
+    output.each_line do |line|
+      puts "#{line}"
+    end
+  end
 
-   if $?.exitstatus != 0
-     raise "src/* could not be compiled #{$?.exitstatus}"
-   end
- end
+  if $?.exitstatus != 0
+    raise "src/* could not be compiled #{$?.exitstatus}"
+  end
+end
 
- Rake::Task[:clean].enhance do
-   IO.popen("make clean") do |output|
-     output.each_line do |line|
-       puts "#{line}"
-     end
-   end
- end
 
- task default: [:compile, :test]
+Rake::Task[:clean].enhance do
+  IO.popen("make clean") do |output|
+    output.each_line do |line|
+      puts "#{line}"
+    end
+  end
+end
+
+task default: [:compile, :test]
