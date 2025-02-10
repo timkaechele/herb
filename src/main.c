@@ -1,6 +1,6 @@
-#include "include/io.h"
-#include "include/erbx.h"
 #include "include/buffer.h"
+#include "include/erbx.h"
+#include "include/io.h"
 
 #include <stdio.h>
 

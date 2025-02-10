@@ -1,11 +1,11 @@
-#include "include/token.h"
 #include "include/lexer.h"
 #include "include/macros.h"
+#include "include/token.h"
 #include "include/util.h"
 
-#include <string.h>
-#include <stdio.h>
 #include <ctype.h>
+#include <stdio.h>
+#include <string.h>
 
 size_t lexer_sizeof(void) {
   return sizeof(struct LEXER_STRUCT);
@@ -60,7 +60,8 @@ token_T* lexer_advance_current(lexer_T* lexer, int type) {
 }
 
 void lexer_skip_whitespace(lexer_T* lexer) {
-  while (lexer->current_character == 13 || lexer->current_character == 10 || lexer->current_character == ' ' || lexer->current_character == '\t') {
+  while (lexer->current_character == 13 || lexer->current_character == 10 || lexer->current_character == ' ' ||
+         lexer->current_character == '\t') {
     lexer_advance(lexer);
   }
 }
@@ -80,7 +81,7 @@ token_T* lexer_parse_whitespace(lexer_T* lexer) {
 
   while (iswhitespace(lexer->current_character) && lexer->current_character != '\0') {
     value = realloc(value, (strlen(value) + 2) * sizeof(char));
-    strcat(value, (char[]){lexer->current_character, 0});
+    strcat(value, (char[]) {lexer->current_character, 0});
     lexer_advance(lexer);
   }
 
@@ -92,7 +93,7 @@ token_T* lexer_parse_tag_name(lexer_T* lexer) {
 
   while (lexer->current_character != ' ' && lexer->current_character != '>') {
     value = realloc(value, (strlen(value) + 2) * sizeof(char));
-    strcat(value, (char[]){lexer->current_character, 0});
+    strcat(value, (char[]) {lexer->current_character, 0});
     lexer_advance(lexer);
   }
 
@@ -105,7 +106,7 @@ token_T* lexer_parse_attribute_name(lexer_T* lexer) {
 
   while ((character = lexer->current_character) != '=' && character != ' ') {
     value = realloc(value, (strlen(value) + 2) * sizeof(char));
-    strcat(value, (char[]){character, 0});
+    strcat(value, (char[]) {character, 0});
     lexer_advance(lexer);
   }
 
@@ -126,7 +127,7 @@ token_T* lexer_parse_attribute_value(lexer_T* lexer) {
 
   while (lexer->current_character != quote) {
     value = realloc(value, (strlen(value) + 2) * sizeof(char));
-    strcat(value, (char[]){lexer->current_character, 0});
+    strcat(value, (char[]) {lexer->current_character, 0});
     lexer_advance(lexer);
   }
 
@@ -138,7 +139,7 @@ token_T* lexer_parse_text_content(lexer_T* lexer) {
 
   while (lexer->current_character != '<') {
     value = realloc(value, (strlen(value) + 2) * sizeof(char));
-    strcat(value, (char[]){lexer->current_character, 0});
+    strcat(value, (char[]) {lexer->current_character, 0});
     lexer_advance(lexer);
   }
 
@@ -151,7 +152,7 @@ token_T* lexer_next_token(lexer_T* lexer) {
     // printf("STATE: %u\n", lexer->state);
     // printf("Current character: %c\n", lexer->current_character);
 
-    switch(lexer->state) {
+    switch (lexer->state) {
       case STATE_NONE: {
         if (iswhitespace(lexer->current_character) || isnewline(lexer->current_character)) {
           lexer_skip_whitespace(lexer);
@@ -172,7 +173,6 @@ token_T* lexer_next_token(lexer_T* lexer) {
 
             return token_init("<", TOKEN_START_TAG_START, lexer);
           } break;
-
 
           case '\0': break;
           default: {

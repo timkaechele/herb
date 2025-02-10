@@ -3,8 +3,8 @@
 
 #include <stdlib.h>
 
-#include "lexer.h"
 #include "ast.h"
+#include "lexer.h"
 
 typedef struct PARSER_STRUCT {
   lexer_T* lexer;

@@ -1,10 +1,10 @@
 #include "include/erbx.h"
+#include "include/array.h"
+#include "include/buffer.h"
 #include "include/io.h"
 #include "include/lexer.h"
-#include "include/token.h"
 #include "include/parser.h"
-#include "include/buffer.h"
-#include "include/array.h"
+#include "include/token.h"
 #include "include/version.h"
 
 #include <stdlib.h>

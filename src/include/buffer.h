@@ -1,8 +1,8 @@
 #ifndef ERBX_BUFFER_H
 #define ERBX_BUFFER_H
 
-#include <stdlib.h>
 #include <stdbool.h>
+#include <stdlib.h>
 
 typedef struct BUFFER_STRUCT {
   char* value;

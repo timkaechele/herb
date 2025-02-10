@@ -1,13 +1,13 @@
-#include "include/token_struct.h"
 #include "include/token.h"
 #include "include/lexer.h"
 #include "include/location.h"
-#include "include/util.h"
 #include "include/macros.h"
+#include "include/token_struct.h"
+#include "include/util.h"
 
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <stdio.h>
 
 size_t token_sizeof(void) {
   return sizeof(struct TOKEN_STRUCT);
@@ -21,7 +21,8 @@ token_T* token_init(char* value, int type, lexer_T* lexer) {
   token->range = range_init(lexer->current_position - strlen(value), lexer->current_position);
 
   int start_line = lexer->current_line - count_newlines(value);
-  int start_column = lexer->current_column - strlen(value); // TODO: fix start_column calculation if value contains newlines
+  int start_column = lexer->current_column - strlen(value); // TODO: fix start_column calculation if
+                                                            // value contains newlines
   int end_line = lexer->current_line;
   int end_column = lexer->current_column;
 
@@ -32,7 +33,7 @@ token_T* token_init(char* value, int type, lexer_T* lexer) {
 }
 
 const char* token_type_string(int type) {
-  switch(type) {
+  switch (type) {
     case TOKEN_ATTRIBUTE_NAME: return "TOKEN_ATTRIBUTE_NAME";
     case TOKEN_ATTRIBUTE_VALUE: return "TOKEN_ATTRIBUTE_VALUE";
     case TOKEN_DOUBLE_QUOTE: return "TOKEN_DOUBLE_QUOTE";
@@ -69,7 +70,16 @@ char* token_to_string(token_T* token) {
 
   char* escaped = escape_newlines(token->value);
 
-  sprintf(string, template, type_string, escaped, token->range->start, token->range->end, token->start->line, token->start->column, token->end->line, token->end->column);
+  sprintf(string,
+      template,
+      type_string,
+      escaped,
+      token->range->start,
+      token->range->end,
+      token->start->line,
+      token->start->column,
+      token->end->line,
+      token->end->column);
 
   free(escaped);
 

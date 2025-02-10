@@ -11,7 +11,7 @@ int isnewline(int character) {
   return character == 13 || character == 10;
 }
 
-int count_in_string(const char *string, char character) {
+int count_in_string(const char* string, char character) {
   int count = 0;
 
   while (*string != '\0') {
@@ -25,11 +25,11 @@ int count_in_string(const char *string, char character) {
   return count;
 }
 
-int count_newlines(const char *string) {
+int count_newlines(const char* string) {
   return count_in_string(string, '\n');
 }
 
-char* replace_char(char *string, char find, char replace) {
+char* replace_char(char* string, char find, char replace) {
   while (*string != '\0') {
     if (*string == find) {
       *string = replace;
