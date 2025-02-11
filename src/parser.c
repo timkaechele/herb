@@ -4,7 +4,6 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 
 size_t parser_sizeof(void) {
   return sizeof(struct PARSER_STRUCT);

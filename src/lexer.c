@@ -36,7 +36,7 @@ char lexer_backtrack(lexer_T* lexer, int offset) {
 void lexer_advance(lexer_T* lexer) {
   if (lexer->current_position < lexer->source_length && lexer->current_character != '\0') {
 
-    if (isnewline(lexer->current_character)) {
+    if (is_newline(lexer->current_character)) {
       lexer->current_line += 1;
       lexer->current_column = 1;
     } else {
@@ -79,7 +79,7 @@ token_T* lexer_parse_newline(lexer_T* lexer) {
 token_T* lexer_parse_whitespace(lexer_T* lexer) {
   char* value = calloc(1, sizeof(char));
 
-  while (iswhitespace(lexer->current_character) && lexer->current_character != '\0') {
+  while (is_whitespace(lexer->current_character) && lexer->current_character != '\0') {
     value = realloc(value, (strlen(value) + 2) * sizeof(char));
     strcat(value, (char[]) {lexer->current_character, 0});
     lexer_advance(lexer);
@@ -154,7 +154,7 @@ token_T* lexer_next_token(lexer_T* lexer) {
 
     switch (lexer->state) {
       case STATE_NONE: {
-        if (iswhitespace(lexer->current_character) || isnewline(lexer->current_character)) {
+        if (is_whitespace(lexer->current_character) || is_newline(lexer->current_character)) {
           lexer_skip_whitespace(lexer);
         }
 
@@ -219,7 +219,7 @@ token_T* lexer_next_token(lexer_T* lexer) {
       } break;
 
       case STATE_TAG_ATTRIBUTES: {
-        if (iswhitespace(lexer->current_character) || isnewline(lexer->current_character)) {
+        if (is_whitespace(lexer->current_character) || is_newline(lexer->current_character)) {
           lexer_skip_whitespace(lexer);
         }
 
@@ -248,7 +248,7 @@ token_T* lexer_next_token(lexer_T* lexer) {
       } break;
 
       case STATE_ELEMENT_CHILDREN: {
-        if (iswhitespace(lexer->current_character) || isnewline(lexer->current_character)) {
+        if (is_whitespace(lexer->current_character) || is_newline(lexer->current_character)) {
           lexer_skip_whitespace(lexer);
         }
 
@@ -291,7 +291,7 @@ token_T* lexer_next_token(lexer_T* lexer) {
           return token_init("\0", TOKEN_ATTRIBUTE_VALUE, lexer);
         }
 
-        if (isalpha(lexer->current_character) || iswhitespace(lexer->current_character)) {
+        if (isalpha(lexer->current_character) || is_whitespace(lexer->current_character)) {
           lexer->state = STATE_ATTRIBUTE_VALUE_END;
           return lexer_parse_attribute_value(lexer);
         }
@@ -319,7 +319,7 @@ token_T* lexer_next_token(lexer_T* lexer) {
         return token_init(0, TOKEN_ATTRIBUTE_VALUE, lexer);
       } break;
       default: {
-        if (iswhitespace(lexer->current_character) || isnewline(lexer->current_character)) {
+        if (is_whitespace(lexer->current_character) || is_newline(lexer->current_character)) {
           lexer_skip_whitespace(lexer);
         }
       }

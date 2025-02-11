@@ -1,7 +1,6 @@
 #include "include/token.h"
 #include "include/lexer.h"
 #include "include/location.h"
-#include "include/macros.h"
 #include "include/token_struct.h"
 #include "include/util.h"
 

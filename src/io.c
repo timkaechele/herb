@@ -4,12 +4,11 @@
 #include <string.h>
 
 char* erbx_read_file(const char* filename) {
-  FILE* fp;
   char* line = NULL;
   size_t len = 0;
   ssize_t read;
 
-  fp = fopen(filename, "rb");
+  FILE* fp = fopen(filename, "rb");
 
   if (fp == NULL) {
     printf("Could not read file '%s'\n", filename);

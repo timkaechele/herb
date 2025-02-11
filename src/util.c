@@ -3,11 +3,11 @@
 
 #include "include/util.h"
 
-int iswhitespace(int character) {
+int is_whitespace(int character) {
   return character == ' ' || character == '\t';
 }
 
-int isnewline(int character) {
+int is_newline(int character) {
   return character == 13 || character == 10;
 }
 
