@@ -1,8 +1,6 @@
 #ifndef ERBX_TOKEN_H
 #define ERBX_TOKEN_H
 
-#include <stdlib.h>
-
 #include "lexer_struct.h"
 #include "token_struct.h"
 

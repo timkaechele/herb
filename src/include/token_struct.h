@@ -1,8 +1,6 @@
 #ifndef ERBX_TOKEN_STRUCT_H
 #define ERBX_TOKEN_STRUCT_H
 
-#include <stdlib.h>
-
 #include "location.h"
 #include "range.h"
 
