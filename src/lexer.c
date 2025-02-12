@@ -181,7 +181,6 @@ token_T* lexer_parse_html_comment_content(lexer_T* lexer) {
   }
 
   lexer_advance(lexer);
-
   lexer->state = STATE_HTML_COMMENT_CLOSE;
 
   return token_init(value, TOKEN_HTML_COMMENT_CONTENT, lexer);
@@ -191,7 +190,7 @@ token_T* lexer_handle_data_state(lexer_T* lexer) {
   switch (lexer->current_character) {
     case '\n': {
       return lexer_advance_current(lexer, TOKEN_NEWLINE);
-    } break;
+    }
 
     case '<': {
       const char next_character = lexer_peek(lexer, 1);
@@ -202,14 +201,14 @@ token_T* lexer_handle_data_state(lexer_T* lexer) {
           lexer_advance(lexer);
           lexer_advance(lexer);
           return token_init("<%", TOKEN_ERB_START, lexer);
-        } break;
+        }
 
         case '/': {
           lexer->state = STATE_HTML_TAG_CLOSE;
           lexer_advance(lexer);
           lexer_advance(lexer);
           return token_init("</", TOKEN_HTML_CLOSE_TAG_START, lexer);
-        } break;
+        }
 
         case '!': {
           if (lexer_peek(lexer, 2) == '-' && lexer_peek(lexer, 3) == '-') {
@@ -224,14 +223,11 @@ token_T* lexer_handle_data_state(lexer_T* lexer) {
           // TODO: handle this case
           lexer_error(lexer, "Unexpected character in lexer_handle_data_state");
         }
-
-        default: {
-          lexer->state = STATE_HTML_TAG_OPEN;
-          lexer_advance(lexer);
-          return token_init("<", TOKEN_HTML_TAG_START, lexer);
-        }
       }
-    } break;
+
+      lexer->state = STATE_HTML_TAG_OPEN;
+      return lexer_advance_current(lexer, TOKEN_HTML_TAG_START);
+    }
 
     case '%': {
       if (lexer_peek(lexer, 1) == '>') {
@@ -243,12 +239,10 @@ token_T* lexer_handle_data_state(lexer_T* lexer) {
       }
 
       lexer_error(lexer, "Unexpected character in lexer_handle_html_attributes_state");
-    } break;
-
-    default: {
-      return lexer_parse_text_content(lexer);
     }
   }
+
+  return lexer_parse_text_content(lexer);
 }
 
 token_T* lexer_handle_erb_open_state(lexer_T* lexer) {
@@ -272,12 +266,12 @@ token_T* lexer_handle_html_attributes_state(lexer_T* lexer) {
   switch (lexer->current_character) {
     case ' ': {
       return lexer_advance_current(lexer, TOKEN_WHITESPACE);
-    } break;
+    }
 
     case '>': {
       lexer->state = STATE_DATA;
       return lexer_advance_current(lexer, TOKEN_HTML_TAG_END);
-    } break;
+    }
 
     case '/': {
       if (lexer_peek(lexer, 1) == '>') {
@@ -289,35 +283,30 @@ token_T* lexer_handle_html_attributes_state(lexer_T* lexer) {
 
       // TODO: handle this case
       lexer_error(lexer, "Unexpected character in lexer_handle_html_attributes_state");
-    } break;
-
-    default: {
-      lexer->state = STATE_HTML_ATTRIBUTE_NAME;
-      return lexer_parse_attribute_name(lexer);
     }
   }
+
+  lexer->state = STATE_HTML_ATTRIBUTE_NAME;
+  return lexer_parse_attribute_name(lexer);
 }
 
 // <div class="hello"></div>
 //    ^
 //
 token_T* lexer_handle_tag_name_state(lexer_T* lexer) {
-
   switch (lexer->current_character) {
     case ' ': {
       lexer->state = STATE_HTML_ATTRIBUTES;
       return lexer_advance_current(lexer, TOKEN_WHITESPACE);
-    } break;
+    }
 
     case '>': {
       lexer->state = STATE_DATA;
       return lexer_advance_current(lexer, TOKEN_HTML_TAG_END);
-    } break;
-
-    default: {
-      lexer_error(lexer, "Unexpected character in lexer_handle_tag_name_state");
     }
   }
+
+  lexer_error(lexer, "Unexpected character in lexer_handle_tag_name_state");
 }
 
 // <div class="hello"></div>
@@ -331,12 +320,12 @@ token_T* lexer_handle_html_attribute_name_state(lexer_T* lexer) {
     case '=': {
       lexer->state = STATE_HTML_ATTRIBUTE_EQUALS;
       return lexer_advance_current(lexer, TOKEN_HTML_EQUALS);
-    } break;
+    }
 
     case ' ': {
       lexer->state = STATE_HTML_ATTRIBUTES;
       return lexer_advance_current(lexer, TOKEN_WHITESPACE);
-    } break;
+    }
 
     case '/': {
       if (lexer_peek(lexer, 1) == '>') {
@@ -348,43 +337,34 @@ token_T* lexer_handle_html_attribute_name_state(lexer_T* lexer) {
 
       // TODO: handle this case
       lexer_error(lexer, "Unexpected character in lexer_handle_html_attribute_name_state");
-    } break;
+    }
 
     case '>': {
       lexer->state = STATE_DATA;
       return lexer_advance_current(lexer, TOKEN_HTML_TAG_END);
-    } break;
-
-    default: {
-      lexer_error(lexer, "Unexpected character in lexer_handle_html_attribute_name_state");
     }
   }
+
+  lexer_error(lexer, "Unexpected character in lexer_handle_html_attribute_name_state");
 }
 
 token_T* lexer_handle_html_attribute_equals_state(lexer_T* lexer) {
   switch (lexer->current_character) {
-    case '"': {
-      return lexer_advance_current(lexer, TOKEN_HTML_QUOTE);
-    } break;
-
-    case '\'': {
-      return lexer_advance_current(lexer, TOKEN_HTML_QUOTE);
-    } break;
+    case '"':
+    case '\'': return lexer_advance_current(lexer, TOKEN_HTML_QUOTE);
 
     case ' ': {
       lexer->state = STATE_HTML_ATTRIBUTES;
       return lexer_advance_current(lexer, TOKEN_WHITESPACE);
-    } break;
+    }
 
     case '>': {
       lexer->state = STATE_DATA;
       return lexer_advance_current(lexer, TOKEN_HTML_TAG_END);
-    } break;
-
-    default: {
-      return lexer_parse_attribute_value(lexer);
     }
   }
+
+  return lexer_parse_attribute_value(lexer);
 }
 
 token_T* lexer_handle_html_attribute_value_state(lexer_T* lexer) {
@@ -392,48 +372,38 @@ token_T* lexer_handle_html_attribute_value_state(lexer_T* lexer) {
     case '"': {
       lexer->state = STATE_HTML_ATTRIBUTES;
       return lexer_advance_current(lexer, TOKEN_HTML_QUOTE);
-    } break;
+    }
 
     case '\'': {
       lexer->state = STATE_HTML_ATTRIBUTES;
       return lexer_advance_current(lexer, TOKEN_HTML_QUOTE);
-    } break;
+    }
 
     case ' ': {
       lexer->state = STATE_HTML_ATTRIBUTES;
       return lexer_advance_current(lexer, TOKEN_WHITESPACE);
     }
-
-    default: {
-      lexer_error(lexer, "Unexpected character in lexer_handle_html_attribute_value_state");
-    }
   }
+
+  lexer_error(lexer, "Unexpected character in lexer_handle_html_attribute_value_state");
 }
 
 token_T* lexer_handle_html_tag_open_state(lexer_T* lexer) {
-  switch (lexer->current_character) {
-    case ' ': {
-      lexer_error(lexer, "Unexpected character in lexer_handle_html_tag_open_state");
-    } break;
-
-    default: {
-      lexer->state = STATE_HTML_ATTRIBUTES;
-      return lexer_parse_tag_name(lexer);
-    }
+  if (lexer->current_character == ' ') {
+    lexer_error(lexer, "Unexpected character in lexer_handle_html_tag_open_state");
   }
+
+  lexer->state = STATE_HTML_ATTRIBUTES;
+  return lexer_parse_tag_name(lexer);
 }
 
 token_T* lexer_handle_html_tag_close_state(lexer_T* lexer) {
-  switch (lexer->current_character) {
-    case '>': {
-      lexer->state = STATE_DATA;
-      return lexer_advance_current(lexer, TOKEN_HTML_TAG_END);
-    }
-
-    default: {
-      return lexer_parse_tag_name(lexer);
-    }
+  if (lexer->current_character == '>') {
+    lexer->state = STATE_DATA;
+    return lexer_advance_current(lexer, TOKEN_HTML_TAG_END);
   }
+
+  return lexer_parse_tag_name(lexer);
 }
 
 token_T* lexer_handle_html_comment_open_state(lexer_T* lexer) {
@@ -441,23 +411,14 @@ token_T* lexer_handle_html_comment_open_state(lexer_T* lexer) {
 }
 
 token_T* lexer_handle_html_comment_close_state(lexer_T* lexer) {
-  switch (lexer->current_character) {
-    case '-': {
-      if (lexer_peek(lexer, 1) == '-' && lexer_peek(lexer, 2) == '>') {
-        lexer_advance(lexer);
-        lexer_advance(lexer);
-        lexer_advance(lexer);
-        return token_init("-->", TOKEN_HTML_COMMENT_END, lexer);
-      }
-
-      // TODO: handle this case
-      lexer_error(lexer, "Unexpected character in lexer_handle_html_comment_close_state");
-    }
-
-    default: {
-      lexer_error(lexer, "Unexpected character in lexer_handle_html_comment_close_state");
-    }
+  if (lexer->current_character == '-' && lexer_peek(lexer, 1) == '-' && lexer_peek(lexer, 2) == '>') {
+    lexer_advance(lexer);
+    lexer_advance(lexer);
+    lexer_advance(lexer);
+    return token_init("-->", TOKEN_HTML_COMMENT_END, lexer);
   }
+
+  lexer_error(lexer, "Unexpected character in lexer_handle_html_comment_close_state");
 }
 
 token_T* lexer_next_token(lexer_T* lexer) {
