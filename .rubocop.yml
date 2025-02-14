@@ -28,6 +28,12 @@ Style/BlockDelimiters:
 
 Metrics/MethodLength:
   Max: 20
+  Exclude:
+    - ext/erbx/test/fork_helper.rb
+
+Metrics/AbcSize:
+  Exclude:
+    - ext/erbx/test/fork_helper.rb
 
 Metrics/ClassLength:
   Exclude:
@@ -35,3 +41,7 @@ Metrics/ClassLength:
 
 Layout/LineLength:
   Max: 120
+
+Security/MarshalLoad:
+  Exclude:
+    - ext/erbx/test/fork_helper.rb
