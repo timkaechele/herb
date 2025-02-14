@@ -35,7 +35,6 @@ END
 TEST(test_buffer_prepend)
   buffer_T buffer = buffer_new();
 
-
   buffer_append(&buffer, "World");
   buffer_prepend(&buffer, "Hello ");
   ck_assert_str_eq(buffer.value, "Hello World");
@@ -149,7 +148,6 @@ END
 // Test buffer length correctness
 TEST(test_buffer_length_correctness)
   buffer_T buffer = buffer_new();
-  buffer_init(&buffer);
 
   buffer_append(&buffer, "Short");
   size_t length = buffer_length(&buffer);
