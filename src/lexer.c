@@ -155,7 +155,7 @@ token_T* lexer_parse_attribute_value(lexer_T* lexer) {
     quote = ' ';
   }
 
-  while (lexer->current_character != quote) {
+  while (lexer->current_character != quote && lexer->current_character != '/' && lexer->current_character != '>') {
     buffer_append_char(&buffer, lexer->current_character);
     lexer_advance(lexer);
   }
@@ -377,6 +377,17 @@ token_T* lexer_handle_html_attribute_equals_state(lexer_T* lexer) {
       return lexer_advance_current(lexer, TOKEN_WHITESPACE);
     }
 
+    case '/': {
+      if (lexer_peek(lexer, 1) == '>') {
+        lexer->state = STATE_HTML_TAG_CLOSE;
+        lexer_advance(lexer);
+        lexer_advance(lexer);
+        return token_init("/>", TOKEN_HTML_TAG_SELF_CLOSE, lexer);
+      }
+
+      lexer_error(lexer, "Unexpected character in lexer_handle_html_attribute_equals_state");
+    }
+
     case '>': {
       lexer->state = STATE_DATA;
       return lexer_advance_current(lexer, TOKEN_HTML_TAG_END);
@@ -397,6 +408,20 @@ token_T* lexer_handle_html_attribute_value_state(lexer_T* lexer) {
     case ' ': {
       lexer->state = STATE_HTML_ATTRIBUTES;
       return lexer_advance_current(lexer, TOKEN_WHITESPACE);
+    }
+
+    case '/': {
+      if (lexer_peek(lexer, 1) == '>') {
+        lexer->state = STATE_HTML_TAG_CLOSE;
+        lexer_advance(lexer);
+        lexer_advance(lexer);
+        return token_init("/>", TOKEN_HTML_TAG_SELF_CLOSE, lexer);
+      }
+    }
+
+    case '>': {
+      lexer->state = STATE_DATA;
+      return lexer_advance_current(lexer, TOKEN_HTML_TAG_END);
     }
   }
 
