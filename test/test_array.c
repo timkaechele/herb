@@ -29,7 +29,7 @@ TEST(test_array_append)
   // Trigger reallocation
   array_append(array, &item3);
   ck_assert_int_eq(array->size, 3);
-  ck_assert_int_ge(array->capacity, 3); // Capacity should be at least doubled
+  ck_assert_int_eq(array->capacity, 4);
 
   array_free(&array);
 END
@@ -87,7 +87,7 @@ TEST(test_array_free)
   array_T* array = array_init(5);
   array_free(&array);
 
-  ck_assert_ptr_null(array); // This will likely fail since `free()` doesn't set the posize_ter to NULL.
+  ck_assert_ptr_null(array);
 END
 
 // Register test cases
