@@ -3,13 +3,15 @@
 set -e  # Exit on error
 
 make clean
+rake clean
+
 make
+rake compile
 
 ./run_erbx_tests
-./erbx examples/test.html.erb
-
-rake compile
 rake test
+
+./erbx examples/test.html.erb
 
 bin/lint
 bin/tidy
