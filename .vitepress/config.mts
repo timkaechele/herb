@@ -132,7 +132,7 @@ export default defineConfig({
       {
         text: "Tokens",
         items: [
-          { text: "Index", link: "/tokens" },
+          { text: "Index", link: "/tokens/" },
           {
             text: "Tokens",
             collapsed: true,
@@ -147,7 +147,7 @@ export default defineConfig({
       {
         text: "C-Structs",
         items: [
-          { text: "Index", link: "/structs" },
+          { text: "Index", link: "/structs/" },
           {
             text: "C-Structs",
             collapsed: true,
