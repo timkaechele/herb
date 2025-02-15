@@ -6,7 +6,7 @@
 
 token_T* token_init(char* value, token_type_T type, lexer_T* lexer);
 char* token_to_string(token_T* token);
-const char* token_type_string(token_type_T type);
+const char* token_type_to_string(token_type_T type);
 
 char* token_value(token_T* token);
 int token_type(token_T* token);

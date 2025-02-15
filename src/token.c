@@ -36,7 +36,7 @@ token_T* token_init(char* value, token_type_T type, lexer_T* lexer) {
   return token;
 }
 
-const char* token_type_string(token_type_T type) {
+const char* token_type_to_string(token_type_T type) {
   switch (type) {
     case TOKEN_WHITESPACE: return "TOKEN_WHITESPACE";
     case TOKEN_NEWLINE: return "TOKEN_NEWLINE";
@@ -69,7 +69,7 @@ const char* token_type_string(token_type_T type) {
 }
 
 char* token_to_string(token_T* token) {
-  const char* type_string = token_type_string(token->type);
+  const char* type_string = token_type_to_string(token->type);
   const char* template = "#<Token type=%s value='%s' range=[%d, %d] start=%d:%d end=%d:%d>";
 
   char* string = calloc(strlen(type_string) + strlen(template) + 8, sizeof(char));

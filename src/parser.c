@@ -21,7 +21,7 @@ token_T* parser_consume(parser_T* parser, int type) {
   if (parser->token->type != type) {
     printf("[Parser]: Unexpected token: '%s', was expected: '%s'\n",
         token_to_string(parser->token),
-        token_type_string(type));
+        token_type_to_string(type));
     exit(1);
   }
 
