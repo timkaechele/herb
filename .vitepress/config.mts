@@ -144,6 +144,22 @@ export default defineConfig({
           }
         ]
       },
+      {
+        text: "C-Structs",
+        items: [
+          { text: "Index", link: "/structs" },
+          {
+            text: "C-Structs",
+            collapsed: true,
+            items: [
+              { text: "array_T", link: "/structs/array" },
+              { text: "buffer_T", link: "/structs/buffer" },
+              { text: "location_T", link: "/structs/location" },
+              { text: "range_T", link: "/structs/range" },
+            ]
+          }
+        ]
+      },
     ],
 
     socialLinks: [
