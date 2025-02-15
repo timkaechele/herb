@@ -434,6 +434,7 @@ token_T* lexer_handle_html_comment_close_state(lexer_T* lexer) {
     lexer_advance(lexer);
     lexer_advance(lexer);
     lexer_advance(lexer);
+    lexer->state = STATE_DATA;
     return token_init("-->", TOKEN_HTML_COMMENT_END, lexer);
   }
 

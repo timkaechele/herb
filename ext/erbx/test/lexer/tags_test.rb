@@ -525,5 +525,50 @@ module Lexer
 
       assert_equal expected, result.array.items.map(&:type)
     end
+
+    test "HTML comment followed by html tag" do
+      result = ERBX.lex(%(<!--Hello World--><h1>Hello</h1>))
+
+      expected = %w[
+        TOKEN_HTML_COMMENT_START
+        TOKEN_HTML_COMMENT_CONTENT
+        TOKEN_HTML_COMMENT_END
+        TOKEN_HTML_TAG_START
+        TOKEN_HTML_TAG_NAME
+        TOKEN_HTML_TAG_END
+        TOKEN_TEXT_CONTENT
+        TOKEN_HTML_CLOSE_TAG_START
+        TOKEN_HTML_TAG_NAME
+        TOKEN_HTML_TAG_END
+        TOKEN_EOF
+      ]
+
+      assert_equal expected, result.array.items.map(&:type)
+    end
+
+    xtest "HTML comment followed by html tag with nested comment" do
+      result = ERBX.lex(%(
+        <!--Hello World-->
+        <h1><!-- Hello World --></h1>
+      ))
+
+      expected = %w[
+        TOKEN_HTML_COMMENT_START
+        TOKEN_HTML_COMMENT_CONTENT
+        TOKEN_HTML_COMMENT_END
+        TOKEN_HTML_TAG_START
+        TOKEN_HTML_TAG_NAME
+        TOKEN_HTML_TAG_END
+        TOKEN_HTML_COMMENT_START
+        TOKEN_HTML_COMMENT_CONTENT
+        TOKEN_HTML_COMMENT_END
+        TOKEN_HTML_CLOSE_TAG_START
+        TOKEN_HTML_TAG_NAME
+        TOKEN_HTML_TAG_END
+        TOKEN_EOF
+      ]
+
+      assert_equal expected, result.array.items.map(&:type)
+    end
   end
 end
