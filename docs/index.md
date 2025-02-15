@@ -5,7 +5,7 @@ layout: home
 hero:
   name: "ERBX"
   text: ""
-  tagline: ERBX specification and documentation
+  tagline: Seamless and powerful HTML+ERB parsing.
 
   actions:
     - theme: brand

@@ -3,7 +3,7 @@ import { defineConfig } from "vitepress"
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
   title: "ERBX",
-  description: "ERBX specification and documentation",
+  description: "Seamless and powerful HTML+ERB parsing.",
   srcDir: "./docs",
   base: "/erbx/",
   themeConfig: {
