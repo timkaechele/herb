@@ -9,6 +9,10 @@ hero:
 
   actions:
     - theme: brand
+      text: Documentation
+      link: /bindings/ruby
+
+    - theme: alt
       text: Specification
       link: /specification
 

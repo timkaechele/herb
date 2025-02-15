@@ -12,6 +12,7 @@ export default defineConfig({
     nav: [
       { text: "Home", link: "/" },
       { text: "Specification", link: "/specification" },
+      { text: "Language Bindings", link: "/bindings/ruby/" },
     ],
 
     sidebar: [
@@ -27,7 +28,28 @@ export default defineConfig({
           // { text: "Jinja", link: "/specification/jinja" },
           // { text: "Liquid", link: "/specification/liquid" },
         ]
-      }
+      },
+      {
+        text: "Language Bindings",
+        items: [
+          {
+            text: "Ruby",
+            collapsed: true,
+            items: [
+              { text: "Installation", link: "/bindings/ruby/"},
+              { text: "Reference", link: "/bindings/ruby/reference"},
+            ]
+          },
+          {
+            text: "JavaScript/Node.js",
+            collapsed: true,
+            items: [
+              { text: "Installation", link: "/bindings/javascript/"},
+              { text: "Reference", link: "/bindings/javascript/reference"},
+            ]
+          },
+        ]
+      },
     ],
 
     socialLinks: [
