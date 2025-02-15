@@ -1,4 +1,4 @@
-# ERBx
+# ERBX
 
 Seamless Parsing for HTML, ERB, and more.
 

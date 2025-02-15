@@ -3,9 +3,9 @@
 layout: home
 
 hero:
-  name: "ERBx"
+  name: "ERBX"
   text: ""
-  tagline: ERBx specification and documentation
+  tagline: ERBX specification and documentation
 
   actions:
     - theme: brand
