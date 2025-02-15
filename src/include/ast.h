@@ -45,6 +45,8 @@ typedef struct AST_STRUCT {
     AST_ERB_CONTENT_NODE, // maybe this can just be a regular AST_ERB_EXPRESSION_NODE
 
     AST_RUBY_STATEMENTS_NODE,
+
+    AST_NOOP, // temporary node
   } type;
 
   array_T* children;
