@@ -4,7 +4,7 @@ ERBX is bundled and packaged up as an ES Module in an npm package and available 
 
 
 > [!TIP] More Language Bindings
-> ERBX also has [bindings for Ruby](/bindings/ruby)
+> ERBX also has [bindings for Ruby](/bindings/ruby/)
 
 ## Installation
 

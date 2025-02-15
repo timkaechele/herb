@@ -7,7 +7,7 @@ outline: deep
 ERBX is bundled and packaged up as a precompiled rubygem and available to be installed from [RubyGems.org](https://rubygems.org).
 
 > [!TIP] More Language Bindings
-> ERBX also has [bindings for JavaScript/Node.js](/bindings/javascript)
+> ERBX also has [bindings for JavaScript/Node.js](/bindings/javascript/)
 
 ## Installation
 
