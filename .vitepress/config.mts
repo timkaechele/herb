@@ -129,6 +129,21 @@ export default defineConfig({
           }
         ]
       },
+      {
+        text: "Tokens",
+        items: [
+          { text: "Index", link: "/tokens" },
+          {
+            text: "Tokens",
+            collapsed: true,
+            items: [
+              { text: "TOKEN_NEWLINE", link: "/tokens/TOKEN_NEWLINE" },
+              { text: "TOKEN_TEXT_CONTENT", link: "/tokens/TOKEN_TEXT_CONTENT" },
+              { text: "TOKEN_WHITESPACE", link: "/tokens/TOKEN_WHITESPACE" },
+            ]
+          }
+        ]
+      },
     ],
 
     socialLinks: [
