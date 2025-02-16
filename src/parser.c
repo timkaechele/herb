@@ -1,5 +1,5 @@
 #include "include/parser.h"
-#include "include/ast.h"
+#include "include/ast_node.h"
 #include "include/token.h"
 
 #include <stdio.h>
@@ -30,11 +30,11 @@ token_T* parser_consume(parser_T* parser, token_type_T type) {
   return parser->current_token;
 }
 
-AST_T* parser_parse(parser_T* parser) {
+AST_NODE_T* parser_parse(parser_T* parser) {
   switch (parser->current_token->type) {
     default: {
     }
   }
 
-  return ast_init(AST_NOOP);
+  return ast_node_init(AST_NOOP);
 }

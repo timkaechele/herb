@@ -48,17 +48,17 @@ typedef enum {
   AST_NOOP, // temporary node
 } ast_node_type_T;
 
-typedef struct AST_STRUCT {
+typedef struct AST_NODE_STRUCT {
   ast_node_type_T type;
   array_T* children;
   char* name;
   struct AST_STRUCT* value;
   int data_type;
   int int_value;
-} AST_T;
+} AST_NODE_T;
 
-AST_T* ast_init(ast_node_type_T type);
+AST_NODE_T* ast_node_init(ast_node_type_T type);
 
-size_t ast_sizeof(void);
+size_t ast_node_sizeof(void);
 
 #endif

@@ -68,7 +68,7 @@ void erbx_lex_to_buffer(char* source, buffer_T* output) {
   erbx_free_tokens(&tokens);
 
   // parser_T* parser = parser_init(lexer);
-  // AST_T* root = parser_parse(parser);
+  // AST_NODE_T* root = parser_parse(parser);
   // printf("%zu\n", root->children->size);
 }
 
