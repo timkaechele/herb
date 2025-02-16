@@ -41,47 +41,51 @@ token_T* lexer_error(lexer_T* lexer, const char* message) {
   return token_init(erbx_strdup(error_message), TOKEN_ERROR, lexer);
 }
 
+static void lexer_handle_newline(lexer_T* lexer) {
+  if (is_newline(lexer->current_character)) {
+    lexer->current_line++;
+    lexer->current_column = 1;
+  } else {
+    lexer->current_column++;
+  }
+}
+
 static void lexer_advance(lexer_T* lexer) {
   if (lexer->current_position < lexer->source_length && lexer->current_character != '\0') {
-
-    if (is_newline(lexer->current_character)) {
-      lexer->current_line += 1;
-      lexer->current_column = 1;
-    } else {
-      lexer->current_column += 1;
-    }
-
-    lexer->current_position += 1;
+    lexer_handle_newline(lexer);
+    lexer->current_position++;
     lexer->current_character = lexer->source[lexer->current_position];
   }
 }
 
 static void lexer_advance_by(lexer_T* lexer, size_t count) {
-  for (size_t i = 0; i < count; i++)
+  for (size_t i = 0; i < count; i++) {
     lexer_advance(lexer);
+  }
 }
 
-static token_T* lexer_advance_with(lexer_T* lexer, char* value, int type) {
+static token_T* lexer_advance_with(lexer_T* lexer, const char* value, int type) {
   lexer_advance_by(lexer, strlen(value));
-
   return token_init(value, type, lexer);
 }
 
 static token_T* lexer_advance_current(lexer_T* lexer, int type) {
-  char* value = calloc(2, sizeof(char));
-  value[0] = lexer->current_character;
-  value[1] = '\0';
-
-  lexer_advance(lexer);
-  token_T* token = token_init(value, type, lexer);
-
-  return token;
+  return lexer_advance_with(lexer, (char[]) {lexer->current_character, '\0'}, type);
 }
+
+static token_T* lexer_match_and_advance(lexer_T* lexer, const char* value, int type) {
+  if (strncmp(lexer->source + lexer->current_position, value, strlen(value)) == 0) {
+    return lexer_advance_with(lexer, value, type);
+  }
+  return NULL;
+}
+
+// ===== Specialized Parsers
 
 static token_T* lexer_parse_whitespace(lexer_T* lexer) {
   buffer_T buffer = buffer_new();
 
-  while (isspace(lexer->current_character) && lexer->current_character != 10 && lexer->current_character != 13) {
+  while (isspace(lexer->current_character) && lexer->current_character != '\n' && lexer->current_character != '\r') {
     buffer_append_char(&buffer, lexer->current_character);
     lexer_advance(lexer);
   }
@@ -113,27 +117,25 @@ static token_T* lexer_parse_text_content(lexer_T* lexer) {
   return token_init(buffer.value, TOKEN_TEXT_CONTENT, lexer);
 }
 
+// ===== ERB Parsing
+
 static token_T* lexer_parse_erb_open(lexer_T* lexer) {
   lexer->state = STATE_ERB_CONTENT;
 
-  char next_char = lexer_peek(lexer, 2); // the next character after <%
+  const char* erb_patterns[] = {"<%==", "<%=", "<%#", "<%-", "<%%", "<%"};
 
-  if (next_char == '=' && lexer_peek(lexer, 3) == '=') {
-    return lexer_advance_with(lexer, "<%==", TOKEN_ERB_START);
+  for (size_t i = 0; i < sizeof(erb_patterns) / sizeof(erb_patterns[0]); i++) {
+    token_T* match = lexer_match_and_advance(lexer, erb_patterns[i], TOKEN_ERB_START);
+    if (match) return match;
   }
 
-  if (next_char == '=') return lexer_advance_with(lexer, "<%=", TOKEN_ERB_START);
-  if (next_char == '#') return lexer_advance_with(lexer, "<%#", TOKEN_ERB_START);
-  if (next_char == '-') return lexer_advance_with(lexer, "<%-", TOKEN_ERB_START);
-  if (next_char == '%') return lexer_advance_with(lexer, "<%%", TOKEN_ERB_START);
-
-  return lexer_advance_with(lexer, "<%", TOKEN_ERB_START);
+  return lexer_error(lexer, "Unexpected ERB start");
 }
 
 static token_T* lexer_parse_erb_content(lexer_T* lexer) {
   buffer_T buffer = buffer_new();
 
-  while (!(lexer_peek_erb_end(lexer, 0))) {
+  while (!lexer_peek_erb_end(lexer, 0)) {
     if (lexer->current_character == '\0') {
       return token_init(buffer.value, TOKEN_ERROR, lexer); // Handle unexpected EOF
     }
@@ -143,7 +145,6 @@ static token_T* lexer_parse_erb_content(lexer_T* lexer) {
   }
 
   lexer->state = STATE_ERB_CLOSE;
-
   return token_init(buffer.value, TOKEN_ERB_CONTENT, lexer);
 }
 
@@ -155,6 +156,8 @@ static token_T* lexer_parse_erb_close(lexer_T* lexer) {
 
   return lexer_advance_with(lexer, "%>", TOKEN_ERB_END);
 }
+
+// ===== Tokenizing Function
 
 token_T* lexer_next_token(lexer_T* lexer) {
   if (lexer->current_character == '\0') return token_init("", TOKEN_EOF, lexer);
@@ -183,13 +186,13 @@ token_T* lexer_next_token(lexer_T* lexer) {
     }
 
     case '/': {
-      if (lexer_peek(lexer, 1) == '>') return lexer_advance_with(lexer, "/>", TOKEN_HTML_TAG_SELF_CLOSE);
-      return lexer_advance_current(lexer, TOKEN_SLASH);
+      token_T* token = lexer_match_and_advance(lexer, "/>", TOKEN_HTML_TAG_SELF_CLOSE);
+      return token ? token : lexer_advance_current(lexer, TOKEN_SLASH);
     }
 
     case '-': {
-      if (lexer_peek_for_html_comment_end(lexer, 0)) return lexer_advance_with(lexer, "-->", TOKEN_HTML_COMMENT_END);
-      return lexer_advance_current(lexer, TOKEN_DASH);
+      token_T* token = lexer_match_and_advance(lexer, "-->", TOKEN_HTML_COMMENT_END);
+      return token ? token : lexer_advance_current(lexer, TOKEN_DASH);
     }
 
     case '>': return lexer_advance_current(lexer, TOKEN_HTML_TAG_END);
@@ -202,14 +205,8 @@ token_T* lexer_next_token(lexer_T* lexer) {
     case '"':
     case '\'': return lexer_advance_current(lexer, TOKEN_QUOTE);
 
-    default: {
-      if (isalnum(lexer->current_character) || lexer->current_character == '_') {
-        return lexer_parse_identifier(lexer);
-      }
-
+    default:
+      if (isalnum(lexer->current_character) || lexer->current_character == '_') return lexer_parse_identifier(lexer);
       return lexer_parse_text_content(lexer);
-    }
   }
-
-  return lexer_error(lexer, "lexer_next_token");
 }
