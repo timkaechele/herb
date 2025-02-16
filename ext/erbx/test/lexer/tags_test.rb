@@ -4,6 +4,16 @@ require_relative "../test_helper"
 
 module Lexer
   class TagsTest < Minitest::Spec
+    test "nil" do
+      result = ERBX.lex(nil)
+
+      expected = %w[
+        TOKEN_EOF
+      ]
+
+      assert_equal expected, result.array.items.map(&:type)
+    end
+
     test "empty file" do
       result = ERBX.lex("")
 

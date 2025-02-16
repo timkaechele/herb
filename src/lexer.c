@@ -12,6 +12,8 @@ static size_t lexer_sizeof(void) {
 }
 
 lexer_T* lexer_init(char* source) {
+  if (source == NULL) source = "";
+
   lexer_T* lexer = calloc(1, lexer_sizeof());
 
   lexer->state = STATE_DATA;
