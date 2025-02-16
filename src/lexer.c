@@ -64,16 +64,16 @@ static void lexer_advance_by(lexer_T* lexer, size_t count) {
   }
 }
 
-static token_T* lexer_advance_with(lexer_T* lexer, const char* value, int type) {
+static token_T* lexer_advance_with(lexer_T* lexer, const char* value, token_type_T type) {
   lexer_advance_by(lexer, strlen(value));
   return token_init(value, type, lexer);
 }
 
-static token_T* lexer_advance_current(lexer_T* lexer, int type) {
+static token_T* lexer_advance_current(lexer_T* lexer, token_type_T type) {
   return lexer_advance_with(lexer, (char[]) {lexer->current_character, '\0'}, type);
 }
 
-static token_T* lexer_match_and_advance(lexer_T* lexer, const char* value, int type) {
+static token_T* lexer_match_and_advance(lexer_T* lexer, const char* value, token_type_T type) {
   if (strncmp(lexer->source + lexer->current_position, value, strlen(value)) == 0) {
     return lexer_advance_with(lexer, value, type);
   }
