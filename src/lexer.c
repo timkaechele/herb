@@ -7,7 +7,7 @@
 #include <stdio.h>
 #include <string.h>
 
-size_t lexer_sizeof(void) {
+static size_t lexer_sizeof(void) {
   return sizeof(struct LEXER_STRUCT);
 }
 
@@ -38,7 +38,7 @@ token_T* lexer_error(lexer_T* lexer, const char* message) {
   return token_init(error_message, TOKEN_ERROR, lexer);
 }
 
-void lexer_advance(lexer_T* lexer) {
+static void lexer_advance(lexer_T* lexer) {
   if (lexer->current_position < lexer->source_length && lexer->current_character != '\0') {
 
     if (is_newline(lexer->current_character)) {
@@ -53,7 +53,7 @@ void lexer_advance(lexer_T* lexer) {
   }
 }
 
-token_T* lexer_advance_current(lexer_T* lexer, int type) {
+static token_T* lexer_advance_current(lexer_T* lexer, int type) {
   char* value = calloc(2, sizeof(char));
   value[0] = lexer->current_character;
   value[1] = '\0';
@@ -64,7 +64,7 @@ token_T* lexer_advance_current(lexer_T* lexer, int type) {
   return token;
 }
 
-token_T* lexer_parse_whitespace(lexer_T* lexer) {
+static token_T* lexer_parse_whitespace(lexer_T* lexer) {
   buffer_T buffer = buffer_new();
 
   while (isspace(lexer->current_character) && lexer->current_character != 10 && lexer->current_character != 13) {
@@ -75,7 +75,7 @@ token_T* lexer_parse_whitespace(lexer_T* lexer) {
   return token_init(buffer.value, TOKEN_WHITESPACE, lexer);
 }
 
-token_T* lexer_parse_identifier(lexer_T* lexer) {
+static token_T* lexer_parse_identifier(lexer_T* lexer) {
   buffer_T buffer = buffer_new();
 
   while ((isalnum(lexer->current_character) || lexer->current_character == '-' || lexer->current_character == '_' ||
@@ -88,7 +88,7 @@ token_T* lexer_parse_identifier(lexer_T* lexer) {
   return token_init(buffer.value, TOKEN_IDENTIFIER, lexer);
 }
 
-token_T* lexer_parse_doctype(lexer_T* lexer) {
+static token_T* lexer_parse_doctype(lexer_T* lexer) {
   lexer_advance(lexer); // Move past `<`
   lexer_advance(lexer); // Move past `!`
   lexer_advance(lexer); // Move past `D`
@@ -102,7 +102,7 @@ token_T* lexer_parse_doctype(lexer_T* lexer) {
   return token_init("<!DOCTYPE ", TOKEN_HTML_DOCTYPE, lexer);
 }
 
-token_T* lexer_parse_text_content(lexer_T* lexer) {
+static token_T* lexer_parse_text_content(lexer_T* lexer) {
   buffer_T buffer = buffer_new();
 
   while (lexer->current_character != '<' && lexer->current_character != '>' && lexer->current_character != '\0') {
@@ -113,7 +113,7 @@ token_T* lexer_parse_text_content(lexer_T* lexer) {
   return token_init(buffer.value, TOKEN_TEXT_CONTENT, lexer);
 }
 
-token_T* lexer_parse_erb_open(lexer_T* lexer) {
+static token_T* lexer_parse_erb_open(lexer_T* lexer) {
   lexer_advance(lexer); // Move past `<`
   lexer_advance(lexer); // Move past `%`
 
@@ -148,7 +148,7 @@ token_T* lexer_parse_erb_open(lexer_T* lexer) {
   return token_init("<%", TOKEN_ERB_START, lexer);
 }
 
-token_T* lexer_parse_erb_content(lexer_T* lexer) {
+static token_T* lexer_parse_erb_content(lexer_T* lexer) {
   buffer_T buffer = buffer_new();
 
   while (!(lexer_peek_erb_end(lexer, 0))) {
@@ -165,7 +165,7 @@ token_T* lexer_parse_erb_content(lexer_T* lexer) {
   return token_init(buffer.value, TOKEN_ERB_CONTENT, lexer);
 }
 
-token_T* lexer_parse_erb_close(lexer_T* lexer) {
+static token_T* lexer_parse_erb_close(lexer_T* lexer) {
   lexer->state = STATE_DATA;
 
   if (lexer_peek_erb_percent_close_tag(lexer, 0)) {
