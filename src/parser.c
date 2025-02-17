@@ -28,9 +28,9 @@ static void parser_parse_in_data_state(parser_T* parser, AST_NODE_T* element);
 static AST_NODE_T* parser_parse_erb_tag(parser_T* parser, AST_NODE_T* element);
 static AST_NODE_T* parser_build_node(parser_T* parser, ast_node_type_T type, char* name, AST_NODE_T* element);
 
-static char* format_parser_error(const char* message, const char* expected, const char* actual) {
+static char* format_parser_error(const char* message, const char* expected, const char* got) {
   char* template = "[Parser]: Unexpected Token %s (expected '%s', got: '%s')";
-  int needed = snprintf(NULL, 0, template, message, expected, actual);
+  int needed = snprintf(NULL, 0, template, message, expected, got);
 
   if (needed < 0) {
     return NULL;
@@ -41,7 +41,7 @@ static char* format_parser_error(const char* message, const char* expected, cons
     return NULL;
   }
 
-  snprintf(buffer, needed + 1, template, message, expected, actual);
+  snprintf(buffer, needed + 1, template, message, expected, got);
 
   return buffer;
 }
