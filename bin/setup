@@ -1,0 +1,6 @@
+#!/bin/bash
+
+set -e  # Exit on error
+
+make prism
+make all
