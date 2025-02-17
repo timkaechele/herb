@@ -43,7 +43,7 @@ module SnapshotUtils
     puts source
     puts "\n\n"
 
-    if !ENV["UPDATE_ALL_SNAPSHOTS"].nil? ||
+    if !ENV["FORCE_UPDATE_SNAPSHOTS"].nil? ||
        ask?("Do you want to update (or create) the snapshot for '#{class_name} #{name}'?")
 
       puts "\nUpdating Snapshot for '#{class_name} #{name}' at: \n#{snapshot_file(source)}\n"
@@ -62,7 +62,7 @@ module SnapshotUtils
 
     assert_equal snapshot_file(source).read, actual
   rescue Minitest::Assertion => e
-    save_failures_to_snapshot(actual, source) if ENV["UPDATE_SNAPSHOTS"] || ENV["UPDATE_ALL_SNAPSHOTS"]
+    save_failures_to_snapshot(actual, source) if ENV["UPDATE_SNAPSHOTS"] || ENV["FORCE_UPDATE_SNAPSHOTS"]
 
     raise unless snapshot_file(source).exist?
 
