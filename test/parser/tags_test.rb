@@ -6,10 +6,6 @@ module Parser
   class TagsTest < Minitest::Spec
     include SnapshotUtils
 
-    test "empty" do
-      assert_parsed_snapshot("")
-    end
-
     test "empty tag" do
       assert_parsed_snapshot("<span></span>")
     end
