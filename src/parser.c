@@ -46,8 +46,8 @@ static char* format_parser_error(const char* message, const char* expected, cons
   return buffer;
 }
 
-static AST_NODE_T* parser_append_unexpected_token(
-    parser_T* parser, char* message, char* expected, char* actual, AST_NODE_T* node) {
+static AST_NODE_T*
+parser_append_unexpected_token(parser_T* parser, char* message, char* expected, char* actual, AST_NODE_T* node) {
   AST_NODE_T* unexpected_token = ast_node_init(AST_UNEXCPECTED_TOKEN_NODE);
   unexpected_token->name = escape_newlines(format_parser_error(message, expected, actual));
   array_append(node->children, unexpected_token);
@@ -58,20 +58,24 @@ static AST_NODE_T* parser_append_unexpected_token(
 static AST_NODE_T* parser_append_unexpected_token_from_token(parser_T* parser, token_type_T type, AST_NODE_T* node) {
   token_T* token = parser_consume(parser, type, node);
 
-  return parser_append_unexpected_token(parser,
-      token->value,
-      (char*) token_type_to_string(parser->current_token->type),
-      (char*) token_type_to_string(type),
-      node);
+  return parser_append_unexpected_token(
+    parser,
+    token->value,
+    (char*) token_type_to_string(parser->current_token->type),
+    (char*) token_type_to_string(type),
+    node
+  );
 }
 
 token_T* parser_consume(parser_T* parser, token_type_T type, AST_NODE_T* node) {
   if (parser->current_token->type != type) {
-    parser_append_unexpected_token(parser,
-        "in parser_consume",
-        (char*) token_type_to_string(type),
-        (char*) token_type_to_string(parser->current_token->type),
-        node);
+    parser_append_unexpected_token(
+      parser,
+      "in parser_consume",
+      (char*) token_type_to_string(type),
+      (char*) token_type_to_string(parser->current_token->type),
+      node
+    );
   } else {
     if (0 == 1) {
       printf("[Parser]: Consumed token '%s'\n", token_to_string(parser->current_token));
@@ -254,11 +258,13 @@ static AST_NODE_T* parser_parse_html_attribute_value(parser_T* parser, AST_NODE_
       token_T* close_quote = parser_consume(parser, TOKEN_QUOTE, attribute_value);
 
       if (strcmp(open_quote->value, close_quote->value) != 0) {
-        parser_append_unexpected_token(parser,
-            "Unexpected quote",
-            open_quote->value,
-            close_quote->value,
-            attribute_value);
+        parser_append_unexpected_token(
+          parser,
+          "Unexpected quote",
+          open_quote->value,
+          close_quote->value,
+          attribute_value
+        );
       }
 
       attribute_value->name = buffer_value(&buffer);
@@ -385,11 +391,13 @@ static AST_NODE_T* parser_parse_html_element(parser_T* parser, AST_NODE_T* paren
       parser_append_unexpected_token(parser, "mismatched closing tag", open_tag->name, close_tag->name, element_node);
     }
   } else {
-    parser_append_unexpected_token(parser,
-        "open_tag type",
-        "AST_HTML_OPEN_TAG_NODE, AST_HTML_SELF_CLOSE_TAG_NODE",
-        open_tag->name,
-        element_node);
+    parser_append_unexpected_token(
+      parser,
+      "open_tag type",
+      "AST_HTML_OPEN_TAG_NODE, AST_HTML_SELF_CLOSE_TAG_NODE",
+      open_tag->name,
+      element_node
+    );
   }
 
   return element_node;

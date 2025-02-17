@@ -1,7 +1,7 @@
 ---
 BasedOnStyle: LLVM
 
-AlignAfterOpenBracket: DontAlign
+AlignAfterOpenBracket: BlockIndent
 AllowAllArgumentsOnNextLine: false
 AllowShortBlocksOnASingleLine: Empty
 AllowShortCaseLabelsOnASingleLine: true
@@ -9,6 +9,7 @@ AllowShortFunctionsOnASingleLine: None
 AllowShortIfStatementsOnASingleLine: true
 BinPackArguments: false
 ColumnLimit: 120
+ContinuationIndentWidth: 2
 IndentCaseLabels: true
 IndentWidth: 2
 PenaltyBreakBeforeFirstCallParameter: 0

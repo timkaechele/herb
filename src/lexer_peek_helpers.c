@@ -52,6 +52,8 @@ bool lexer_peek_erb_percent_close_tag(lexer_T* lexer, int offset) {
 }
 
 bool lexer_peek_erb_end(lexer_T* lexer, int offset) {
-  return (lexer_peek_erb_close_tag(lexer, offset) || lexer_peek_erb_dash_close_tag(lexer, offset) ||
-          lexer_peek_erb_percent_close_tag(lexer, offset));
+  return (
+    lexer_peek_erb_close_tag(lexer, offset) || lexer_peek_erb_dash_close_tag(lexer, offset) ||
+    lexer_peek_erb_percent_close_tag(lexer, offset)
+  );
 }
