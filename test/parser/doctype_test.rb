@@ -25,5 +25,13 @@ module Parser
     test "html4 doctype" do
       assert_parsed_snapshot(%(<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">))
     end
+
+    test "doctype case insensitivity" do
+      doctypes = ["<!DOCTYPE>", "<!doctype>", "<!DoCtYpE>", "<!dOcTyPe>"]
+
+      doctypes.each do |doctype|
+        assert_parsed_snapshot(doctype)
+      end
+    end
   end
 end

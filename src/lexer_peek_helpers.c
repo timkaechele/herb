@@ -32,23 +32,23 @@ bool lexer_peek_for_doctype(lexer_T* lexer, int offset) {
 }
 
 bool lexer_peek_for_html_comment_start(lexer_T* lexer, int offset) {
-  return lexer_peek_for(lexer, offset, "<!--", true);
+  return lexer_peek_for(lexer, offset, "<!--", false);
 }
 
 bool lexer_peek_for_html_comment_end(lexer_T* lexer, int offset) {
-  return lexer_peek_for(lexer, offset, "-->", true);
+  return lexer_peek_for(lexer, offset, "-->", false);
 }
 
 bool lexer_peek_erb_close_tag(lexer_T* lexer, int offset) {
-  return lexer_peek_for(lexer, offset, "%>", true);
+  return lexer_peek_for(lexer, offset, "%>", false);
 }
 
 bool lexer_peek_erb_dash_close_tag(lexer_T* lexer, int offset) {
-  return lexer_peek_for(lexer, offset, "-%>", true);
+  return lexer_peek_for(lexer, offset, "-%>", false);
 }
 
 bool lexer_peek_erb_percent_close_tag(lexer_T* lexer, int offset) {
-  return lexer_peek_for(lexer, offset, "%%>", true);
+  return lexer_peek_for(lexer, offset, "%%>", false);
 }
 
 bool lexer_peek_erb_end(lexer_T* lexer, int offset) {

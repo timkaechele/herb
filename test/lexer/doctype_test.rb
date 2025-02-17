@@ -72,5 +72,19 @@ module Lexer
 
       assert_equal expected, result.array.items.map(&:type)
     end
+
+    test "doctype case insensitivity" do
+      doctypes = ["<!DOCTYPE>", "<!doctype>", "<!DoCtYpE>", "<!dOcTyPe>"]
+
+      expected = %w[
+        TOKEN_HTML_DOCTYPE
+        TOKEN_HTML_TAG_END
+        TOKEN_EOF
+      ]
+
+      doctypes.each do |doctype|
+        assert_equal expected, ERBX.lex(doctype).array.items.map(&:type), "#{doctype} didn't match"
+      end
+    end
   end
 end
