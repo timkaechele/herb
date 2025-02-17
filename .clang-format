@@ -13,6 +13,7 @@ ContinuationIndentWidth: 2
 IndentCaseLabels: true
 IndentWidth: 2
 PenaltyBreakBeforeFirstCallParameter: 0
+PenaltyReturnTypeOnItsOwnLine: 1000
 PointerAlignment: Left
 SpaceAfterCStyleCast: true
 SpaceBeforeParens: ControlStatements

@@ -46,8 +46,9 @@ static char* format_parser_error(const char* message, const char* expected, cons
   return buffer;
 }
 
-static AST_NODE_T*
-parser_append_unexpected_token(parser_T* parser, char* message, char* expected, char* actual, AST_NODE_T* node) {
+static AST_NODE_T* parser_append_unexpected_token(
+  parser_T* parser, char* message, char* expected, char* actual, AST_NODE_T* node
+) {
   AST_NODE_T* unexpected_token = ast_node_init(AST_UNEXCPECTED_TOKEN_NODE);
   unexpected_token->name = escape_newlines(format_parser_error(message, expected, actual));
   array_append(node->children, unexpected_token);
