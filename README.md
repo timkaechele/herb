@@ -96,9 +96,10 @@ Running the executable shows a pretty-printed output for the respective command 
 #<Token type=TOKEN_EOF value='' range=[12, 12] start=2:1 end=2:1>
 
 Finished lexing in:
-  - 26.000 µs
-  - 0.026000 ms
-  - 0.000026000 s
+
+        24 µs
+     0.024 ms
+  0.000024  s
 ```
 
 ### Test

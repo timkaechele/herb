@@ -22,11 +22,11 @@ void print_time_diff(struct timespec start, struct timespec end, char* verb) {
 
   printf("Finished");
   printf(" %s ", verb);
-  printf("in:\n");
+  printf("in:\n\n");
 
-  printf("  - %.3f µs\n", us);
-  printf("  - %.6f ms\n", ms);
-  printf("  - %.9f s\n", s);
+  printf("  %8.0f µs\n", us);
+  printf("  %8.3f ms\n", ms);
+  printf("  %8.6f  s\n\n", s);
 }
 
 int main(int argc, char* argv[]) {
