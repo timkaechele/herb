@@ -27,7 +27,7 @@ module Parser
     end
 
     test "doctype case insensitivity" do
-      doctypes = ["<!DOCTYPE>", "<!doctype>", "<!DoCtYpE>", "<!dOcTyPe>"]
+      doctypes = ["<!docTYPE>", "<!DOCtype>", "<!doctype>", "<!DoCtYpE>", "<!dOcTyPe>"]
 
       doctypes.each do |doctype|
         assert_parsed_snapshot(doctype)
