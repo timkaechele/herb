@@ -6,13 +6,6 @@ module Parser
   class TagsTest < Minitest::Spec
     include SnapshotUtils
 
-    def assert_parsed_snapshot(source)
-      parsed = ERBX.parse(source)
-      expected = parsed.root_node.inspect
-
-      assert_snapshot_matches(expected, source)
-    end
-
     test "empty" do
       assert_parsed_snapshot("")
     end
