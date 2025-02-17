@@ -6,9 +6,7 @@ Seamless and powerful HTML+ERB parsing.
 
 This project builds the ERBX program and its associated unit tests using a Makefile for automation. The Makefile provides several useful commands for compiling, running tests, and cleaning the project.
 
-### Building
-
-#### Requirements
+### Requirements
 
 - [**Check**](https://libcheck.github.io/check/): For unit testing.
 - [**Clang 19**](https://clang.llvm.org): The compiler used to build this project.
@@ -18,25 +16,31 @@ This project builds the ERBX program and its associated unit tests using a Makef
 - [**Ruby**](https://www.ruby-lang.org/en/): We need Ruby as a dependency for `bundler`.
 - [**Bundler**](https://bundler.io): We are using `bundler` to build [`prism`](https://github.com/ruby/prism) from source so we can build `erbx` against it.
 
-**For Linux:**  
+##### For Linux
 
 ```bash
 xargs sudo apt-get install < Aptfile
-# or
+```
+or:
+
+```bash
 sudo apt-get install check clang-19 clang-tidy-19 clang-format-19
 ```
 
-**For macOS (using Homebrew):**
+##### For macOS (using Homebrew)
 
 ```bash
 brew bundle
-# or
+```
+or:
+
+```bash
 brew install check llvm@19
 ```
 
-### Commands
+### Building
 
-### Clone the Repo
+#### Clone the Repo
 
 Clone the Git Repository:
 
@@ -44,7 +48,7 @@ Clone the Git Repository:
 git clone https://github.com/marcoroth/erbx && cd erbx/
 ```
 
-### Build Prism
+#### Build Prism
 
 Before we can compile ERBX we need to compile Prism from source:
 
@@ -52,13 +56,16 @@ Before we can compile ERBX we need to compile Prism from source:
 make prism
 ```
 
-#### Build
+#### Build ERBX
 
 After compiling `prism` we can now compile all source files in `src/` and generate the `erbx` executable.
 
 ```bash
-make
+make all
 ```
+
+> [!NOTE]
+For any consecutive builds you can just run `make`/`make all`.
 
 ### Run
 
@@ -94,17 +101,17 @@ Finished lexing in:
   - 0.000026000 s
 ```
 
-#### Test
+### Test
 
 Builds the test suite from files in `test/` and creates the `run_erbx_tests` executable to run the tests:
 
-###### For the C Tests
+#### For the C Tests
 
 ```bash
 make test && ./run_erbx_tests
 ```
 
-###### For the Ruby Tests
+#### For the Ruby Tests
 
 ```bash
 rake test
@@ -142,7 +149,9 @@ The integration was successful if you see:
 Integration successful!
 ```
 
-Optionally there is also `bin/prism_integration` that also cleans out the built prism copy and builds that from source.
+Optionally there is also the `bin/prism_integration` script to run a full E2E build integration.
+
+The difference is that the `bin/prism_integration` script also cleans out prism before building prism and erbx from scratch.
 
 ## License
 
