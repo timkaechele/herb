@@ -12,6 +12,7 @@ ColumnLimit: 120
 ContinuationIndentWidth: 2
 IndentCaseLabels: true
 IndentWidth: 2
+InsertNewlineAtEOF: true
 PenaltyBreakBeforeFirstCallParameter: 0
 PenaltyReturnTypeOnItsOwnLine: 1000
 PointerAlignment: Left
