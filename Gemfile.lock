@@ -1,3 +1,10 @@
+GIT
+  remote: https://github.com/ruby/prism.git
+  revision: 01843caefd06828190161826575822c30466d95c
+  tag: v1.3.0
+  specs:
+    prism (1.3.0)
+
 PATH
   remote: .
   specs:
@@ -35,7 +42,6 @@ GEM
       racc
     pretty_please (0.2.0)
       dispersion (~> 0.2)
-    prism (1.3.0)
     racc (1.8.1)
     rainbow (3.1.1)
     rake (13.2.1)
@@ -69,6 +75,7 @@ DEPENDENCIES
   erbx!
   maxitest
   minitest-difftastic (~> 0.2)
+  prism!
   rake (~> 13.2)
   rake-compiler (~> 1.2)
   rubocop (~> 1.71)
