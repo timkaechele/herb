@@ -14,6 +14,7 @@ rake test
 ./erbx lex examples/test.html.erb
 ./erbx ruby examples/test.html.erb
 ./erbx html examples/test.html.erb
+./erbx parse examples/test.html.erb
 
 bin/lint
 bin/tidy
