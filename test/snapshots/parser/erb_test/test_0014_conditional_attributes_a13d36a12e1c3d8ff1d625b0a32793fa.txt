@@ -1,0 +1,54 @@
+@ DocumentNode (location: (0,0)-(0,0))
+├── name: ∅
+└── children: (1)
+    @ Element (location: (0,0)-(0,0))
+    ├── name: ∅
+    └── children: (3)
+        @ OpenTag (location: (0,0)-(0,0))
+        ├── name: "div"
+        └── children: (1)
+            @ AttributeSet (location: (0,0)-(0,0))
+            ├── name: ∅
+            └── children: (5)
+                @ ERBContent (location: (0,0)-(0,0))
+                ├── name: " if odd? "
+                └── children: []
+
+                @ Attribute (location: (0,0)-(0,0))
+                ├── name: ∅
+                └── children: (2)
+                    @ AttributeName (location: (0,0)-(0,0))
+                    ├── name: "data-odd"
+                    └── children: []
+
+                    @ AttributeValue (location: (0,0)-(0,0))
+                    ├── name: "true"
+                    └── children: []
+
+                @ ERBContent (location: (0,0)-(0,0))
+                ├── name: " else "
+                └── children: []
+
+                @ Attribute (location: (0,0)-(0,0))
+                ├── name: ∅
+                └── children: (2)
+                    @ AttributeName (location: (0,0)-(0,0))
+                    ├── name: "data-odd"
+                    └── children: []
+
+                    @ AttributeValue (location: (0,0)-(0,0))
+                    ├── name: "false"
+                    └── children: []
+
+                @ ERBContent (location: (0,0)-(0,0))
+                ├── name: " end "
+                └── children: []
+
+        @ ElementBody (location: (0,0)-(0,0))
+        ├── name: ∅
+        └── children: []
+
+        @ CloseTag (location: (0,0)-(0,0))
+        ├── name: "div"
+        └── children: []
+

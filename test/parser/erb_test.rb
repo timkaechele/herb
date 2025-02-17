@@ -53,5 +53,13 @@ module Parser
     test "interpolate inside comment" do
       assert_parsed_snapshot(%(<!-- <%= "Comment" %> -->))
     end
+
+    test "conditional tags" do
+      assert_parsed_snapshot(%(<div><% if bold? %><b><%= title %></b><% else %><b><%= title %></b><% end %></div>))
+    end
+
+    test "conditional attributes" do
+      assert_parsed_snapshot(%(<div <% if odd? %> data-odd=true <% else %> data-odd=false <% end %>></div>))
+    end
   end
 end

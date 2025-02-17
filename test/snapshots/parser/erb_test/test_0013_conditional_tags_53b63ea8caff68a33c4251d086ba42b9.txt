@@ -1,0 +1,74 @@
+@ DocumentNode (location: (0,0)-(0,0))
+├── name: ∅
+└── children: (1)
+    @ Element (location: (0,0)-(0,0))
+    ├── name: ∅
+    └── children: (3)
+        @ OpenTag (location: (0,0)-(0,0))
+        ├── name: "div"
+        └── children: (1)
+            @ AttributeSet (location: (0,0)-(0,0))
+            ├── name: ∅
+            └── children: []
+
+        @ ElementBody (location: (0,0)-(0,0))
+        ├── name: ∅
+        └── children: (5)
+            @ ERBContent (location: (0,0)-(0,0))
+            ├── name: " if bold? "
+            └── children: []
+
+            @ Element (location: (0,0)-(0,0))
+            ├── name: ∅
+            └── children: (3)
+                @ OpenTag (location: (0,0)-(0,0))
+                ├── name: "b"
+                └── children: (1)
+                    @ AttributeSet (location: (0,0)-(0,0))
+                    ├── name: ∅
+                    └── children: []
+
+                @ ElementBody (location: (0,0)-(0,0))
+                ├── name: ∅
+                └── children: (1)
+                    @ ERBContent (location: (0,0)-(0,0))
+                    ├── name: " title "
+                    └── children: []
+
+                @ CloseTag (location: (0,0)-(0,0))
+                ├── name: "b"
+                └── children: []
+
+            @ ERBContent (location: (0,0)-(0,0))
+            ├── name: " else "
+            └── children: []
+
+            @ Element (location: (0,0)-(0,0))
+            ├── name: ∅
+            └── children: (3)
+                @ OpenTag (location: (0,0)-(0,0))
+                ├── name: "b"
+                └── children: (1)
+                    @ AttributeSet (location: (0,0)-(0,0))
+                    ├── name: ∅
+                    └── children: []
+
+                @ ElementBody (location: (0,0)-(0,0))
+                ├── name: ∅
+                └── children: (1)
+                    @ ERBContent (location: (0,0)-(0,0))
+                    ├── name: " title "
+                    └── children: []
+
+                @ CloseTag (location: (0,0)-(0,0))
+                ├── name: "b"
+                └── children: []
+
+            @ ERBContent (location: (0,0)-(0,0))
+            ├── name: " end "
+            └── children: []
+
+        @ CloseTag (location: (0,0)-(0,0))
+        ├── name: "div"
+        └── children: []
+
