@@ -18,9 +18,9 @@ bool lexer_peek_for(lexer_T* lexer, int offset, const char* pattern, bool case_i
     char character = lexer_peek(lexer, offset + index);
 
     if (case_insensitive) {
-      if (tolower(character) != tolower(pattern[index])) return false;
+      if (tolower(character) != tolower(pattern[index])) { return false; }
     } else {
-      if (character != pattern[index]) return false;
+      if (character != pattern[index]) { return false; }
     }
   }
 
@@ -53,7 +53,7 @@ bool lexer_peek_erb_percent_close_tag(lexer_T* lexer, int offset) {
 
 bool lexer_peek_erb_end(lexer_T* lexer, int offset) {
   return (
-    lexer_peek_erb_close_tag(lexer, offset) || lexer_peek_erb_dash_close_tag(lexer, offset) ||
-    lexer_peek_erb_percent_close_tag(lexer, offset)
+    lexer_peek_erb_close_tag(lexer, offset) || lexer_peek_erb_dash_close_tag(lexer, offset)
+    || lexer_peek_erb_percent_close_tag(lexer, offset)
   );
 }

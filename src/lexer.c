@@ -12,7 +12,7 @@ static size_t lexer_sizeof(void) {
 }
 
 lexer_T* lexer_init(char* source) {
-  if (source == NULL) source = "";
+  if (source == NULL) { source = ""; }
 
   lexer_T* lexer = calloc(1, lexer_sizeof());
 
@@ -72,7 +72,7 @@ static token_T* lexer_advance_with(lexer_T* lexer, const char* value, token_type
 }
 
 static token_T* lexer_advance_current(lexer_T* lexer, token_type_T type) {
-  return lexer_advance_with(lexer, (char[]) {lexer->current_character, '\0'}, type);
+  return lexer_advance_with(lexer, (char[]) { lexer->current_character, '\0' }, type);
 }
 
 static token_T* lexer_match_and_advance(lexer_T* lexer, const char* value, token_type_T type) {
@@ -98,9 +98,10 @@ static token_T* lexer_parse_whitespace(lexer_T* lexer) {
 static token_T* lexer_parse_identifier(lexer_T* lexer) {
   buffer_T buffer = buffer_new();
 
-  while ((isalnum(lexer->current_character) || lexer->current_character == '-' || lexer->current_character == '_' ||
-          lexer->current_character == ':') &&
-         !lexer_peek_for_html_comment_end(lexer, 0)) {
+  while ((isalnum(lexer->current_character) || lexer->current_character == '-' || lexer->current_character == '_'
+          || lexer->current_character == ':')
+         && !lexer_peek_for_html_comment_end(lexer, 0)) {
+
     buffer_append_char(&buffer, lexer->current_character);
     lexer_advance(lexer);
   }
@@ -122,13 +123,13 @@ static token_T* lexer_parse_text_content(lexer_T* lexer) {
 // ===== ERB Parsing
 
 static token_T* lexer_parse_erb_open(lexer_T* lexer) {
-  lexer->state = STATE_ERB_CONTENT;
+  const char* erb_patterns[] = { "<%==", "<%=", "<%#", "<%-", "<%%", "<%" };
 
-  const char* erb_patterns[] = {"<%==", "<%=", "<%#", "<%-", "<%%", "<%"};
+  lexer->state = STATE_ERB_CONTENT;
 
   for (size_t i = 0; i < sizeof(erb_patterns) / sizeof(erb_patterns[0]); i++) {
     token_T* match = lexer_match_and_advance(lexer, erb_patterns[i], TOKEN_ERB_START);
-    if (match) return match;
+    if (match) { return match; }
   }
 
   return lexer_error(lexer, "Unexpected ERB start");
@@ -147,14 +148,15 @@ static token_T* lexer_parse_erb_content(lexer_T* lexer) {
   }
 
   lexer->state = STATE_ERB_CLOSE;
+
   return token_init(buffer.value, TOKEN_ERB_CONTENT, lexer);
 }
 
 static token_T* lexer_parse_erb_close(lexer_T* lexer) {
   lexer->state = STATE_DATA;
 
-  if (lexer_peek_erb_percent_close_tag(lexer, 0)) return lexer_advance_with(lexer, "%%>", TOKEN_ERB_END);
-  if (lexer_peek_erb_dash_close_tag(lexer, 0)) return lexer_advance_with(lexer, "-%>", TOKEN_ERB_END);
+  if (lexer_peek_erb_percent_close_tag(lexer, 0)) { return lexer_advance_with(lexer, "%%>", TOKEN_ERB_END); }
+  if (lexer_peek_erb_dash_close_tag(lexer, 0)) { return lexer_advance_with(lexer, "-%>", TOKEN_ERB_END); }
 
   return lexer_advance_with(lexer, "%>", TOKEN_ERB_END);
 }
@@ -162,19 +164,19 @@ static token_T* lexer_parse_erb_close(lexer_T* lexer) {
 // ===== Tokenizing Function
 
 token_T* lexer_next_token(lexer_T* lexer) {
-  if (lexer->current_character == '\0') return token_init("", TOKEN_EOF, lexer);
+  if (lexer->current_character == '\0') { return token_init("", TOKEN_EOF, lexer); }
 
-  if (lexer->state == STATE_ERB_CONTENT) return lexer_parse_erb_content(lexer);
-  if (lexer->state == STATE_ERB_CLOSE) return lexer_parse_erb_close(lexer);
+  if (lexer->state == STATE_ERB_CONTENT) { return lexer_parse_erb_content(lexer); }
+  if (lexer->state == STATE_ERB_CLOSE) { return lexer_parse_erb_close(lexer); }
 
-  if (lexer->current_character == '\n') return lexer_advance_current(lexer, TOKEN_NEWLINE);
-  if (isspace(lexer->current_character)) return lexer_parse_whitespace(lexer);
+  if (lexer->current_character == '\n') { return lexer_advance_current(lexer, TOKEN_NEWLINE); }
+  if (isspace(lexer->current_character)) { return lexer_parse_whitespace(lexer); }
 
   switch (lexer->current_character) {
     case '<': {
-      if (lexer_peek(lexer, 1) == '%') return lexer_parse_erb_open(lexer);
-      if (lexer_peek_for_doctype(lexer, 0)) return lexer_advance_with(lexer, "<!DOCTYPE", TOKEN_HTML_DOCTYPE);
-      if (isalnum(lexer_peek(lexer, 1))) return lexer_advance_current(lexer, TOKEN_HTML_TAG_START);
+      if (lexer_peek(lexer, 1) == '%') { return lexer_parse_erb_open(lexer); }
+      if (lexer_peek_for_doctype(lexer, 0)) { return lexer_advance_with(lexer, "<!DOCTYPE", TOKEN_HTML_DOCTYPE); }
+      if (isalnum(lexer_peek(lexer, 1))) { return lexer_advance_current(lexer, TOKEN_HTML_TAG_START); }
 
       if (lexer_peek_for_html_comment_start(lexer, 0)) {
         return lexer_advance_with(lexer, "<!--", TOKEN_HTML_COMMENT_START);
@@ -207,8 +209,12 @@ token_T* lexer_next_token(lexer_T* lexer) {
     case '"':
     case '\'': return lexer_advance_current(lexer, TOKEN_QUOTE);
 
-    default:
-      if (isalnum(lexer->current_character) || lexer->current_character == '_') return lexer_parse_identifier(lexer);
+    default: {
+      if (isalnum(lexer->current_character) || lexer->current_character == '_') {
+        return lexer_parse_identifier(lexer);
+      }
+
       return lexer_parse_text_content(lexer);
+    }
   }
 }

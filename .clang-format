@@ -2,20 +2,49 @@
 BasedOnStyle: LLVM
 
 AlignAfterOpenBracket: BlockIndent
+AlignOperands: AlignAfterOperator
 AllowAllArgumentsOnNextLine: false
-AllowShortBlocksOnASingleLine: Empty
+AllowShortBlocksOnASingleLine: Always
 AllowShortCaseLabelsOnASingleLine: true
+AllowShortEnumsOnASingleLine: true
 AllowShortFunctionsOnASingleLine: None
-AllowShortIfStatementsOnASingleLine: true
+AllowShortIfStatementsOnASingleLine: WithoutElse
 BinPackArguments: false
+BreakAfterReturnType: Automatic
+BreakArrays: true
+BreakBeforeBinaryOperators: NonAssignment
+BreakBeforeBraces: Custom
 ColumnLimit: 120
 ContinuationIndentWidth: 2
+Cpp11BracedListStyle: false
 IndentCaseLabels: true
 IndentWidth: 2
+InsertBraces: true
 InsertNewlineAtEOF: true
+InsertTrailingCommas: Wrapped
 PenaltyBreakBeforeFirstCallParameter: 0
 PenaltyReturnTypeOnItsOwnLine: 1000
 PointerAlignment: Left
+RemoveParentheses: MultipleParentheses
 SpaceAfterCStyleCast: true
 SpaceBeforeParens: ControlStatements
 SpacesInAngles: true
+
+BraceWrapping: # for BreakBeforeBraces
+  AfterCaseLabel: false
+  AfterClass: false
+  AfterControlStatement: Never
+  AfterEnum: false
+  AfterExternBlock: false
+  AfterFunction: false
+  AfterNamespace: false
+  AfterStruct: false
+  AfterUnion: false
+  BeforeCatch: false
+  BeforeElse: false
+  BeforeLambdaBody: false
+  BeforeWhile: false
+  IndentBraces: false
+  SplitEmptyFunction: false
+  SplitEmptyNamespace: false
+  SplitEmptyRecord: false

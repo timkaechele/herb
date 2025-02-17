@@ -32,14 +32,10 @@ static char* format_parser_error(const char* message, const char* expected, cons
   char* template = "[Parser]: Unexpected Token %s (expected '%s', got: '%s')";
   int needed = snprintf(NULL, 0, template, message, expected, got);
 
-  if (needed < 0) {
-    return NULL;
-  }
+  if (needed < 0) { return NULL; }
 
   char* buffer = malloc(needed + 1);
-  if (!buffer) {
-    return NULL;
-  }
+  if (!buffer) { return NULL; }
 
   snprintf(buffer, needed + 1, template, message, expected, got);
 
@@ -78,9 +74,7 @@ token_T* parser_consume(parser_T* parser, token_type_T type, AST_NODE_T* node) {
       node
     );
   } else {
-    if (0 == 1) {
-      printf("[Parser]: Consumed token '%s'\n", token_to_string(parser->current_token));
-    }
+    if (0 == 1) { printf("[Parser]: Consumed token '%s'\n", token_to_string(parser->current_token)); }
   }
 
   token_T* token = parser->current_token;
@@ -147,9 +141,9 @@ static AST_NODE_T* parser_parse_text_content(parser_T* parser, AST_NODE_T* eleme
 
   buffer_T content = buffer_new();
 
-  while (parser->current_token->type != TOKEN_EOF && parser->current_token->type != TOKEN_HTML_TAG_START &&
-         parser->current_token->type != TOKEN_HTML_TAG_START_CLOSE &&
-         parser->current_token->type != TOKEN_HTML_COMMENT_START) {
+  while (parser->current_token->type != TOKEN_EOF && parser->current_token->type != TOKEN_HTML_TAG_START
+         && parser->current_token->type != TOKEN_HTML_TAG_START_CLOSE
+         && parser->current_token->type != TOKEN_HTML_COMMENT_START) {
     switch (parser->current_token->type) {
       case TOKEN_ERB_START: {
         if (buffer_length(&content) > 0) {
@@ -304,8 +298,8 @@ static AST_NODE_T* parser_parse_html_attribute(parser_T* parser, AST_NODE_T* att
 static AST_NODE_T* parser_parse_html_attribute_set(parser_T* parser) {
   AST_NODE_T* attribute_list = ast_node_init(AST_HTML_ATTRIBUTE_SET_NODE);
 
-  while (parser->current_token->type != TOKEN_HTML_TAG_END &&
-         parser->current_token->type != TOKEN_HTML_TAG_SELF_CLOSE && parser->current_token->type != TOKEN_EOF) {
+  while (parser->current_token->type != TOKEN_HTML_TAG_END && parser->current_token->type != TOKEN_HTML_TAG_SELF_CLOSE
+         && parser->current_token->type != TOKEN_EOF) {
     switch (parser->current_token->type) {
       case TOKEN_ERB_START: parser_parse_erb_tag(parser, attribute_list); break;
       case TOKEN_WHITESPACE: parser_consume(parser, TOKEN_WHITESPACE, attribute_list); break;

@@ -76,11 +76,11 @@ void erbx_lex_to_buffer(char* source, buffer_T* output) {
 }
 
 void erbx_free_tokens(array_T** tokens) {
-  if (!tokens || !(*tokens)) return;
+  if (!tokens || !(*tokens)) { return; }
 
   for (size_t i = 0; i < array_size(*tokens); i++) {
     token_T* token = array_get(*tokens, i);
-    if (token) token_free(token);
+    if (token) { token_free(token); }
   }
 
   array_free(tokens);

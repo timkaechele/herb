@@ -18,9 +18,7 @@ int count_in_string(const char* string, char character) {
   int count = 0;
 
   while (*string != '\0') {
-    if (*string == character) {
-      count++;
-    }
+    if (*string == character) { count++; }
 
     string++;
   }
@@ -34,9 +32,7 @@ int count_newlines(const char* string) {
 
 char* replace_char(char* string, char find, char replace) {
   while (*string != '\0') {
-    if (*string == find) {
-      *string = replace;
-    }
+    if (*string == find) { *string = replace; }
 
     string++;
   }
@@ -67,8 +63,8 @@ char* escape_newlines(const char* input) {
 char* erbx_strdup(const char* s) {
   size_t len = strlen(s) + 1;
   char* copy = malloc(len);
-  if (copy) {
-    memcpy(copy, s, len);
-  }
+
+  if (copy) { memcpy(copy, s, len); }
+
   return copy;
 }

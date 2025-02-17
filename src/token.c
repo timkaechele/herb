@@ -101,7 +101,7 @@ int token_type(token_T* token) {
 }
 
 void token_free(token_T* token) {
-  if (!token) return;
+  if (!token) { return; }
 
   if (token->value) {
     free(token->value);
