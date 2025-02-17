@@ -10,6 +10,10 @@ module Parser
       assert_parsed_snapshot(%(<div id="hello" class="container p-3"></div>))
     end
 
+    test "duplicate attributes" do
+      assert_parsed_snapshot(%(<div class="hello" class="container p-3"></div>))
+    end
+
     test "attribute with no quotes value and whitespace and self-closing tag" do
       assert_parsed_snapshot("<img value=hello />")
     end
