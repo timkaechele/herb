@@ -118,7 +118,7 @@ int main(int argc, char* argv[]) {
     char* ruby_source = erbx_extract(source, ERBX_EXTRACT_LANGUAGE_RUBY);
     printf("Extracted Ruby: \n%s\n", ruby_source);
 
-    erbx_parse_ruby(ruby_source);
+    erbx_parse_ruby_to_stdout(ruby_source);
 
     return 0;
   }

@@ -21,7 +21,7 @@ static bool erbx_prism_visit(const pm_node_t* node, void* data) {
   return false;
 }
 
-void erbx_parse_ruby(char* source) {
+void erbx_parse_ruby_to_stdout(char* source) {
   size_t length = strlen(source);
 
   pm_parser_t parser;
