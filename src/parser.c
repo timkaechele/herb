@@ -12,6 +12,10 @@
 #include <string.h>
 #include <strings.h>
 
+static void parser_parse_in_data_state(parser_T* parser, AST_NODE_T* element);
+static AST_NODE_T* parser_parse_erb_tag(parser_T* parser, AST_NODE_T* element);
+static AST_NODE_T* parser_build_node(parser_T* parser, ast_node_type_T type, char* name, AST_NODE_T* node);
+
 size_t parser_sizeof(void) {
   return sizeof(struct PARSER_STRUCT);
 }
@@ -23,10 +27,6 @@ parser_T* parser_init(lexer_T* lexer) {
 
   return parser;
 }
-
-static void parser_parse_in_data_state(parser_T* parser, AST_NODE_T* element);
-static AST_NODE_T* parser_parse_erb_tag(parser_T* parser, AST_NODE_T* element);
-static AST_NODE_T* parser_build_node(parser_T* parser, ast_node_type_T type, char* name, AST_NODE_T* node);
 
 static char* format_parser_error(const char* message, const char* expected, const char* got) {
   char* template = "[Parser]: Unexpected Token %s (expected '%s', got: '%s')";
