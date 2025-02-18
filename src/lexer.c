@@ -11,6 +11,14 @@ static size_t lexer_sizeof(void) {
   return sizeof(struct LEXER_STRUCT);
 }
 
+static bool lexer_eof(lexer_T* lexer) {
+  return lexer->current_character == '\0';
+}
+
+static bool lexer_has_more_characters(lexer_T* lexer) {
+  return lexer->current_position < lexer->source_length;
+}
+
 lexer_T* lexer_init(char* source) {
   if (source == NULL) { source = ""; }
 
@@ -53,7 +61,7 @@ static void lexer_handle_newline(lexer_T* lexer) {
 }
 
 static void lexer_advance(lexer_T* lexer) {
-  if (lexer->current_position < lexer->source_length && lexer->current_character != '\0') {
+  if (lexer_has_more_characters(lexer) && !lexer_eof(lexer)) {
     lexer_handle_newline(lexer);
     lexer->current_position++;
     lexer->current_character = lexer->source[lexer->current_position];
@@ -79,6 +87,7 @@ static token_T* lexer_match_and_advance(lexer_T* lexer, const char* value, token
   if (strncmp(lexer->source + lexer->current_position, value, strlen(value)) == 0) {
     return lexer_advance_with(lexer, value, type);
   }
+
   return NULL;
 }
 
@@ -112,7 +121,7 @@ static token_T* lexer_parse_identifier(lexer_T* lexer) {
 static token_T* lexer_parse_text_content(lexer_T* lexer) {
   buffer_T buffer = buffer_new();
 
-  while (lexer->current_character != '<' && lexer->current_character != '>' && lexer->current_character != '\0') {
+  while (lexer->current_character != '<' && lexer->current_character != '>' && !lexer_eof(lexer)) {
     buffer_append_char(&buffer, lexer->current_character);
     lexer_advance(lexer);
   }
@@ -139,7 +148,7 @@ static token_T* lexer_parse_erb_content(lexer_T* lexer) {
   buffer_T buffer = buffer_new();
 
   while (!lexer_peek_erb_end(lexer, 0)) {
-    if (lexer->current_character == '\0') {
+    if (lexer_eof(lexer)) {
       return token_init(buffer.value, TOKEN_ERROR, lexer); // Handle unexpected EOF
     }
 
@@ -164,7 +173,7 @@ static token_T* lexer_parse_erb_close(lexer_T* lexer) {
 // ===== Tokenizing Function
 
 token_T* lexer_next_token(lexer_T* lexer) {
-  if (lexer->current_character == '\0') { return token_init("", TOKEN_EOF, lexer); }
+  if (lexer_eof(lexer)) { return token_init("", TOKEN_EOF, lexer); }
 
   if (lexer->state == STATE_ERB_CONTENT) { return lexer_parse_erb_content(lexer); }
   if (lexer->state == STATE_ERB_CLOSE) { return lexer_parse_erb_close(lexer); }
