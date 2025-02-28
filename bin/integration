@@ -6,6 +6,8 @@ make clean
 rake clean
 
 make prism
+rake templates
+
 make
 rake compile
 
