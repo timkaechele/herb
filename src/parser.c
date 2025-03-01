@@ -57,7 +57,7 @@ static AST_UNEXPECTED_TOKEN_NODE_T* parser_unexpected_token(
   return unexpected_token;
 }
 
-static AST_UNEXPECTED_TOKEN_NODE_T* parser_append_unexpected_token_from_token(
+static AST_UNEXPECTED_TOKEN_NODE_T* parser_init_unexpected_token_from_token(
   parser_T* parser, const token_type_T type, const AST_NODE_T* node
 ) {
   token_T* token = parser_consume(parser, type, node->errors);
@@ -253,7 +253,7 @@ static AST_HTML_TEXT_NODE_T* parser_parse_text_content(parser_T* parser, const A
 static AST_HTML_ATTRIBUTE_NAME_NODE_T* parser_parse_html_attribute_name(parser_T* parser, const AST_NODE_T* attribute) {
   if (parser->current_token->type != TOKEN_IDENTIFIER) {
     AST_UNEXPECTED_TOKEN_NODE_T* unexpected_token_node =
-      parser_append_unexpected_token_from_token(parser, TOKEN_IDENTIFIER, attribute);
+      parser_init_unexpected_token_from_token(parser, TOKEN_IDENTIFIER, attribute);
     array_append(attribute->errors, unexpected_token_node);
   }
 
@@ -345,7 +345,7 @@ static AST_HTML_ATTRIBUTE_VALUE_NODE_T* parser_parse_html_attribute_value(parser
 
     default: {
       AST_UNEXPECTED_TOKEN_NODE_T* unexpected_token_node =
-        parser_append_unexpected_token_from_token(parser, parser->current_token->type, attribute);
+        parser_init_unexpected_token_from_token(parser, parser->current_token->type, attribute);
 
       array_append(children, unexpected_token_node); // TODO: check if this is right.
     } break;
@@ -429,7 +429,7 @@ static AST_HTML_OPEN_TAG_NODE_T* parser_parse_html_open_tag(parser_T* parser, AS
 
       default: {
         AST_UNEXPECTED_TOKEN_NODE_T* unexpected_token_node =
-          parser_append_unexpected_token_from_token(parser, parser->current_token->type, element);
+          parser_init_unexpected_token_from_token(parser, parser->current_token->type, element);
         array_append(children, unexpected_token_node);
         break;
       }
@@ -481,7 +481,7 @@ static AST_HTML_OPEN_TAG_NODE_T* parser_parse_html_open_tag(parser_T* parser, AS
   token_free(tag_start);
   token_free(tag_name);
 
-  parser_append_unexpected_token_from_token(parser, parser->current_token->type, (AST_NODE_T*) element);
+  parser_init_unexpected_token_from_token(parser, parser->current_token->type, (AST_NODE_T*) element);
 
   return NULL;
 }
@@ -633,7 +633,7 @@ static array_T* parser_parse_in_data_state(parser_T* parser, AST_NODE_T* element
 
       default: {
         AST_UNEXPECTED_TOKEN_NODE_T* unexpected_token_node =
-          parser_append_unexpected_token_from_token(parser, parser->current_token->type, element);
+          parser_init_unexpected_token_from_token(parser, parser->current_token->type, element);
         array_append(children, unexpected_token_node);
       } break;
     }
