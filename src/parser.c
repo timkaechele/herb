@@ -378,7 +378,7 @@ static AST_HTML_ATTRIBUTE_VALUE_NODE_T* parser_parse_html_attribute_value(parser
   return value_node;
 }
 
-static AST_HTML_ATTRIBUTE_NODE_T* parser_parse_html_attribute(parser_T* parser, array_T* array, AST_NODE_T* element) {
+static AST_HTML_ATTRIBUTE_NODE_T* parser_parse_html_attribute(parser_T* parser, AST_NODE_T* element) {
   AST_HTML_ATTRIBUTE_NAME_NODE_T* attribute_name = parser_parse_html_attribute_name(parser, element);
 
   if (parser->current_token->type == TOKEN_EQUALS) {
@@ -401,9 +401,9 @@ static AST_HTML_ATTRIBUTE_NODE_T* parser_parse_html_attribute(parser_T* parser, 
   return ast_html_attribute_node_init(attribute_name, NULL, NULL, attribute_name->base.start, attribute_name->base.end);
 }
 
-static AST_HTML_OPEN_TAG_NODE_T* parser_parse_html_open_tag(parser_T* parser, AST_HTML_ELEMENT_NODE_T* element) {
-  token_T* tag_start = parser_consume(parser, TOKEN_HTML_TAG_START, element->base.errors);
-  token_T* tag_name = parser_consume(parser, TOKEN_IDENTIFIER, element->base.errors);
+static AST_HTML_OPEN_TAG_NODE_T* parser_parse_html_open_tag(parser_T* parser, AST_NODE_T* element) {
+  token_T* tag_start = parser_consume(parser, TOKEN_HTML_TAG_START, element->errors);
+  token_T* tag_name = parser_consume(parser, TOKEN_IDENTIFIER, element->errors);
 
   array_T* children = array_init(8);
   array_T* attributes = array_init(8);
@@ -412,24 +412,24 @@ static AST_HTML_OPEN_TAG_NODE_T* parser_parse_html_open_tag(parser_T* parser, AS
          && parser->current_token->type != TOKEN_EOF) {
     switch (parser->current_token->type) {
       case TOKEN_ERB_START: {
-        AST_ERB_CONTENT_NODE_T* erb_node = parser_parse_erb_tag(parser, (AST_NODE_T*) element);
+        AST_ERB_CONTENT_NODE_T* erb_node = parser_parse_erb_tag(parser, element);
         array_append(children, erb_node);
       } break;
 
       case TOKEN_WHITESPACE: {
-        token_T* token = parser_consume(parser, TOKEN_WHITESPACE, element->base.errors);
+        token_T* token = parser_consume(parser, TOKEN_WHITESPACE, element->errors);
         token_free(token);
       } break;
 
       case TOKEN_IDENTIFIER: {
-        AST_HTML_ATTRIBUTE_NODE_T* attribute = parser_parse_html_attribute(parser, attributes, (AST_NODE_T*) element);
+        AST_HTML_ATTRIBUTE_NODE_T* attribute = parser_parse_html_attribute(parser, element);
 
         array_append(attributes, attribute);
       } break;
 
       default: {
         AST_UNEXPECTED_TOKEN_NODE_T* unexpected_token_node =
-          parser_append_unexpected_token_from_token(parser, parser->current_token->type, (AST_NODE_T*) element);
+          parser_append_unexpected_token_from_token(parser, parser->current_token->type, element);
         array_append(children, unexpected_token_node);
         break;
       }
@@ -437,7 +437,7 @@ static AST_HTML_OPEN_TAG_NODE_T* parser_parse_html_open_tag(parser_T* parser, AS
   }
 
   if (parser->current_token->type == TOKEN_HTML_TAG_END) {
-    token_T* tag_end = parser_consume(parser, TOKEN_HTML_TAG_END, element->base.errors);
+    token_T* tag_end = parser_consume(parser, TOKEN_HTML_TAG_END, element->errors);
 
     AST_HTML_OPEN_TAG_NODE_T* open_tag_node = ast_html_open_tag_node_init(
       tag_start,
@@ -458,7 +458,7 @@ static AST_HTML_OPEN_TAG_NODE_T* parser_parse_html_open_tag(parser_T* parser, AS
   }
 
   if (parser->current_token->type == TOKEN_HTML_TAG_SELF_CLOSE) {
-    token_T* tag_end = parser_consume(parser, TOKEN_HTML_TAG_SELF_CLOSE, element->base.errors);
+    token_T* tag_end = parser_consume(parser, TOKEN_HTML_TAG_SELF_CLOSE, element->errors);
 
     AST_HTML_OPEN_TAG_NODE_T* open_tag_node = ast_html_open_tag_node_init(
       tag_start,
@@ -486,12 +486,10 @@ static AST_HTML_OPEN_TAG_NODE_T* parser_parse_html_open_tag(parser_T* parser, AS
   return NULL;
 }
 
-static AST_HTML_CLOSE_TAG_NODE_T* parser_parse_html_close_tag(
-  parser_T* parser, const AST_HTML_ELEMENT_NODE_T* element
-) {
-  token_T* tag_opening = parser_consume(parser, TOKEN_HTML_TAG_START_CLOSE, element->base.errors);
-  token_T* tag_name = parser_consume(parser, TOKEN_IDENTIFIER, element->base.errors);
-  token_T* tag_closing = parser_consume(parser, TOKEN_HTML_TAG_END, element->base.errors);
+static AST_HTML_CLOSE_TAG_NODE_T* parser_parse_html_close_tag(parser_T* parser, const AST_NODE_T* element) {
+  token_T* tag_opening = parser_consume(parser, TOKEN_HTML_TAG_START_CLOSE, element->errors);
+  token_T* tag_name = parser_consume(parser, TOKEN_IDENTIFIER, element->errors);
+  token_T* tag_closing = parser_consume(parser, TOKEN_HTML_TAG_END, element->errors);
 
   AST_HTML_CLOSE_TAG_NODE_T* close_tag =
     ast_html_close_tag_node_init(tag_opening, tag_name, tag_closing, tag_opening->start, tag_closing->end);
@@ -504,7 +502,7 @@ static AST_HTML_CLOSE_TAG_NODE_T* parser_parse_html_close_tag(
 }
 
 static AST_HTML_ELEMENT_NODE_T* parser_parse_html_element(parser_T* parser, AST_NODE_T* parent) {
-  AST_HTML_OPEN_TAG_NODE_T* open_tag = parser_parse_html_open_tag(parser, (AST_HTML_ELEMENT_NODE_T*) parent);
+  AST_HTML_OPEN_TAG_NODE_T* open_tag = parser_parse_html_open_tag(parser, parent);
 
   // TODO: attach information if the open tag should have a close tag based on the is_void_element value.
   // open_tag->should_have_close_tag = is_void_element(open_tag->name);
@@ -527,7 +525,7 @@ static AST_HTML_ELEMENT_NODE_T* parser_parse_html_element(parser_T* parser, AST_
     // open_tag isn't right here
     parser_parse_in_data_state(parser, (AST_NODE_T*) open_tag, body);
 
-    AST_HTML_CLOSE_TAG_NODE_T* close_tag = parser_parse_html_close_tag(parser, (AST_HTML_ELEMENT_NODE_T*) parent);
+    AST_HTML_CLOSE_TAG_NODE_T* close_tag = parser_parse_html_close_tag(parser, parent);
 
     AST_HTML_ELEMENT_NODE_T* element_node = ast_html_element_node_init(
       open_tag,
