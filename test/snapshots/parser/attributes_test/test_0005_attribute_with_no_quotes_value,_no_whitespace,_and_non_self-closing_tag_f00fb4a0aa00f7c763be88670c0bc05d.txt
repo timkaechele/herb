@@ -1,17 +1,17 @@
 @ DocumentNode (location: (1:0)-(1:17))
 ├── errors: (3 errors)
 │   ├── @ UnexpectedTokenNode (location: (1:17)-(1:17))
-│   │   ├── message: "[Parser]: Unexpected Token in parser_consume (expected 'TOKEN_HTML_TAG_START_CLOSE', got: 'TOKEN_EOF')"
+│   │   ├── message: "[Parser]: Unexpected Token in parser_consume_expected (expected 'TOKEN_HTML_TAG_START_CLOSE', got: 'TOKEN_EOF')"
 │   │   ├── expected: "TOKEN_HTML_TAG_START_CLOSE"
 │   │   └── got: "TOKEN_EOF"
 │   │
 │   ├── @ UnexpectedTokenNode (location: (1:17)-(1:17))
-│   │   ├── message: "[Parser]: Unexpected Token in parser_consume (expected 'TOKEN_IDENTIFIER', got: 'TOKEN_EOF')"
+│   │   ├── message: "[Parser]: Unexpected Token in parser_consume_expected (expected 'TOKEN_IDENTIFIER', got: 'TOKEN_EOF')"
 │   │   ├── expected: "TOKEN_IDENTIFIER"
 │   │   └── got: "TOKEN_EOF"
 │   │
 │   └── @ UnexpectedTokenNode (location: (1:17)-(1:17))
-│       ├── message: "[Parser]: Unexpected Token in parser_consume (expected 'TOKEN_HTML_TAG_END', got: 'TOKEN_EOF')"
+│       ├── message: "[Parser]: Unexpected Token in parser_consume_expected (expected 'TOKEN_HTML_TAG_END', got: 'TOKEN_EOF')"
 │       ├── expected: "TOKEN_HTML_TAG_END"
 │       └── got: "TOKEN_EOF"
 │
