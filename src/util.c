@@ -25,7 +25,20 @@ int count_in_string(const char* string, const char character) {
 }
 
 int count_newlines(const char* string) {
-  return count_in_string(string, '\n');
+  int count = 0;
+
+  while (*string) {
+    if (*string == '\r') {
+      count++;
+      if (*(string + 1) == '\n') { string++; }
+    } else if (*string == '\n') {
+      count++;
+    }
+
+    string++;
+  }
+
+  return count;
 }
 
 char* replace_char(char* string, const char find, const char replace) {
@@ -46,6 +59,9 @@ char* escape_newlines(const char* input) {
     if (*input == '\n') {
       *output++ = '\\';
       *output++ = 'n';
+    } else if (*input == '\r') {
+      *output++ = '\\';
+      *output++ = 'r';
     } else {
       *output++ = *input;
     }

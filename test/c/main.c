@@ -8,6 +8,7 @@ TCase *io_tests(void);
 TCase *json_tests(void);
 TCase *tags_tests(void);
 TCase *token_tests(void);
+TCase *util_tests(void);
 
 Suite *erbx_suite(void) {
   Suite *suite = suite_create("ERBX Suite");
@@ -17,6 +18,7 @@ Suite *erbx_suite(void) {
   suite_add_tcase(suite, erbx_tests());
   suite_add_tcase(suite, io_tests());
   suite_add_tcase(suite, json_tests());
+  suite_add_tcase(suite, util_tests());
   // suite_add_tcase(suite, tags_tests());
   suite_add_tcase(suite, token_tests());
 

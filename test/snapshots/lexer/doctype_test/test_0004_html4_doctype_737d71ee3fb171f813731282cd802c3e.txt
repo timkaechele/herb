@@ -4,7 +4,7 @@
 #<ERBX::Token type="TOKEN_WHITESPACE" value=" " range=[14, 15] start=1:14 end=1:15>
 #<ERBX::Token type="TOKEN_IDENTIFIER" value="PUBLIC" range=[15, 21] start=1:15 end=1:21>
 #<ERBX::Token type="TOKEN_WHITESPACE" value=" " range=[21, 22] start=1:21 end=1:22>
-#<ERBX::Token type="TOKEN_QUOTE" value=""" range=[22, 23] start=1:22 end=1:23>
+#<ERBX::Token type="TOKEN_QUOTE" value="\"" range=[22, 23] start=1:22 end=1:23>
 #<ERBX::Token type="TOKEN_DASH" value="-" range=[23, 24] start=1:23 end=1:24>
 #<ERBX::Token type="TOKEN_SLASH" value="/" range=[24, 25] start=1:24 end=1:25>
 #<ERBX::Token type="TOKEN_SLASH" value="/" range=[25, 26] start=1:25 end=1:26>
@@ -21,9 +21,9 @@
 #<ERBX::Token type="TOKEN_SLASH" value="/" range=[44, 45] start=1:44 end=1:45>
 #<ERBX::Token type="TOKEN_SLASH" value="/" range=[45, 46] start=1:45 end=1:46>
 #<ERBX::Token type="TOKEN_IDENTIFIER" value="EN" range=[46, 48] start=1:46 end=1:48>
-#<ERBX::Token type="TOKEN_QUOTE" value=""" range=[48, 49] start=1:48 end=1:49>
+#<ERBX::Token type="TOKEN_QUOTE" value="\"" range=[48, 49] start=1:48 end=1:49>
 #<ERBX::Token type="TOKEN_WHITESPACE" value=" " range=[49, 50] start=1:49 end=1:50>
-#<ERBX::Token type="TOKEN_QUOTE" value=""" range=[50, 51] start=1:50 end=1:51>
+#<ERBX::Token type="TOKEN_QUOTE" value="\"" range=[50, 51] start=1:50 end=1:51>
 #<ERBX::Token type="TOKEN_IDENTIFIER" value="http:" range=[51, 56] start=1:51 end=1:56>
 #<ERBX::Token type="TOKEN_SLASH" value="/" range=[56, 57] start=1:56 end=1:57>
 #<ERBX::Token type="TOKEN_SLASH" value="/" range=[57, 58] start=1:57 end=1:58>
@@ -40,6 +40,6 @@
 #<ERBX::Token type="TOKEN_IDENTIFIER" value="strict" range=[78, 84] start=1:78 end=1:84>
 #<ERBX::Token type="TOKEN_CHARACTER" value="." range=[84, 85] start=1:84 end=1:85>
 #<ERBX::Token type="TOKEN_IDENTIFIER" value="dtd" range=[85, 88] start=1:85 end=1:88>
-#<ERBX::Token type="TOKEN_QUOTE" value=""" range=[88, 89] start=1:88 end=1:89>
+#<ERBX::Token type="TOKEN_QUOTE" value="\"" range=[88, 89] start=1:88 end=1:89>
 #<ERBX::Token type="TOKEN_HTML_TAG_END" value=">" range=[89, 90] start=1:89 end=1:90>
 #<ERBX::Token type="TOKEN_EOF" value="" range=[90, 90] start=1:90 end=1:90>

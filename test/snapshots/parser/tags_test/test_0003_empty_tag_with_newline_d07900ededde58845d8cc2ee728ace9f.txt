@@ -13,8 +13,7 @@
         ├── tag_name: "span" (location: (1:1)-(1:5))
         ├── body: (1 item)
         │   └── @ HTMLTextNode (location: (1:0)-(2:1))
-        │       └── content: "
-        │       "
+        │       └── content: "\n"
         │
         ├── close_tag:
         │   └── @ HTMLCloseTagNode (location: (2:1)-(2:8))

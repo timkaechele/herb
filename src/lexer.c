@@ -69,6 +69,11 @@ token_T* lexer_error(const lexer_T* lexer, const char* message) {
 }
 
 static void lexer_handle_newline(lexer_T* lexer) {
+  if (lexer->current_character == '\r' && lexer_peek(lexer, 1) == '\n') {
+    lexer->current_column = 1;
+    return;
+  }
+
   if (is_newline(lexer->current_character)) {
     lexer->current_line++;
     lexer->current_column = 1;
@@ -215,8 +220,14 @@ token_T* lexer_next_token(lexer_T* lexer) {
   if (lexer->state == STATE_ERB_CONTENT) { return lexer_parse_erb_content(lexer); }
   if (lexer->state == STATE_ERB_CLOSE) { return lexer_parse_erb_close(lexer); }
 
+  if (lexer->current_character == '\r' && lexer_peek(lexer, 1) == '\n') {
+    return lexer_advance_with_next(lexer, 2, TOKEN_NEWLINE);
+  }
   if (lexer->current_character == '\n') { return lexer_advance_current(lexer, TOKEN_NEWLINE); }
+  if (lexer->current_character == '\r') { return lexer_advance_current(lexer, TOKEN_NEWLINE); }
+
   if (isspace(lexer->current_character)) { return lexer_parse_whitespace(lexer); }
+
   if (lexer->current_character == '\xC2' && lexer_peek(lexer, 1) == '\xA0') {
     return lexer_advance_with(lexer, "\xC2\xA0", TOKEN_NBSP);
   }

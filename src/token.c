@@ -25,11 +25,21 @@ token_T* token_init(const char* value, const token_type_T type, const lexer_T* l
   token->type = type;
   token->range = range_init(lexer->current_position - strlen(value), lexer->current_position);
 
-  const size_t start_line = lexer->current_line - count_newlines(value);
-  const size_t start_column = lexer->current_column - strlen(value); // TODO: fix start_column calculation if
-                                                                     // value contains newlines
-  const size_t end_line = lexer->current_line;
-  const size_t end_column = lexer->current_column;
+  size_t newlines = count_newlines(value);
+  size_t start_line = lexer->current_line - newlines;
+  size_t last_newline_position = 0;
+
+  if (newlines > 0) {
+    const char* last_newline = strrchr(value, '\n');
+    if (!last_newline) { last_newline = strrchr(value, '\r'); }
+    if (last_newline) { last_newline_position = strlen(last_newline + 1); }
+  } else {
+    last_newline_position = strlen(value);
+  }
+
+  size_t start_column = (newlines > 0) ? last_newline_position : (lexer->current_column - strlen(value));
+  size_t end_line = lexer->current_line;
+  size_t end_column = lexer->current_column;
 
   token->start = location_init(start_line, start_column);
   token->end = location_init(end_line, end_column);

@@ -31,7 +31,7 @@ module ERBX
         <%- name = "#{symbol} #{field.name}: " -%>
         <%- case field -%>
         <%- when ERBX::Template::StringField -%>
-        output += %(<%= name %>"#{<%= field.name %>}"\n)
+        output += %(<%= name %>#{<%= field.name %>.inspect}\n)
         <%- when ERBX::Template::TokenField -%>
         output += "<%= name %>"
         output += <%= field.name %> ? <%= field.name %>.tree_inspect : "∅"

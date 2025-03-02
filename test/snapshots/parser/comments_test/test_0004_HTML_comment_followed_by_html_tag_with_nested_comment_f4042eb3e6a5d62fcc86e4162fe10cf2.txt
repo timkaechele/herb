@@ -1,8 +1,7 @@
 @ DocumentNode (location: (1:0)-(4:7))
 └── children: (5 items)
     ├── @ HTMLTextNode (location: (1:0)-(2:9))
-    │   └── content: "
-    │           "
+    │   └── content: "\n        "
     │
     ├── @ HTMLCommentNode (location: (2:9)-(2:27))
     │   ├── comment_start: "<!--" (location: (2:9)-(2:13))
@@ -13,8 +12,7 @@
     │   └── comment_end: "-->" (location: (2:24)-(2:27))
     │
     ├── @ HTMLTextNode (location: (2:0)-(3:9))
-    │   └── content: "
-    │           "
+    │   └── content: "\n        "
     │
     ├── @ HTMLElementNode (location: (3:9)-(3:38))
     │   ├── open_tag:
@@ -45,5 +43,4 @@
     │   └── is_void: false
     │
     └── @ HTMLTextNode (location: (3:0)-(4:7))
-        └── content: "
-              "
+        └── content: "\n      "
