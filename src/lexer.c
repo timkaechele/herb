@@ -6,16 +6,31 @@
 #include <ctype.h>
 #include <string.h>
 
+#define LEXER_STALL_LIMIT 5
+
 static size_t lexer_sizeof(void) {
   return sizeof(struct LEXER_STRUCT);
 }
 
 static bool lexer_eof(const lexer_T* lexer) {
-  return lexer->current_character == '\0';
+  return lexer->current_character == '\0' || lexer->stalled;
 }
 
 static bool lexer_has_more_characters(const lexer_T* lexer) {
   return lexer->current_position < lexer->source_length;
+}
+
+static bool lexer_stalled(lexer_T* lexer) {
+  if (lexer->last_position == lexer->current_position) {
+    lexer->stall_counter++;
+
+    if (lexer->stall_counter > LEXER_STALL_LIMIT) { lexer->stalled = true; }
+  } else {
+    lexer->stall_counter = 0;
+    lexer->last_position = lexer->current_position;
+  }
+
+  return lexer->stalled;
 }
 
 lexer_T* lexer_init(const char* source) {
@@ -30,6 +45,9 @@ lexer_T* lexer_init(const char* source) {
   lexer->current_line = 1;
   lexer->current_column = 0;
   lexer->current_character = source[0];
+  lexer->stall_counter = 0;
+  lexer->last_position = 0;
+  lexer->stalled = false;
 
   return lexer;
 }
@@ -192,6 +210,7 @@ static token_T* lexer_parse_erb_close(lexer_T* lexer) {
 
 token_T* lexer_next_token(lexer_T* lexer) {
   if (lexer_eof(lexer)) { return token_init("", TOKEN_EOF, lexer); }
+  if (lexer_stalled(lexer)) { return lexer_error(lexer, "Lexer stalled after 5 iterations"); }
 
   if (lexer->state == STATE_ERB_CONTENT) { return lexer_parse_erb_content(lexer); }
   if (lexer->state == STATE_ERB_CLOSE) { return lexer_parse_erb_close(lexer); }
