@@ -47,6 +47,7 @@ Metrics/MethodLength:
 
 Metrics/AbcSize:
   Exclude:
+    - Rakefile
     - test/fork_helper.rb
     - test/snapshot_utils.rb
     - templates/template.rb
