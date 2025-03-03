@@ -245,11 +245,11 @@ module ERBX
     end
 
     def self.nodes
-      @nodes ||= config.fetch("nodes", []).map { |node| NodeType.new(node) }
+      config.fetch("nodes", []).map { |node| NodeType.new(node) }
     end
 
     def self.config
-      @config ||= YAML.load_file("config.yml")
+      YAML.load_file("config.yml")
     end
   end
 end
