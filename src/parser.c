@@ -55,6 +55,18 @@ static AST_UNEXPECTED_TOKEN_NODE_T* parser_init_unexpected_token(parser_T* parse
   }
 }
 
+static void parser_append_literal_node_from_buffer(
+  const parser_T* parser, buffer_T* buffer, array_T* children, location_T* start_location
+) {
+  if (buffer_length(buffer) == 0) { return; }
+
+  AST_LITERAL_NODE_T* literal =
+    ast_literal_node_init(buffer_value(buffer), start_location, parser->current_token->start, NULL);
+
+  if (children != NULL) { array_append(children, literal); }
+  buffer_clear(buffer);
+}
+
 static token_T* parser_advance(parser_T* parser) {
   token_T* token = parser->current_token;
   parser->current_token = lexer_next_token(parser->lexer);
@@ -101,12 +113,7 @@ static AST_HTML_COMMENT_NODE_T* parser_parse_html_comment(parser_T* parser) {
 
   while (token_is_none_of(parser, TOKEN_HTML_COMMENT_END, TOKEN_EOF)) {
     if (token_is(parser, TOKEN_ERB_START)) {
-      if (buffer_length(&comment) > 0) {
-        AST_LITERAL_NODE_T* literal =
-          ast_literal_node_init(buffer_value(&comment), start_location, parser->current_token->start, NULL);
-        array_append(children, literal);
-        buffer_clear(&comment);
-      }
+      parser_append_literal_node_from_buffer(parser, &comment, children, start_location);
 
       AST_ERB_CONTENT_NODE_T* erb_node = parser_parse_erb_tag(parser);
       array_append(children, erb_node);
@@ -122,11 +129,7 @@ static AST_HTML_COMMENT_NODE_T* parser_parse_html_comment(parser_T* parser) {
     token_free(token);
   }
 
-  if (buffer_length(&comment) > 0) {
-    AST_LITERAL_NODE_T* literal =
-      ast_literal_node_init(buffer_value(&comment), start_location, parser->current_token->start, NULL);
-    array_append(children, literal);
-  }
+  parser_append_literal_node_from_buffer(parser, &comment, children, start_location);
 
   token_T* comment_end = parser_consume_expected(parser, TOKEN_HTML_COMMENT_END, errors);
 
@@ -152,13 +155,7 @@ static AST_HTML_DOCTYPE_NODE_T* parser_parse_html_doctype(parser_T* parser) {
 
   while (token_is_none_of(parser, TOKEN_HTML_TAG_END, TOKEN_EOF)) {
     if (token_is(parser, TOKEN_ERB_START)) {
-      if (buffer_length(&content) > 0) {
-        array_append(
-          children,
-          ast_literal_node_init(buffer_value(&content), start_location, parser->current_token->start, NULL)
-        );
-        buffer_clear(&content);
-      }
+      parser_append_literal_node_from_buffer(parser, &content, children, start_location);
 
       AST_ERB_CONTENT_NODE_T* erb_node = parser_parse_erb_tag(parser);
       array_append(children, erb_node);
@@ -171,11 +168,7 @@ static AST_HTML_DOCTYPE_NODE_T* parser_parse_html_doctype(parser_T* parser) {
     token_free(token);
   }
 
-  if (buffer_length(&content) > 0) {
-    AST_LITERAL_NODE_T* literal =
-      ast_literal_node_init(buffer_value(&content), start_location, parser->current_token->start, NULL);
-    array_append(children, literal);
-  }
+  parser_append_literal_node_from_buffer(parser, &content, children, start_location);
 
   token_T* tag_closing = parser_consume_expected(parser, TOKEN_HTML_TAG_END, errors);
 
@@ -281,13 +274,7 @@ static AST_HTML_ATTRIBUTE_VALUE_NODE_T* parser_parse_html_attribute_value(parser
       while (token_is_none_of(parser, TOKEN_QUOTE, TOKEN_EOF)) {
         switch (parser->current_token->type) {
           case TOKEN_ERB_START: {
-            if (buffer_length(&buffer) > 0) {
-              AST_LITERAL_NODE_T* literal =
-                ast_literal_node_init(buffer_value(&buffer), start_location, parser->current_token->start, NULL);
-
-              buffer_clear(&buffer);
-              array_append(children, literal);
-            }
+            parser_append_literal_node_from_buffer(parser, &buffer, children, start_location);
 
             array_append(children, parser_parse_erb_tag(parser));
 
@@ -303,12 +290,7 @@ static AST_HTML_ATTRIBUTE_VALUE_NODE_T* parser_parse_html_attribute_value(parser
         }
       }
 
-      if (buffer_length(&buffer) > 0) {
-        AST_LITERAL_NODE_T* literal =
-          ast_literal_node_init(buffer_value(&buffer), start_location, parser->current_token->start, NULL);
-        array_append(children, literal);
-      }
-
+      parser_append_literal_node_from_buffer(parser, &buffer, children, start_location);
       buffer_free(&buffer);
 
       close_quote = parser_consume_expected(parser, TOKEN_QUOTE, errors);
