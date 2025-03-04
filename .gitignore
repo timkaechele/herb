@@ -73,6 +73,7 @@ tmp/*
 !/.bundle/config
 
 # Bundler
+vendor/*
 vendor/bundle/*
 vendor/cache/*
 
