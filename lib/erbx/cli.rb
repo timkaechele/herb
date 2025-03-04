@@ -28,6 +28,32 @@ class ERBX::CLI
     end
   end
 
+  def directory
+    unless @file
+      puts "No directory provided."
+      puts
+      puts "Usage:"
+      puts "  bundle exec erbx #{@command} [directory] [options]"
+      puts
+      puts "Tip: Use `.` for the current directory"
+      puts "  bundle exec erbx #{@command} . [options]"
+
+      exit(1)
+    end
+
+    unless File.exist?(@file)
+      puts "Not a directory: '#{@file}'."
+      puts
+    end
+
+    unless File.directory?(@file)
+      puts "Not a directory: '#{@file}'."
+      puts
+    end
+
+    @file
+  end
+
   def file_content
     if @file && File.exist?(@file)
       File.read(@file)
@@ -37,7 +63,8 @@ class ERBX::CLI
     else
       puts "No file provided."
       puts
-      puts "Usage: bundle exec erbx #{@command} [file] [options]"
+      puts "Usage:"
+      puts "  bundle exec erbx #{@command} [file] [options]"
       exit(1)
     end
   end
@@ -76,7 +103,7 @@ class ERBX::CLI
   def result
     @result ||= case @command
                 when "analyze"
-                  ERBX::Project.new(@file).parse!
+                  ERBX::Project.new(directory).parse!
                   exit(0)
                 when "parse"
                   ERBX.parse(file_content)
