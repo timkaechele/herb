@@ -32,6 +32,8 @@ Gem::Specification.new do |spec|
     "exe/*"
   ]
 
+  spec.bindir = "exe"
+  spec.executables = spec.files.grep(%r{\Aexe/}) { |f| File.basename(f) }
   spec.extensions = ["ext/erbx/extconf.rb"]
 
   spec.metadata["allowed_push_host"] = "https://rubygems.org"
