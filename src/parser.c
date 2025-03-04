@@ -477,6 +477,24 @@ static AST_HTML_CLOSE_TAG_NODE_T* parser_parse_html_close_tag(parser_T* parser) 
   token_T* tag_name = parser_consume_expected(parser, TOKEN_IDENTIFIER, errors);
   token_T* tag_closing = parser_consume_expected(parser, TOKEN_HTML_TAG_END, errors);
 
+  if (tag_name != NULL && is_void_element(tag_name->value)) {
+    char* expected = html_self_closing_tag_string(tag_name->value);
+    char* actual = html_closing_tag_string(tag_name->value);
+
+    AST_UNEXPECTED_TOKEN_NODE_T* unexpected_token_node = ast_unexpected_token_node_init_from_raw_message(
+      tag_opening->start,
+      tag_closing->end,
+      "element is a void element and shouldn't be closed as a closing tag",
+      expected,
+      actual
+    );
+
+    free(expected);
+    free(actual);
+
+    array_append(errors, unexpected_token_node);
+  }
+
   AST_HTML_CLOSE_TAG_NODE_T* close_tag =
     ast_html_close_tag_node_init(tag_opening, tag_name, tag_closing, tag_opening->start, tag_closing->end, errors);
 

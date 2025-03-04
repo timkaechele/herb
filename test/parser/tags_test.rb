@@ -57,5 +57,9 @@ module Parser
     test "link tag" do
       assert_parsed_snapshot(%(<link href="https://mywebsite.com/style.css" rel="stylesheet">))
     end
+
+    test "element has a self-closing tag for a void element at the position where closing tag of parent is expected" do
+      assert_parsed_snapshot(%(<div></br></div>))
+    end
   end
 end

@@ -3,6 +3,7 @@
 #include <ctype.h>
 #include <stdbool.h>
 #include <stddef.h>
+#include <stdlib.h>
 #include <strings.h>
 
 // https://developer.mozilla.org/en-US/docs/Glossary/Void_element
@@ -18,4 +19,71 @@ bool is_void_element(const char* tag_name) {
   }
 
   return false;
+}
+
+/**
+ * @brief Creates a closing HTML tag string like "</tag_name>"
+ *
+ * @param tag_name The name of the HTML tag to be enclosed in a closing tag
+ * @return A newly allocated string containing the closing tag, or NULL if memory allocation fails
+ * @note The caller is responsible for freeing the returned string
+ *
+ * Example:
+ * @code
+ * char* tag = html_closing_tag_string("div");
+ * if (tag) {
+ *   printf("%s\n", tag); // Prints: </div>
+ *   free(tag);
+ * }
+ * @endcode
+ */
+char* html_closing_tag_string(const char* tag_name) {
+  size_t length = strlen(tag_name);
+  char* result = (char*) malloc(length + 4); // +4 for '<', '/', '>', and '\0'
+
+  if (result == NULL) { return NULL; }
+
+  result[0] = '<';
+  result[1] = '/';
+
+  memcpy(result + 2, tag_name, length);
+
+  result[length + 2] = '>';
+  result[length + 3] = '\0';
+
+  return result;
+}
+
+/**
+ * @brief Creates a self-closing HTML tag string like "<tag_name />"
+ *
+ * @param tag_name The name of the HTML tag to be enclosed in a self-closing tag
+ * @return A newly allocated string containing the self-closing tag, or NULL if memory allocation fails
+ * @note The caller is responsible for freeing the returned string
+ *
+ * Example:
+ * @code
+ * char* tag = html_self_closing_tag_string("br");
+ * if (tag) {
+ *     printf("%s\n", tag); // Prints: <br />
+ *     free(tag);
+ * }
+ * @endcode
+ */
+char* html_self_closing_tag_string(const char* tag_name) {
+  size_t length = strlen(tag_name);
+  char* result = (char*) malloc(length + 5); // +5 for '<', ' ', '/', '>', and '\0'
+
+  if (result == NULL) { return NULL; }
+
+  result[0] = '<';
+
+  memcpy(result + 1, tag_name, length);
+
+  result[length + 1] = ' ';
+  result[length + 2] = '/';
+  result[length + 3] = '>';
+  result[length + 4] = '\0';
+
+  return result;
 }
