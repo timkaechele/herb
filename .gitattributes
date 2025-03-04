@@ -1,0 +1,3 @@
+templates/**/*.c.erb linguist-language=C
+templates/**/*.h.erb linguist-language=C
+templates/**/*.rb.erb linguist-language=Ruby
