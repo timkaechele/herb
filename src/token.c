@@ -78,6 +78,8 @@ const char* token_type_to_string(const token_type_T type) {
     case TOKEN_ERROR: return "TOKEN_ERROR";
     case TOKEN_EOF: return "TOKEN_EOF";
   }
+
+  return "Unkown token_type_T";
 }
 
 char* token_to_string(const token_T* token) {

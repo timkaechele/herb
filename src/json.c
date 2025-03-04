@@ -28,7 +28,7 @@ void json_int_to_string(const int value, char* buffer) {
   int i = 0;
 
   // Handle negative numbers
-  unsigned int abs_value = (value < 0) ? -(unsigned int) value : value;
+  unsigned int abs_value = (unsigned int) abs(value);
 
   do {
     string[i++] = (char) ((abs_value % 10) + '0');

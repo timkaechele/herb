@@ -43,6 +43,8 @@ const char* ast_node_type_to_string(AST_NODE_T* node) {
     case <%= node.type %>: return "<%= node.type %>";
     <%- end -%>
   }
+
+  return "Unknown ast_node_type_T";
 }
 
 const char* ast_node_human_type(AST_NODE_T* node) {
@@ -51,6 +53,8 @@ const char* ast_node_human_type(AST_NODE_T* node) {
     case <%= node.type %>: return "<%= node.name %>";
     <%- end -%>
   }
+
+  return "Unknown ast_node_type_T";
 }
 
 void ast_free_base_node(AST_NODE_T* node) {

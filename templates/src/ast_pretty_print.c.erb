@@ -256,8 +256,8 @@ void ast_pretty_print_node(AST_NODE_T* node, const size_t indent, const size_t r
       const AST_HTML_TEXT_NODE_T* text_node = (AST_HTML_TEXT_NODE_T*) node;
 
       const char* value = "∅";
-      char* escaped;
-      char* quoted;
+      char* escaped = NULL;
+      char* quoted = NULL;
 
       if (text_node->content != NULL) {
         escaped = escape_newlines(text_node->content);
@@ -268,8 +268,8 @@ void ast_pretty_print_node(AST_NODE_T* node, const size_t indent, const size_t r
       ast_pretty_print_property("content", value, indent, relative_indent, true, buffer);
 
       if (text_node->content != NULL) {
-        free(escaped);
-        free(quoted);
+        if (escaped != NULL) { free(escaped); }
+        if (quoted != NULL) { free(quoted); }
       }
 
     } break;

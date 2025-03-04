@@ -68,6 +68,8 @@ VALUE rb_node_from_c_struct(AST_NODE_T* node) {
     case <%= node.type %>: return rb_<%= node.human %>_from_c_struct((<%= node.struct_type %>*) node); break;
   <%- end -%>
   }
+
+  return Qnil;
 }
 
 static VALUE rb_array_from_c_array(array_T* array) {
