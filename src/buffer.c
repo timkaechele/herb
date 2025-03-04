@@ -43,6 +43,16 @@ size_t buffer_sizeof(void) {
   return sizeof(buffer_T);
 }
 
+/**
+ * Increases the capacity of the buffer if needed to accommodate additional content.
+ * This function only handles memory allocation and does not modify the buffer content
+ * or null termination.
+ *
+ * @param buffer The buffer to increase capacity for
+ * @param required_length The additional length needed beyond current buffer length
+ * @return true if capacity is sufficient (either already or after reallocation),
+ *         false if reallocation failed
+ */
 bool buffer_increase_capacity(buffer_T* buffer, const size_t required_length) {
   const size_t required_capacity = buffer->length + required_length;
 
@@ -59,6 +69,16 @@ bool buffer_increase_capacity(buffer_T* buffer, const size_t required_length) {
   return true;
 }
 
+/**
+ * Appends a null-terminated string to the buffer.
+ * @note This function requires that 'text' is a properly null-terminated string.
+ * When reading data from files or other non-string sources, ensure the data is
+ * null-terminated before calling this function, or use buffer_append_with_length instead.
+ *
+ * @param buffer The buffer to append to
+ * @param text A null-terminated string to append
+ * @return void
+ */
 void buffer_append(buffer_T* buffer, const char* text) {
   if (!buffer || !text) { return; }
   if (text[0] == '\0') { return; }
@@ -69,6 +89,28 @@ void buffer_append(buffer_T* buffer, const char* text) {
 
   memcpy(buffer->value + buffer->length, text, text_length);
   buffer->length += text_length;
+  buffer->value[buffer->length] = '\0';
+}
+
+/**
+ * Appends a string of specified length to the buffer.
+ * Unlike buffer_append(), this function does not require the text to be
+ * null-terminated as it uses the provided length instead of strlen().
+ * This is particularly useful when working with data from files, network
+ * buffers, or other non-null-terminated sources.
+ *
+ * @param buffer The buffer to append to
+ * @param text The text to append (doesn't need to be null-terminated)
+ * @param length The number of bytes to append from text
+ * @return void
+ */
+void buffer_append_with_length(buffer_T* buffer, const char* text, const size_t length) {
+  if (!buffer || !text || length == 0) { return; }
+  if (!buffer_increase_capacity(buffer, length)) { return; }
+
+  memcpy(buffer->value + buffer->length, text, length);
+
+  buffer->length += length;
   buffer->value[buffer->length] = '\0';
 }
 

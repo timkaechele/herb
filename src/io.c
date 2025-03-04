@@ -21,7 +21,7 @@ char* erbx_read_file(const char* filename) {
   size_t bytes_read;
 
   while ((bytes_read = fread(chunk, 1, FILE_READ_CHUNK, fp)) > 0) {
-    buffer_append(&buffer, chunk);
+    buffer_append_with_length(&buffer, chunk, bytes_read);
   }
 
   fclose(fp);

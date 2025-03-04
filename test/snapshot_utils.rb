@@ -14,6 +14,12 @@ module SnapshotUtils
     expected = result.value.inspect
 
     assert_snapshot_matches(expected, source)
+
+    assert_equal "TOKEN_EOF", result.value.last.type
+    assert_equal source.to_s.bytesize, result.value.last.range.start_position
+    assert_equal source.to_s.bytesize, result.value.last.range.end_position
+
+    result
   end
 
   def assert_parsed_snapshot(source)
@@ -21,6 +27,8 @@ module SnapshotUtils
     expected = result.value.inspect
 
     assert_snapshot_matches(expected, source)
+
+    result
   end
 
   def snapshot_changed?(content, source)

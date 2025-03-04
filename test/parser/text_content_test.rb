@@ -25,5 +25,21 @@ module Parser
     test "text content with tag around" do
       assert_parsed_snapshot("Hello<span></span>World")
     end
+
+    test "text content that exceeds initial buffer_T size (ca. 4K)" do
+      initial_buffer_capacity = 1024 # bytes
+      content = cyclic_string((((initial_buffer_capacity * 2) + 1) * 2) + 1)
+      result = assert_parsed_snapshot(%(<div>#{content}</div>))
+
+      assert_equal content, result.value.children.first.body.first.content
+    end
+
+    test "text content that exceeds initial buffer_T size (ca. 8K)" do
+      initial_buffer_capacity = 1024 # bytes
+      content = cyclic_string((((((initial_buffer_capacity * 2) + 1) * 2) + 1) * 2) + 1)
+      result = assert_parsed_snapshot(%(<div>#{content}</div>))
+
+      assert_equal content, result.value.children.first.body.first.content
+    end
   end
 end
