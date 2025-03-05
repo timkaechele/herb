@@ -274,7 +274,7 @@ module ERBX
     end
 
     def self.nodes
-      config.fetch("nodes", []).map { |node| NodeType.new(node) }
+      (config.dig("nodes", "types") || []).map { |node| NodeType.new(node) }
     end
 
     def self.config
