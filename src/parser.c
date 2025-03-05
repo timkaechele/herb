@@ -31,12 +31,12 @@ parser_T* parser_init(lexer_T* lexer) {
   return parser;
 }
 
-static void parser_push_open_tag(parser_T* parser, token_T* tag_name) {
+static void parser_push_open_tag(const parser_T* parser, token_T* tag_name) {
   token_T* copy = token_copy(tag_name);
   array_push(parser->open_tags_stack, copy);
 }
 
-static bool parser_check_matching_tag(parser_T* parser, const char* tag_name) {
+static bool parser_check_matching_tag(const parser_T* parser, const char* tag_name) {
   if (array_size(parser->open_tags_stack) == 0) { return false; }
 
   token_T* top_token = array_last(parser->open_tags_stack);
@@ -45,7 +45,7 @@ static bool parser_check_matching_tag(parser_T* parser, const char* tag_name) {
   return (strcasecmp(top_token->value, tag_name) == 0);
 }
 
-static token_T* parser_pop_open_tag(parser_T* parser) {
+static token_T* parser_pop_open_tag(const parser_T* parser) {
   if (array_size(parser->open_tags_stack) == 0) { return NULL; }
 
   return array_pop(parser->open_tags_stack);
@@ -735,7 +735,7 @@ static void parser_parse_in_data_state(parser_T* parser, array_T* children, arra
   }
 }
 
-static void parser_parse_unclosed_html_tags(parser_T* parser, array_T* errors) {
+static void parser_parse_unclosed_html_tags(const parser_T* parser, array_T* errors) {
   while (array_size(parser->open_tags_stack) > 0) {
     token_T* unclosed_token = parser_pop_open_tag(parser);
 
