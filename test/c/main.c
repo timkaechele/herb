@@ -4,6 +4,7 @@
 TCase *array_tests(void);
 TCase *buffer_tests(void);
 TCase *erbx_tests(void);
+TCase *html_util_tests(void);
 TCase *io_tests(void);
 TCase *json_tests(void);
 TCase *tags_tests(void);
@@ -16,6 +17,7 @@ Suite *erbx_suite(void) {
   suite_add_tcase(suite, array_tests());
   suite_add_tcase(suite, buffer_tests());
   suite_add_tcase(suite, erbx_tests());
+  suite_add_tcase(suite, html_util_tests());
   suite_add_tcase(suite, io_tests());
   suite_add_tcase(suite, json_tests());
   suite_add_tcase(suite, util_tests());
