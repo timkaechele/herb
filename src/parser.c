@@ -7,7 +7,6 @@
 #include "include/lexer.h"
 #include "include/token.h"
 #include "include/token_matchers.h"
-#include "include/util.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -27,8 +26,29 @@ parser_T* parser_init(lexer_T* lexer) {
 
   parser->lexer = lexer;
   parser->current_token = lexer_next_token(lexer);
+  parser->open_tags_stack = array_init(16);
 
   return parser;
+}
+
+static void parser_push_open_tag(parser_T* parser, token_T* tag_name) {
+  token_T* copy = token_copy(tag_name);
+  array_push(parser->open_tags_stack, copy);
+}
+
+static bool parser_check_matching_tag(parser_T* parser, const char* tag_name) {
+  if (array_size(parser->open_tags_stack) == 0) { return false; }
+
+  token_T* top_token = array_last(parser->open_tags_stack);
+  if (top_token == NULL || top_token->value == NULL) { return false; };
+
+  return (strcasecmp(top_token->value, tag_name) == 0);
+}
+
+static token_T* parser_pop_open_tag(parser_T* parser) {
+  if (array_size(parser->open_tags_stack) == 0) { return NULL; }
+
+  return array_pop(parser->open_tags_stack);
 }
 
 static AST_UNEXPECTED_TOKEN_NODE_T* parser_init_unexpected_token(parser_T* parser) {
@@ -104,7 +124,7 @@ static token_T* parser_consume_expected(parser_T* parser, const token_type_T typ
 }
 
 static AST_HTML_COMMENT_NODE_T* parser_parse_html_comment(parser_T* parser) {
-  array_T* errors = array_init(1);
+  array_T* errors = array_init(8);
   array_T* children = array_init(8);
   token_T* comment_start = parser_consume_expected(parser, TOKEN_HTML_COMMENT_START, errors);
   location_T* start_location = location_copy(parser->current_token->start);
@@ -145,7 +165,7 @@ static AST_HTML_COMMENT_NODE_T* parser_parse_html_comment(parser_T* parser) {
 }
 
 static AST_HTML_DOCTYPE_NODE_T* parser_parse_html_doctype(parser_T* parser) {
-  array_T* errors = array_init(1);
+  array_T* errors = array_init(8);
   array_T* children = array_init(8);
   buffer_T content = buffer_new();
 
@@ -186,7 +206,7 @@ static AST_HTML_DOCTYPE_NODE_T* parser_parse_html_doctype(parser_T* parser) {
 static AST_HTML_TEXT_NODE_T* parser_parse_text_content(parser_T* parser) {
   location_T* start_location = location_copy(parser->current_token->start);
 
-  array_T* errors = array_init(1);
+  array_T* errors = array_init(8);
   buffer_T content = buffer_new();
 
   while (token_is_none_of(
@@ -235,7 +255,7 @@ static AST_HTML_TEXT_NODE_T* parser_parse_text_content(parser_T* parser) {
 }
 
 static AST_HTML_ATTRIBUTE_NAME_NODE_T* parser_parse_html_attribute_name(parser_T* parser) {
-  array_T* errors = array_init(1);
+  array_T* errors = array_init(8);
   token_T* identifier = parser_consume_if_present(parser, TOKEN_IDENTIFIER);
 
   if (identifier == NULL) {
@@ -310,7 +330,7 @@ static AST_HTML_ATTRIBUTE_VALUE_NODE_T* parser_parse_quoted_html_attribute_value
 
 static AST_HTML_ATTRIBUTE_VALUE_NODE_T* parser_parse_html_attribute_value(parser_T* parser) {
   array_T* children = array_init(8);
-  array_T* errors = array_init(1);
+  array_T* errors = array_init(8);
 
   // <div id=<%= "home" %>>
   if (token_is(parser, TOKEN_ERB_START)) {
@@ -400,8 +420,70 @@ static AST_HTML_ATTRIBUTE_NODE_T* parser_parse_html_attribute(parser_T* parser) 
   );
 }
 
+static AST_HTML_ELEMENT_NODE_T* parser_handle_missing_close_tag(
+  AST_HTML_OPEN_TAG_NODE_T* open_tag, array_T* body, array_T* errors
+) {
+  char* expected = html_closing_tag_string(open_tag->tag_name->value);
+  AST_UNEXPECTED_TOKEN_NODE_T* unexpected_token_node = ast_unexpected_token_node_init_from_raw_message(
+    open_tag->base.start,
+    open_tag->base.end,
+    "expected element to have a close tag",
+    expected,
+    ""
+  );
+  free(expected);
+  array_append(errors, unexpected_token_node);
+
+  return ast_html_element_node_init(
+    open_tag,
+    open_tag->tag_name,
+    body,
+    NULL,
+    false,
+    open_tag->base.start,
+    open_tag->base.end,
+    errors
+  );
+}
+
+static void parser_handle_mismatched_tags(
+  const parser_T* parser, const AST_HTML_CLOSE_TAG_NODE_T* close_tag, array_T* errors
+) {
+  if (array_size(parser->open_tags_stack) > 0) {
+    token_T* expected_token = array_last(parser->open_tags_stack);
+    char error_message[256];
+    snprintf(
+      error_message,
+      sizeof(error_message),
+      "mismatched closing tag, expected closing tag for '%s' (opened at %zu:%zu)",
+      expected_token->value,
+      expected_token->start->line,
+      expected_token->start->column
+    );
+    AST_UNEXPECTED_TOKEN_NODE_T* unexpected_token_node = ast_unexpected_token_node_init_from_raw_message(
+      close_tag->base.start,
+      close_tag->base.end,
+      error_message,
+      expected_token->value,
+      close_tag->tag_name->value
+    );
+    array_append(errors, unexpected_token_node);
+  } else {
+    char* expected = html_opening_tag_string(close_tag->tag_name->value);
+    AST_UNEXPECTED_TOKEN_NODE_T* unexpected_token_node = ast_unexpected_token_node_init_from_raw_message(
+      close_tag->base.start,
+      close_tag->base.end,
+      "closing tag with no matching open tag",
+      expected,
+      ""
+    );
+    free(expected);
+    array_append(errors, unexpected_token_node);
+  }
+}
+
 static AST_HTML_OPEN_TAG_NODE_T* parser_parse_html_open_tag(parser_T* parser) {
-  array_T* errors = array_init(1);
+  array_T* errors = array_init(8);
   array_T* children = array_init(8);
   array_T* attributes = array_init(8);
 
@@ -471,7 +553,7 @@ static AST_HTML_OPEN_TAG_NODE_T* parser_parse_html_open_tag(parser_T* parser) {
 }
 
 static AST_HTML_CLOSE_TAG_NODE_T* parser_parse_html_close_tag(parser_T* parser) {
-  array_T* errors = array_init(1);
+  array_T* errors = array_init(8);
 
   token_T* tag_opening = parser_consume_expected(parser, TOKEN_HTML_TAG_START_CLOSE, errors);
   token_T* tag_name = parser_consume_expected(parser, TOKEN_IDENTIFIER, errors);
@@ -484,7 +566,7 @@ static AST_HTML_CLOSE_TAG_NODE_T* parser_parse_html_close_tag(parser_T* parser) 
     AST_UNEXPECTED_TOKEN_NODE_T* unexpected_token_node = ast_unexpected_token_node_init_from_raw_message(
       tag_opening->start,
       tag_closing->end,
-      "element is a void element and shouldn't be closed as a closing tag",
+      "Void elements shouldn't be used as closing tags.",
       expected,
       actual
     );
@@ -505,57 +587,89 @@ static AST_HTML_CLOSE_TAG_NODE_T* parser_parse_html_close_tag(parser_T* parser) 
   return close_tag;
 }
 
+// TODO: this should probably be AST_HTML_ELEMENT_NODE_T with a AST_HTML_SELF_CLOSING_TAG_NODE_T
+static AST_HTML_ELEMENT_NODE_T* parser_parse_html_self_closing_element(
+  parser_T* parser, AST_HTML_OPEN_TAG_NODE_T* open_tag
+) {
+  if (open_tag->base.type != AST_HTML_SELF_CLOSE_TAG_NODE) {
+    if (!is_void_element(open_tag->tag_name->value)) { return NULL; }
+  }
+
+  return ast_html_element_node_init(
+    open_tag,
+    open_tag->tag_name,
+    NULL,
+    NULL,
+    true,
+    open_tag->base.start,
+    open_tag->base.end,
+    NULL
+  );
+}
+
+static AST_HTML_ELEMENT_NODE_T* parser_parse_html_regular_element(
+  parser_T* parser, AST_HTML_OPEN_TAG_NODE_T* open_tag
+) {
+  if (open_tag->base.type != AST_HTML_OPEN_TAG_NODE) { return NULL; }
+
+  array_T* errors = array_init(8);
+  array_T* body = array_init(8);
+
+  parser_push_open_tag(parser, open_tag->tag_name);
+
+  parser_parse_in_data_state(parser, body, errors);
+
+  if (!token_is(parser, TOKEN_HTML_TAG_START_CLOSE)) { return parser_handle_missing_close_tag(open_tag, body, errors); }
+
+  AST_HTML_CLOSE_TAG_NODE_T* close_tag = parser_parse_html_close_tag(parser);
+
+  if (is_void_element(close_tag->tag_name->value)) {
+    array_push(body, close_tag);
+    parser_parse_in_data_state(parser, body, errors);
+    close_tag = parser_parse_html_close_tag(parser);
+  }
+
+  bool matches_stack = parser_check_matching_tag(parser, close_tag->tag_name->value);
+
+  if (matches_stack) {
+    token_T* popped_token = parser_pop_open_tag(parser);
+    token_free(popped_token);
+  } else {
+    parser_handle_mismatched_tags(parser, close_tag, errors);
+  }
+
+  return ast_html_element_node_init(
+    open_tag,
+    open_tag->tag_name,
+    body,
+    close_tag,
+    false,
+    open_tag->base.start,
+    close_tag->base.end,
+    errors
+  );
+}
+
 static AST_HTML_ELEMENT_NODE_T* parser_parse_html_element(parser_T* parser) {
-  array_T* errors = array_init(1);
   AST_HTML_OPEN_TAG_NODE_T* open_tag = parser_parse_html_open_tag(parser);
 
-  // TODO: attach information if the open tag should have a close tag based on the is_void_element value.
-  // open_tag->should_have_close_tag = is_void_element(open_tag->name);
+  AST_HTML_ELEMENT_NODE_T* self_closing_element = parser_parse_html_self_closing_element(parser, open_tag);
+  if (self_closing_element != NULL) { return self_closing_element; }
 
-  if (open_tag->base.type == AST_HTML_SELF_CLOSE_TAG_NODE || is_void_element(open_tag->tag_name->value)) {
-    return ast_html_element_node_init(
-      open_tag,
-      open_tag->tag_name,
-      NULL,
-      NULL,
-      true,
-      open_tag->base.start,
-      open_tag->base.end,
-      errors
-    );
-  }
+  AST_HTML_ELEMENT_NODE_T* regular_element = parser_parse_html_regular_element(parser, open_tag);
+  if (regular_element != NULL) { return regular_element; }
 
-  if (open_tag->base.type == AST_HTML_OPEN_TAG_NODE) {
-    array_T* body = array_init(8);
+  array_T* errors = array_init(1);
 
-    parser_parse_in_data_state(parser, body, errors);
+  AST_UNEXPECTED_TOKEN_NODE_T* unexpected_token_node = ast_unexpected_token_node_init_from_raw_message(
+    open_tag->base.start,
+    open_tag->base.end,
+    "open_tag type",
+    "AST_HTML_OPEN_TAG_NODE or AST_HTML_SELF_CLOSE_TAG_NODE",
+    open_tag->tag_name->value
+  );
 
-    AST_HTML_CLOSE_TAG_NODE_T* close_tag = parser_parse_html_close_tag(parser);
-
-    if (strcasecmp(open_tag->tag_name->value, close_tag->tag_name->value) != 0
-        && string_present(open_tag->tag_name->value) && string_present(close_tag->tag_name->value)) {
-      AST_UNEXPECTED_TOKEN_NODE_T* unexpected_token_node = ast_unexpected_token_node_init_from_raw_message(
-        close_tag->base.start,
-        close_tag->base.end,
-        "mismatched closing tag",
-        open_tag->tag_name->value,
-        close_tag->tag_name->value
-      );
-
-      array_append(errors, unexpected_token_node);
-    }
-
-    return ast_html_element_node_init(
-      open_tag,
-      open_tag->tag_name,
-      body,
-      close_tag,
-      false,
-      open_tag->base.start,
-      close_tag->base.end,
-      errors
-    );
-  }
+  array_append(errors, unexpected_token_node);
 
   AST_HTML_ELEMENT_NODE_T* element_node = ast_html_element_node_init(
     open_tag,
@@ -568,21 +682,11 @@ static AST_HTML_ELEMENT_NODE_T* parser_parse_html_element(parser_T* parser) {
     errors
   );
 
-  AST_UNEXPECTED_TOKEN_NODE_T* unexpected_token_node = ast_unexpected_token_node_init_from_raw_message(
-    open_tag->base.start,
-    open_tag->base.end,
-    "open_tag type",
-    "AST_HTML_OPEN_TAG_NODE or AST_HTML_SELF_CLOSE_TAG_NODE",
-    open_tag->tag_name->value
-  );
-
-  array_append(element_node->body, unexpected_token_node);
-
   return element_node;
 }
 
 static AST_ERB_CONTENT_NODE_T* parser_parse_erb_tag(parser_T* parser) {
-  array_T* errors = array_init(1);
+  array_T* errors = array_init(8);
 
   token_T* opening_tag = parser_consume_expected(parser, TOKEN_ERB_START, errors);
   token_T* content = parser_consume_expected(parser, TOKEN_ERB_CONTENT, errors);
@@ -631,17 +735,84 @@ static void parser_parse_in_data_state(parser_T* parser, array_T* children, arra
   }
 }
 
+static void parser_parse_unclosed_html_tags(parser_T* parser, array_T* errors) {
+  while (array_size(parser->open_tags_stack) > 0) {
+    token_T* unclosed_token = parser_pop_open_tag(parser);
+
+    char* closing_tag = html_closing_tag_string(unclosed_token->value);
+    char error_message[256];
+
+    snprintf(
+      error_message,
+      sizeof(error_message),
+      "unclosed HTML tag at end of document (opened at %zu:%zu)",
+      unclosed_token->start->line,
+      unclosed_token->start->column
+    );
+
+    AST_UNEXPECTED_TOKEN_NODE_T* unclosed_error = ast_unexpected_token_node_init_from_raw_message(
+      parser->current_token->start,
+      parser->current_token->end,
+      error_message,
+      closing_tag,
+      "EOF"
+    );
+
+    free(closing_tag);
+    array_append(errors, unclosed_error);
+    token_free(unclosed_token);
+  }
+}
+
+static void parser_parse_stray_closing_tags(parser_T* parser, array_T* children, array_T* errors) {
+  while (token_is_not(parser, TOKEN_EOF)) {
+    if (token_is_not(parser, TOKEN_HTML_TAG_START_CLOSE)) {
+      AST_UNEXPECTED_TOKEN_NODE_T* unexpected_token_node = parser_init_unexpected_token(parser);
+
+      if (unexpected_token_node != NULL) { array_append(errors, unexpected_token_node); }
+
+      continue;
+    }
+
+    AST_HTML_CLOSE_TAG_NODE_T* close_tag = parser_parse_html_close_tag(parser);
+
+    if (!is_void_element(close_tag->tag_name->value)) {
+      char* expected = html_opening_tag_string(close_tag->tag_name->value);
+
+      // TODO: add `element was closed at (1:1)` to message
+      AST_UNEXPECTED_TOKEN_NODE_T* missing_open_tag_error = ast_unexpected_token_node_init_from_raw_message(
+        close_tag->base.start,
+        close_tag->base.end,
+        "expected element to have a start tag",
+        expected,
+        ""
+      );
+
+      free(expected);
+
+      array_append(close_tag->base.errors, missing_open_tag_error);
+    }
+
+    array_append(children, close_tag);
+
+    parser_parse_in_data_state(parser, children, errors);
+  }
+}
+
 static AST_DOCUMENT_NODE_T* parser_parse_document(parser_T* parser) {
   array_T* children = array_init(8);
+  array_T* errors = array_init(8);
+  location_T* start_location = location_copy(parser->current_token->start);
 
-  AST_DOCUMENT_NODE_T* document_node =
-    ast_document_node_init(children, parser->current_token->start, parser->current_token->start, NULL);
+  parser_parse_in_data_state(parser, children, errors);
+  parser_parse_unclosed_html_tags(parser, errors);
+  parser_parse_stray_closing_tags(parser, children, errors);
 
-  parser_parse_in_data_state(parser, document_node->children, document_node->base.errors);
+  token_T* eof = parser_consume_expected(parser, TOKEN_EOF, errors);
 
-  token_T* eof = parser_consume_expected(parser, TOKEN_EOF, document_node->base.errors);
-  ast_node_set_end(&document_node->base, eof->end);
+  AST_DOCUMENT_NODE_T* document_node = ast_document_node_init(children, start_location, eof->end, errors);
 
+  location_free(start_location);
   token_free(eof);
 
   return document_node;
@@ -656,6 +827,7 @@ void parser_free(parser_T* parser) {
 
   if (parser->lexer != NULL) { lexer_free(parser->lexer); }
   if (parser->current_token != NULL) { token_free(parser->current_token); }
+  if (parser->open_tags_stack != NULL) { array_free(&parser->open_tags_stack); }
 
   free(parser);
 }
