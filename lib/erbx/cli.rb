@@ -15,7 +15,9 @@ class ERBX::CLI
     options
 
     if !result || result.failed?
-      puts "Failed"
+      puts result.value.inspect
+
+      puts "\nFailed"
       exit(1)
     end
 
