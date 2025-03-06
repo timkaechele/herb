@@ -2,7 +2,7 @@
 
 $LOAD_PATH.unshift File.expand_path("../lib", __dir__)
 
-require "erbx"
+require "herb"
 require "pathname"
 require "maxitest/autorun"
 require "minitest/spec"

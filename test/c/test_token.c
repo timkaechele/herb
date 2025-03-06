@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include "include/test.h"
-#include "../../src/include/erbx.h"
+#include "../../src/include/herb.h"
 #include "../../src/include/token.h"
 
 TEST(test_token)
@@ -9,7 +9,7 @@ END
 
 TEST(test_token_to_string)
   buffer_T output = buffer_new();
-  erbx_lex_to_buffer("hello", &output);
+  herb_lex_to_buffer("hello", &output);
 
   ck_assert_str_eq(
     output.value,
@@ -22,7 +22,7 @@ END
 
 TEST(test_token_to_json)
   buffer_T output = buffer_new();
-  erbx_lex_json_to_buffer("hello", &output);
+  herb_lex_json_to_buffer("hello", &output);
 
   const char* expected = "["
   "{\"type\": \"TOKEN_IDENTIFIER\", \"value\": \"hello\", \"range\": [0 , 5], \"start\": {\"line\": 1, \"column\": 0}, \"end\": {\"line\": 1, \"column\": 0}}, "

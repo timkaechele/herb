@@ -1,5 +1,5 @@
-#ifndef ERBX_LEXER_PEEK_H
-#define ERBX_LEXER_PEEK_H
+#ifndef HERB_LEXER_PEEK_H
+#define HERB_LEXER_PEEK_H
 
 #include "lexer_struct.h"
 

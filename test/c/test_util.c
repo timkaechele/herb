@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include "include/test.h"
-#include "../../src/include/erbx.h"
+#include "../../src/include/herb.h"
 #include "../../src/include/util.h"
 
 TEST(util_count_newlines)

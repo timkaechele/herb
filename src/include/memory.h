@@ -1,5 +1,5 @@
-#ifndef ERBX_MEMORY_H
-#define ERBX_MEMORY_H
+#ifndef HERB_MEMORY_H
+#define HERB_MEMORY_H
 
 #include <stddef.h>
 

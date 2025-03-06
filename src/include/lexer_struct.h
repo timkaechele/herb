@@ -1,5 +1,5 @@
-#ifndef ERBX_LEXER_STRUCT_H
-#define ERBX_LEXER_STRUCT_H
+#ifndef HERB_LEXER_STRUCT_H
+#define HERB_LEXER_STRUCT_H
 
 #include <stdbool.h>
 #include <stdlib.h>

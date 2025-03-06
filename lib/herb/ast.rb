@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module ERBX
+module Herb
   module AST
   end
 end

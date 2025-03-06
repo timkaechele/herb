@@ -2,8 +2,8 @@
 
 require "forwardable"
 
-module ERBX
-  module LibERBX
+module Herb
+  module LibHerb
     attach_function :array_get, [:pointer, :int], :pointer
     attach_function :array_capacity, [:pointer], :size_t
     attach_function :array_size, [:pointer], :size_t
@@ -21,16 +21,16 @@ module ERBX
       end
 
       def capacity
-        LibERBX.array_capacity(pointer)
+        LibHerb.array_capacity(pointer)
       end
 
       def size
-        LibERBX.array_size(pointer)
+        LibHerb.array_size(pointer)
       end
 
       def item_pointers
         size.times.map { |item|
-          LibERBX.array_get(pointer, item)
+          LibHerb.array_get(pointer, item)
         }
       end
 

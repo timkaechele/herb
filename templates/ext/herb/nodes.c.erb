@@ -6,7 +6,7 @@
 #include "nodes.h"
 
 #include "../../src/include/ast_pretty_print.h"
-#include "../../src/include/erbx.h"
+#include "../../src/include/herb.h"
 #include "../../src/include/token.h"
 
 VALUE rb_node_from_c_struct(AST_NODE_T* node);
@@ -18,8 +18,8 @@ static VALUE rb_<%= node.human %>_from_c_struct(<%= node.struct_type %>* <%= nod
 
   AST_NODE_T* node = &<%= node.human %>->base;
 
-  VALUE ERBX = rb_define_module("ERBX");
-  VALUE AST = rb_define_module_under(ERBX, "AST");
+  VALUE Herb = rb_define_module("Herb");
+  VALUE AST = rb_define_module_under(Herb, "AST");
   VALUE Node = rb_define_class_under(AST, "Node", rb_cObject);
   VALUE <%= node.name %> = rb_define_class_under(AST, "<%= node.name %>", Node);
 
@@ -30,15 +30,15 @@ static VALUE rb_<%= node.human %>_from_c_struct(<%= node.struct_type %>* <%= nod
 
   <%- node.fields.each do |field| -%>
   <%- case field -%>
-  <%- when ERBX::Template::StringField -%>
+  <%- when Herb::Template::StringField -%>
   VALUE <%= node.human %>_<%= field.name %> = rb_str_new_cstr(<%= node.human %>-><%= field.name %>);
-  <%- when ERBX::Template::NodeField -%>
+  <%- when Herb::Template::NodeField -%>
   VALUE <%= node.human %>_<%= field.name %> = rb_node_from_c_struct((AST_NODE_T*) <%= node.human %>-><%= field.name %>);
-  <%- when ERBX::Template::TokenField -%>
+  <%- when Herb::Template::TokenField -%>
   VALUE <%= node.human %>_<%= field.name %> = rb_token_from_c_struct(<%= node.human %>-><%= field.name %>);
-  <%- when ERBX::Template::BooleanField -%>
+  <%- when Herb::Template::BooleanField -%>
   VALUE <%= node.human %>_<%= field.name %> = (<%= node.human %>-><%= field.name %>) ? Qtrue : Qfalse;
-  <%- when ERBX::Template::ArrayField -%>
+  <%- when Herb::Template::ArrayField -%>
   VALUE <%= node.human %>_<%= field.name %> = rb_nodes_array_from_c_array(<%= node.human %>-><%= field.name %>);
   <%- else -%>
   /* <%= field.inspect %> */

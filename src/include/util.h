@@ -1,5 +1,5 @@
-#ifndef ERBX_UTIL_H
-#define ERBX_UTIL_H
+#ifndef HERB_UTIL_H
+#define HERB_UTIL_H
 
 #include <stdbool.h>
 #include <stdlib.h>
@@ -18,6 +18,6 @@ char* wrap_string(const char* input, char character);
 bool string_blank(const char* input);
 bool string_present(const char* input);
 
-char* erbx_strdup(const char* s);
+char* herb_strdup(const char* s);
 
 #endif

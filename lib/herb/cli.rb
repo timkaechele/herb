@@ -2,7 +2,7 @@
 
 require "optparse"
 
-class ERBX::CLI
+class Herb::CLI
   attr_accessor :json, :silent
 
   def initialize(args)
@@ -35,10 +35,10 @@ class ERBX::CLI
       puts "No directory provided."
       puts
       puts "Usage:"
-      puts "  bundle exec erbx #{@command} [directory] [options]"
+      puts "  bundle exec herb #{@command} [directory] [options]"
       puts
       puts "Tip: Use `.` for the current directory"
-      puts "  bundle exec erbx #{@command} . [options]"
+      puts "  bundle exec herb #{@command} . [options]"
 
       exit(1)
     end
@@ -66,31 +66,31 @@ class ERBX::CLI
       puts "No file provided."
       puts
       puts "Usage:"
-      puts "  bundle exec erbx #{@command} [file] [options]"
+      puts "  bundle exec herb #{@command} [file] [options]"
       exit(1)
     end
   end
 
   def help(exit_code = 0)
     message = <<~HELP
-      ▗▄▄▄▖▗▄▄▖ ▗▄▄▖ ▗▖  ▗▖
-      ▐▌   ▐▌ ▐▌▐▌ ▐▌ ▝▚▞▘
-      ▐▛▀▀▘▐▛▀▚▖▐▛▀▚▖  ▐▌
-      ▐▙▄▄▖▐▌ ▐▌▐▙▄▞▘▗▞▘▝▚▖
+      ▗▖ ▗▖▗▄▄▄▖▗▄▄▖ ▗▄▄▖
+      ▐▌ ▐▌▐▌   ▐▌ ▐▌▐▌ ▐▌
+      ▐▛▀▜▌▐▛▀▀▘▐▛▀▚▖▐▛▀▚▖
+      ▐▌ ▐▌▐▙▄▄▖▐▌ ▐▌▐▙▄▞▘
 
-      ERBX - Seamless and powerful HTML+ERB parsing.
+      Herb - Seamless and powerful HTML+ERB parsing.
 
       Usage:
-        bundle exec erbx [command] [options]
+        bundle exec herb [command] [options]
 
       Commands:
-        bundle exec erbx lex [file]      Lex a file.
-        bundle exec erbx parse [file]    Parse a file.
-        bundle exec erbx analyze [path]  Analyze a project by passing a directory to the root of the project
-        bundle exec erbx ruby [file]     Extract Ruby from a file.
-        bundle exec erbx html [file]     Extract HTML from a file.
-        bundle exec erbx prism [file]    Extract Ruby from a file and parse the Ruby source with Prism.
-        bundle exec erbx version         Prints the versions of the ERBX gem and the liberbx library.
+        bundle exec herb lex [file]      Lex a file.
+        bundle exec herb parse [file]    Parse a file.
+        bundle exec herb analyze [path]  Analyze a project by passing a directory to the root of the project
+        bundle exec herb ruby [file]     Extract Ruby from a file.
+        bundle exec herb html [file]     Extract HTML from a file.
+        bundle exec herb prism [file]    Extract Ruby from a file and parse the Ruby source with Prism.
+        bundle exec herb version         Prints the versions of the Herb gem and the libherb library.
 
       Options:
         #{option_parser.to_s.strip.gsub(/^    /, "  ")}
@@ -105,22 +105,22 @@ class ERBX::CLI
   def result
     @result ||= case @command
                 when "analyze"
-                  ERBX::Project.new(directory).parse!
+                  Herb::Project.new(directory).parse!
                   exit(0)
                 when "parse"
-                  ERBX.parse(file_content)
+                  Herb.parse(file_content)
                 when "lex"
-                  ERBX.lex(file_content)
+                  Herb.lex(file_content)
                 when "ruby"
-                  puts ERBX.extract_ruby(file_content)
+                  puts Herb.extract_ruby(file_content)
                   exit(0)
                 when "html"
-                  puts ERBX.extract_html(file_content)
+                  puts Herb.extract_html(file_content)
                   exit(0)
                 when "help", "-h", "--help"
                   help
                 when "version", "-v", "--version"
-                  puts ERBX.version
+                  puts Herb.version
                   exit(0)
                 when String
                   puts "Unkown command: '#{@command}'"

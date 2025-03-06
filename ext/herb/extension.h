@@ -1,6 +1,6 @@
-#ifndef ERBX_EXTENSION_H
-#define ERBX_EXTENSION_H
+#ifndef HERB_EXTENSION_H
+#define HERB_EXTENSION_H
 
-void Init_erbx(void);
+void Init_herb(void);
 
 #endif

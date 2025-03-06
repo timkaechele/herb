@@ -1,4 +1,4 @@
-#include "include/erbx.h"
+#include "include/herb.h"
 #include "include/array.h"
 #include "include/buffer.h"
 #include "include/io.h"
@@ -10,7 +10,7 @@
 
 #include <stdlib.h>
 
-array_T* erbx_lex(char* source) {
+array_T* herb_lex(char* source) {
   lexer_T* lexer = lexer_init(source);
   token_T* token = NULL;
   array_T* tokens = array_init(1);
@@ -26,7 +26,7 @@ array_T* erbx_lex(char* source) {
   return tokens;
 }
 
-AST_DOCUMENT_NODE_T* erbx_parse(char* source) {
+AST_DOCUMENT_NODE_T* herb_parse(char* source) {
   lexer_T* lexer = lexer_init(source);
   parser_T* parser = parser_init(lexer);
 
@@ -37,17 +37,17 @@ AST_DOCUMENT_NODE_T* erbx_parse(char* source) {
   return document;
 }
 
-array_T* erbx_lex_file(const char* path) {
-  char* source = erbx_read_file(path);
-  array_T* tokens = erbx_lex(source);
+array_T* herb_lex_file(const char* path) {
+  char* source = herb_read_file(path);
+  array_T* tokens = herb_lex(source);
 
   free(source);
 
   return tokens;
 }
 
-void erbx_lex_to_buffer(char* source, buffer_T* output) {
-  array_T* tokens = erbx_lex(source);
+void herb_lex_to_buffer(char* source, buffer_T* output) {
+  array_T* tokens = herb_lex(source);
 
   for (size_t i = 0; i < array_size(tokens); i++) {
     token_T* token = array_get(tokens, i);
@@ -59,11 +59,11 @@ void erbx_lex_to_buffer(char* source, buffer_T* output) {
     buffer_append(output, "\n");
   }
 
-  erbx_free_tokens(&tokens);
+  herb_free_tokens(&tokens);
 }
 
-void erbx_lex_json_to_buffer(char* source, buffer_T* output) {
-  array_T* tokens = erbx_lex(source);
+void herb_lex_json_to_buffer(char* source, buffer_T* output) {
+  array_T* tokens = herb_lex(source);
 
   buffer_T json = buffer_new();
   json_start_root_array(&json);
@@ -79,10 +79,10 @@ void erbx_lex_json_to_buffer(char* source, buffer_T* output) {
   buffer_concat(output, &json);
 
   buffer_free(&json);
-  erbx_free_tokens(&tokens);
+  herb_free_tokens(&tokens);
 }
 
-void erbx_free_tokens(array_T** tokens) {
+void herb_free_tokens(array_T** tokens) {
   if (!tokens || !*tokens) { return; }
 
   for (size_t i = 0; i < array_size(*tokens); i++) {
@@ -93,6 +93,6 @@ void erbx_free_tokens(array_T** tokens) {
   array_free(tokens);
 }
 
-const char* erbx_version(void) {
-  return ERBX_VERSION;
+const char* herb_version(void) {
+  return HERB_VERSION;
 }

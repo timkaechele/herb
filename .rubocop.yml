@@ -33,12 +33,12 @@ Style/BlockDelimiters:
 
 Style/GlobalVars:
   Exclude:
-    - ext/erbx/extconf.rb
+    - ext/herb/extconf.rb
 
 Style/AccessorGrouping:
   Exclude:
-    - lib/erbx/errors.rb
-    - lib/erbx/ast/nodes.rb
+    - lib/herb/errors.rb
+    - lib/herb/ast/nodes.rb
 
 Style/TrailingCommaInHashLiteral:
   EnforcedStyleForMultiline: diff_comma
@@ -46,33 +46,33 @@ Style/TrailingCommaInHashLiteral:
 Metrics/CyclomaticComplexity:
   Max: 10
   Exclude:
-    - lib/erbx/project.rb
-    - lib/erbx/ast/nodes.rb
+    - lib/herb/project.rb
+    - lib/herb/ast/nodes.rb
 
 Metrics/MethodLength:
   Max: 20
   Exclude:
-    - lib/erbx/ast/nodes.rb
-    - lib/erbx/cli.rb
-    - lib/erbx/project.rb
+    - lib/herb/ast/nodes.rb
+    - lib/herb/cli.rb
+    - lib/herb/project.rb
     - templates/template.rb
     - test/fork_helper.rb
 
 Metrics/AbcSize:
   Exclude:
-    - lib/erbx/ast/node.rb
-    - lib/erbx/ast/nodes.rb
-    - lib/erbx/cli.rb
-    - lib/erbx/errors.rb
-    - lib/erbx/project.rb
+    - lib/herb/ast/node.rb
+    - lib/herb/ast/nodes.rb
+    - lib/herb/cli.rb
+    - lib/herb/errors.rb
+    - lib/herb/project.rb
     - templates/template.rb
     - test/fork_helper.rb
     - test/snapshot_utils.rb
 
 Metrics/ClassLength:
   Exclude:
-    - lib/erbx/cli.rb
-    - lib/erbx/project.rb
+    - lib/herb/cli.rb
+    - lib/herb/project.rb
     - test/**/*_test.rb
 
 Metrics/BlockLength:
@@ -80,35 +80,35 @@ Metrics/BlockLength:
   Exclude:
     - Rakefile
     - "*.gemspec"
-    - lib/erbx/project.rb
+    - lib/herb/project.rb
     - test/**/*_test.rb
 
 Metrics/ParameterLists:
   Exclude:
-    - lib/erbx/ast/nodes.rb
-    - lib/erbx/errors.rb
+    - lib/herb/ast/nodes.rb
+    - lib/herb/errors.rb
 
 Metrics/PerceivedComplexity:
   Exclude:
-    - lib/erbx/project.rb
-    - lib/erbx/ast/nodes.rb
+    - lib/herb/project.rb
+    - lib/herb/ast/nodes.rb
 
 Layout/LineLength:
   Max: 120
   Exclude:
     - test/**/*_test.rb
-    - lib/erbx/token.rb
-    - lib/erbx/ast/nodes.rb
+    - lib/herb/token.rb
+    - lib/herb/ast/nodes.rb
 
 Layout/EmptyLines:
   Exclude:
-    - lib/erbx/ast/nodes.rb
-    - lib/erbx/errors.rb
+    - lib/herb/ast/nodes.rb
+    - lib/herb/errors.rb
 
 Layout/EmptyLinesAroundModuleBody:
   Exclude:
-    - lib/erbx/ast/nodes.rb
-    - lib/erbx/errors.rb
+    - lib/herb/ast/nodes.rb
+    - lib/herb/errors.rb
 
 Layout/FirstHashElementIndentation:
   EnforcedStyle: consistent

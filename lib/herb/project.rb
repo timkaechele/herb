@@ -6,7 +6,7 @@ require "tempfile"
 require "pathname"
 require "English"
 
-module ERBX
+module Herb
   class Project
     attr_accessor :project_path, :output_file
 
@@ -38,7 +38,7 @@ module ERBX
     def parse!
       File.open(output_file, "w") do |log|
         log.puts heading("METADATA")
-        log.puts "ERBX Version: #{ERBX.version}"
+        log.puts "Herb Version: #{Herb.version}"
         log.puts "Reported at: #{Time.now.strftime("%Y-%m-%dT%H:%M:%S")}\n\n"
 
         log.puts heading("PROJECT")
@@ -120,7 +120,7 @@ module ERBX
                 $stderr.reopen(stderr_file.path, "w")
 
                 begin
-                  result = ERBX.parse(file_content)
+                  result = Herb.parse(file_content)
 
                   if result.failed?
                     File.open(ast_file.path, "w") do |f|

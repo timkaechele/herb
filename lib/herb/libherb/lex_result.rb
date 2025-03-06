@@ -2,7 +2,7 @@
 
 require "forwardable"
 
-module ERBX
+module Herb
   class LexResult
     extend Forwardable
 
@@ -11,7 +11,7 @@ module ERBX
     attr_accessor :array
 
     def initialize(pointer)
-      @array = LibERBX::Array.new(pointer, LibERBX::Token)
+      @array = LibHerb::Array.new(pointer, LibHerb::Token)
     end
 
     def as_json

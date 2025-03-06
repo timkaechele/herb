@@ -4,7 +4,7 @@ require "erb"
 require "fileutils"
 require "yaml"
 
-module ERBX
+module Herb
   module Template
     class Field
       attr_reader :name, :options
@@ -79,7 +79,7 @@ module ERBX
 
     class TokenField < Field
       def ruby_type
-        "ERBX::Token"
+        "Herb::Token"
       end
 
       def c_type
@@ -89,7 +89,7 @@ module ERBX
 
     class TokenTypeField < Field
       def ruby_type
-        "ERBX::TokenType"
+        "Herb::TokenType"
       end
 
       def c_type
@@ -109,7 +109,7 @@ module ERBX
 
     class LocationField < Field
       def ruby_type
-        "ERBX::Location"
+        "Herb::Location"
       end
 
       def c_type

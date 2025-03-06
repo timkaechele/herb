@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module ERBX
+module Herb
   class Location
     attr_reader :line, :column
 
@@ -22,7 +22,7 @@ module ERBX
     end
 
     def inspect
-      %(#<ERBX::Location #{tree_inspect}>)
+      %(#<Herb::Location #{tree_inspect}>)
     end
   end
 end

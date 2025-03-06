@@ -2,10 +2,10 @@ import { defineConfig } from "vitepress"
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
-  title: "ERBX",
+  title: "Herb",
   description: "Seamless and powerful HTML+ERB parsing.",
   srcDir: "./docs",
-  base: "/erbx/",
+  base: "/herb/",
   themeConfig: {
 
     // https://vitepress.dev/reference/default-theme-config
@@ -162,7 +162,7 @@ export default defineConfig({
     ],
 
     socialLinks: [
-      { icon: "github", link: "https://github.com/marcoroth/erbx" },
+      { icon: "github", link: "https://github.com/marcoroth/herb" },
       { icon: "twitter", link: "https://twitter.com/marcoroth_" },
       { icon: "mastodon", link: "https://ruby.social/@marcoroth" }
     ]

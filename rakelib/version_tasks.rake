@@ -11,7 +11,7 @@ task "set-version-to-timestamp" do
   # to test building, packaging, and installing a precompiled gem
   version_constant_re = /^\s*VERSION\s*=\s*["'](.*)["']$/
 
-  version_file_path = File.join(__dir__, "../lib/erbx/version.rb")
+  version_file_path = File.join(__dir__, "../lib/herb/version.rb")
   version_file_contents = File.read(version_file_path)
 
   current_version_string = version_constant_re.match(version_file_contents)[1].split(".test.").first

@@ -1,5 +1,5 @@
-#ifndef ERBX_MACROS_H
-#define ERBX_MACROS_H
+#ifndef HERB_MACROS_H
+#define HERB_MACROS_H
 
 #define MAX(a, b) (a) > (b) ? (a) : (b)
 

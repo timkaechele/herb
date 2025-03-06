@@ -1,4 +1,4 @@
-module ERBX
+module Herb
   module AST
     <%- nodes.each do |node| -%>
     class <%= node.name -%> < Node
@@ -30,17 +30,17 @@ module ERBX
         <%- symbol = node.fields.last == field ? "└──" : "├──" -%>
         <%- name = "#{symbol} #{field.name}: " -%>
         <%- case field -%>
-        <%- when ERBX::Template::StringField -%>
+        <%- when Herb::Template::StringField -%>
         output += %(<%= name %>#{<%= field.name %>.inspect}\n)
-        <%- when ERBX::Template::TokenField -%>
+        <%- when Herb::Template::TokenField -%>
         output += "<%= name %>"
         output += <%= field.name %> ? <%= field.name %>.tree_inspect : "∅"
         output += "\n"
-        <%- when ERBX::Template::BooleanField -%>
+        <%- when Herb::Template::BooleanField -%>
         output += "<%= name %>"
         output += [true, false].include?(<%= field.name %>) ? <%= field.name %>.to_s : "∅"
         output += "\n"
-        <%- when ERBX::Template::NodeField -%>
+        <%- when Herb::Template::NodeField -%>
         output += "<%= name %>"
         if <%= field.name %>
           <%- prefix = (node.fields.last == field) ? "    " : "│   " -%>
@@ -54,7 +54,7 @@ module ERBX
         else
           output += "∅\n"
         end
-        <%- when ERBX::Template::ArrayField -%>
+        <%- when Herb::Template::ArrayField -%>
         output += "<%= name %>"
         output += inspect_array(<%= field.name %>, prefix: "<%= (node.fields.last == field) ? "    " : "│   " %>")
         <%- else -%>

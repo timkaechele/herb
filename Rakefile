@@ -19,11 +19,11 @@ PLATFORMS = %w[
 ].freeze
 
 exttask = Rake::ExtensionTask.new do |ext|
-  ext.name = "erbx"
+  ext.name = "herb"
   ext.source_pattern = "*.{c,h}"
-  ext.ext_dir = "ext/erbx"
-  ext.lib_dir = "lib/erbx"
-  ext.gem_spec = Gem::Specification.load("erbx.gemspec")
+  ext.ext_dir = "ext/herb"
+  ext.lib_dir = "lib/herb"
+  ext.gem_spec = Gem::Specification.load("herb.gemspec")
   ext.cross_compile = true
   ext.cross_platform = PLATFORMS
 end
@@ -71,7 +71,7 @@ namespace "gem" do
     sh "bundle config set cache_all true"
     sh "cp ~/.gem/gem-*.pem build/gem/ || true"
 
-    gemspec_path = File.expand_path("./erbx.gemspec", __dir__)
+    gemspec_path = File.expand_path("./herb.gemspec", __dir__)
     spec = eval(File.read(gemspec_path), binding, gemspec_path)
 
     RakeCompilerDock.set_ruby_cc_version(spec.required_ruby_version.as_list)
@@ -104,7 +104,7 @@ task :templates do
   require_relative "templates/template"
 
   Dir.glob("#{__dir__}/templates/**/*.erb").each do |template|
-    ERBX::Template.render(template)
+    Herb::Template.render(template)
   end
 end
 
@@ -134,7 +134,7 @@ namespace :templates do
         template_file = template.delete_prefix("#{__dir__}/")
 
         puts "#{Time.now.strftime("[%Y-%m-%d %H:%M:%S]")} Detected change, regenerating #{template_file} ..."
-        ERBX::Template.render(template_file)
+        Herb::Template.render(template_file)
       end
 
       removed.each do |template|
@@ -153,9 +153,9 @@ end
 namespace :parse do
   desc "Parse ERB files in a project directory"
   task :project, [:path, :output_file] do |_t, args|
-    require_relative "lib/erbx"
+    require_relative "lib/herb"
 
-    ERBX::Project.new(args[:path], output_file: args[:output_file]).parse!
+    Herb::Project.new(args[:path], output_file: args[:output_file]).parse!
   end
 end
 

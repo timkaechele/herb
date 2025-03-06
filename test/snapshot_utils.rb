@@ -10,7 +10,7 @@ end
 
 module SnapshotUtils
   def assert_lexed_snapshot(source)
-    result = ERBX.lex(source)
+    result = Herb.lex(source)
     expected = result.value.inspect
 
     assert_snapshot_matches(expected, source)
@@ -23,7 +23,7 @@ module SnapshotUtils
   end
 
   def assert_parsed_snapshot(source)
-    result = ERBX.parse(source)
+    result = Herb.parse(source)
     expected = result.value.inspect
 
     assert_snapshot_matches(expected, source)

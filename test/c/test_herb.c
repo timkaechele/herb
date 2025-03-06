@@ -1,14 +1,14 @@
 #include "include/test.h"
-#include "../../src/include/erbx.h"
+#include "../../src/include/herb.h"
 
-TEST(test_erbx_version)
-  ck_assert_str_eq(erbx_version(), "0.0.1");
+TEST(test_herb_version)
+  ck_assert_str_eq(herb_version(), "0.0.1");
 END
 
-TCase *erbx_tests(void) {
-  TCase *erbx = tcase_create("ERBX");
+TCase *herb_tests(void) {
+  TCase *herb = tcase_create("Herb");
 
-  tcase_add_test(erbx, test_erbx_version);
+  tcase_add_test(herb, test_herb_version);
 
-  return erbx;
+  return herb;
 }

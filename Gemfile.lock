@@ -8,7 +8,7 @@ GIT
 PATH
   remote: .
   specs:
-    erbx (0.0.1)
+    herb (0.0.1)
 
 GEM
   remote: https://rubygems.org/
@@ -78,7 +78,7 @@ PLATFORMS
   x86_64-linux-musl
 
 DEPENDENCIES
-  erbx!
+  herb!
   maxitest
   minitest-difftastic (~> 0.2)
   prism!

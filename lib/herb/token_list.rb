@@ -2,7 +2,7 @@
 
 require "delegate"
 
-module ERBX
+module Herb
   class TokenList < SimpleDelegator
     def inspect
       "#{itself.map(&:inspect).join("\n").force_encoding("utf-8")}\n"

@@ -2,7 +2,7 @@
 
 require "json"
 
-module ERBX
+module Herb
   class ParseResult < Result
     attr_reader :value
 

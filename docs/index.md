@@ -3,7 +3,7 @@
 layout: home
 
 hero:
-  name: "ERBX"
+  name: "Herb"
   text: ""
   tagline: Seamless and powerful HTML+ERB parsing.
 
@@ -18,7 +18,7 @@ hero:
 
     - theme: alt
       text: GitHub
-      link: https://github.com/marcoroth/erbx
+      link: https://github.com/marcoroth/herb
 
 features:
   - title: Fast

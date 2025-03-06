@@ -1,5 +1,5 @@
-#ifndef ERBX_PARSER_H
-#define ERBX_PARSER_H
+#ifndef HERB_PARSER_H
+#define HERB_PARSER_H
 
 #include "array.h"
 #include "ast_node.h"

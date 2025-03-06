@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module ERBX
+module Herb
   class Result
     attr_reader :source, :warnings, :errors
 

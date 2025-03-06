@@ -10,4 +10,4 @@ if [[ "$(uname)" != "Darwin" ]]; then
   exit 0
 fi
 
-leaks --atExit -- ./erbx parse "$1"
+leaks --atExit -- ./herb parse "$1"

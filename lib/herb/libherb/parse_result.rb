@@ -2,7 +2,7 @@
 
 require "forwardable"
 
-module ERBX
+module Herb
   class ParseResult
     extend Forwardable
 
@@ -11,7 +11,7 @@ module ERBX
     attr_accessor :root_node
 
     def initialize(pointer)
-      @root_node = LibERBX::ASTNode.new(pointer)
+      @root_node = LibHerb::ASTNode.new(pointer)
     end
   end
 end

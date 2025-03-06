@@ -1,13 +1,13 @@
 #include "include/array.h"
 #include "include/buffer.h"
-#include "include/erbx.h"
+#include "include/herb.h"
 #include "include/io.h"
 #include "include/lexer.h"
 
 #include <stdlib.h>
 
-void erbx_extract_ruby_to_buffer(char* source, buffer_T* output) {
-  const array_T* tokens = erbx_lex(source);
+void herb_extract_ruby_to_buffer(char* source, buffer_T* output) {
+  const array_T* tokens = herb_lex(source);
 
   for (size_t i = 0; i < array_size(tokens); i++) {
     const token_T* token = array_get(tokens, i);
@@ -20,8 +20,8 @@ void erbx_extract_ruby_to_buffer(char* source, buffer_T* output) {
   }
 }
 
-void erbx_extract_html_to_buffer(char* source, buffer_T* output) {
-  const array_T* tokens = erbx_lex(source);
+void herb_extract_html_to_buffer(char* source, buffer_T* output) {
+  const array_T* tokens = herb_lex(source);
 
   for (size_t i = 0; i < array_size(tokens); i++) {
     const token_T* token = array_get(tokens, i);
@@ -35,13 +35,13 @@ void erbx_extract_html_to_buffer(char* source, buffer_T* output) {
   }
 }
 
-char* erbx_extract(char* source, const erbx_extract_language_T language) {
+char* herb_extract(char* source, const herb_extract_language_T language) {
   buffer_T output;
   buffer_init(&output);
 
   switch (language) {
-    case ERBX_EXTRACT_LANGUAGE_RUBY: erbx_extract_ruby_to_buffer(source, &output); break;
-    case ERBX_EXTRACT_LANGUAGE_HTML: erbx_extract_html_to_buffer(source, &output); break;
+    case HERB_EXTRACT_LANGUAGE_RUBY: herb_extract_ruby_to_buffer(source, &output); break;
+    case HERB_EXTRACT_LANGUAGE_HTML: herb_extract_html_to_buffer(source, &output); break;
   }
 
   char* value = output.value;
@@ -49,9 +49,9 @@ char* erbx_extract(char* source, const erbx_extract_language_T language) {
   return value;
 }
 
-char* erbx_extract_from_file(const char* path, const erbx_extract_language_T language) {
-  char* source = erbx_read_file(path);
-  char* output = erbx_extract(source, language);
+char* herb_extract_from_file(const char* path, const herb_extract_language_T language) {
+  char* source = herb_read_file(path);
+  char* output = herb_extract(source, language);
 
   free(source);
 

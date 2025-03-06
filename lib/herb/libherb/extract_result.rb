@@ -2,7 +2,7 @@
 
 require "forwardable"
 
-module ERBX
+module Herb
   class ExtractResult
     extend Forwardable
 
@@ -11,7 +11,7 @@ module ERBX
     attr_accessor :buffer
 
     def initialize(pointer)
-      @buffer = LibERBX::Buffer.new(pointer)
+      @buffer = LibHerb::Buffer.new(pointer)
     end
   end
 end

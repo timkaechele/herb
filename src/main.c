@@ -4,8 +4,8 @@
 #include "include/ast_nodes.h"
 #include "include/ast_pretty_print.h"
 #include "include/buffer.h"
-#include "include/erbx.h"
 #include "include/extract.h"
+#include "include/herb.h"
 #include "include/io.h"
 #include "include/ruby_parser.h"
 
@@ -33,16 +33,16 @@ void print_time_diff(const struct timespec start, const struct timespec end, con
 
 int main(const int argc, char* argv[]) {
   if (argc < 2) {
-    printf("./erbx [command] [options]\n\n");
+    printf("./herb [command] [options]\n\n");
 
-    printf("ERBX - Seamless and powerful HTML+ERB parsing.\n\n");
+    printf("Herb - Seamless and powerful HTML+ERB parsing.\n\n");
 
-    printf("./erbx lex [file]      -  Lex a file\n");
-    printf("./erbx lex_json [file] -  Lex a file and return the result as json.\n");
-    printf("./erbx parse [file]    -  Parse a file\n");
-    printf("./erbx ruby [file]     -  Extract Ruby from a file\n");
-    printf("./erbx html [file]     -  Extract HTML from a file\n");
-    printf("./erbx prism [file]    -  Extract Ruby from a file and parse the Ruby source with Prism\n");
+    printf("./herb lex [file]      -  Lex a file\n");
+    printf("./herb lex_json [file] -  Lex a file and return the result as json.\n");
+    printf("./herb parse [file]    -  Parse a file\n");
+    printf("./herb ruby [file]     -  Extract Ruby from a file\n");
+    printf("./herb html [file]     -  Extract HTML from a file\n");
+    printf("./herb prism [file]    -  Extract Ruby from a file and parse the Ruby source with Prism\n");
 
     return 1;
   }
@@ -56,13 +56,13 @@ int main(const int argc, char* argv[]) {
 
   if (!buffer_init(&output)) { return 1; }
 
-  char* source = erbx_read_file(argv[2]);
+  char* source = herb_read_file(argv[2]);
 
   struct timespec start, end;
   clock_gettime(CLOCK_MONOTONIC, &start);
 
   if (strcmp(argv[1], "lex") == 0) {
-    erbx_lex_to_buffer(source, &output);
+    herb_lex_to_buffer(source, &output);
     clock_gettime(CLOCK_MONOTONIC, &end);
 
     printf("%s\n", output.value);
@@ -75,7 +75,7 @@ int main(const int argc, char* argv[]) {
   }
 
   if (strcmp(argv[1], "lex_json") == 0) {
-    erbx_lex_json_to_buffer(source, &output);
+    herb_lex_json_to_buffer(source, &output);
 
     printf("%s\n", output.value);
 
@@ -86,7 +86,7 @@ int main(const int argc, char* argv[]) {
   }
 
   if (strcmp(argv[1], "parse") == 0) {
-    AST_DOCUMENT_NODE_T* root = erbx_parse(source);
+    AST_DOCUMENT_NODE_T* root = herb_parse(source);
     clock_gettime(CLOCK_MONOTONIC, &end);
 
     ast_pretty_print_node((AST_NODE_T*) root, 0, 0, &output);
@@ -102,7 +102,7 @@ int main(const int argc, char* argv[]) {
   }
 
   if (strcmp(argv[1], "ruby") == 0) {
-    erbx_extract_ruby_to_buffer(source, &output);
+    herb_extract_ruby_to_buffer(source, &output);
     clock_gettime(CLOCK_MONOTONIC, &end);
 
     printf("%s\n", output.value);
@@ -115,7 +115,7 @@ int main(const int argc, char* argv[]) {
   }
 
   if (strcmp(argv[1], "html") == 0) {
-    erbx_extract_html_to_buffer(source, &output);
+    herb_extract_html_to_buffer(source, &output);
     clock_gettime(CLOCK_MONOTONIC, &end);
 
     printf("%s\n", output.value);
@@ -130,10 +130,10 @@ int main(const int argc, char* argv[]) {
   if (strcmp(argv[1], "prism") == 0) {
     printf("HTML+ERB File: \n%s\n", source);
 
-    char* ruby_source = erbx_extract(source, ERBX_EXTRACT_LANGUAGE_RUBY);
+    char* ruby_source = herb_extract(source, HERB_EXTRACT_LANGUAGE_RUBY);
     printf("Extracted Ruby: \n%s\n", ruby_source);
 
-    erbx_parse_ruby_to_stdout(ruby_source);
+    herb_parse_ruby_to_stdout(ruby_source);
 
     return 0;
   }

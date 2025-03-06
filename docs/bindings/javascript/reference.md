@@ -2,9 +2,9 @@
 outline: deep
 ---
 
-# `erbx` Reference
+# `herb` Reference
 
-The `erbx` module exposes a few methods for you to lex, extract and parse HTML+ERB source code.
+The `herb` module exposes a few methods for you to lex, extract and parse HTML+ERB source code.
 
 ## JavaScript API
 

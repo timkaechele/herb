@@ -17,7 +17,7 @@ token_T* token_init(const char* value, const token_type_T type, const lexer_T* l
   token_T* token = calloc(1, token_sizeof());
 
   if (value) {
-    token->value = erbx_strdup(value);
+    token->value = herb_strdup(value);
   } else {
     token->value = NULL;
   }
@@ -160,7 +160,7 @@ token_T* token_copy(token_T* token) {
   if (!new_token) { return NULL; }
 
   if (token->value) {
-    new_token->value = erbx_strdup(token->value);
+    new_token->value = herb_strdup(token->value);
 
     if (!new_token->value) {
       free(new_token);

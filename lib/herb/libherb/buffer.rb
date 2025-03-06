@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-module ERBX
-  module LibERBX
+module Herb
+  module LibHerb
     attach_function :buffer_init, [:pointer], :bool
     attach_function :buffer_free, [:pointer], :void
     attach_function :buffer_value, [:pointer], :pointer
@@ -11,7 +11,7 @@ module ERBX
     attach_function :buffer_append, [:pointer, :pointer], :void
 
     class Buffer
-      SIZEOF = LibERBX.buffer_sizeof
+      SIZEOF = LibHerb.buffer_sizeof
 
       attr_reader :pointer
 
@@ -20,19 +20,19 @@ module ERBX
       end
 
       def append(string)
-        LibERBX.buffer_append(pointer, string)
+        LibHerb.buffer_append(pointer, string)
       end
 
       def value
-        LibERBX.buffer_value(pointer)
+        LibHerb.buffer_value(pointer)
       end
 
       def length
-        LibERBX.buffer_length(pointer)
+        LibHerb.buffer_length(pointer)
       end
 
       def capacity
-        LibERBX.buffer_capacity(pointer)
+        LibHerb.buffer_capacity(pointer)
       end
 
       def read
@@ -41,11 +41,11 @@ module ERBX
 
       def self.with
         FFI::MemoryPointer.new(SIZEOF) do |pointer|
-          raise "couldn't allocate Buffer" unless LibERBX.buffer_init(pointer)
+          raise "couldn't allocate Buffer" unless LibHerb.buffer_init(pointer)
 
           return yield new(pointer)
         ensure
-          LibERBX.buffer_free(pointer)
+          LibHerb.buffer_free(pointer)
         end
       end
     end

@@ -1,5 +1,5 @@
-#ifndef ERBX_AST_H
-#define ERBX_AST_H
+#ifndef HERB_AST_H
+#define HERB_AST_H
 
 #include "ast_nodes.h"
 #include "errors.h"

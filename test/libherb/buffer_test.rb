@@ -2,33 +2,33 @@
 
 require_relative "../test_helper"
 
-module LibERBX
+module LibHerb
   class BufferTest < Minitest::Spec
     def setup
       skip
     end
 
     test "buffer initialization" do
-      ERBX::LibERBX::Buffer.with do |buffer|
-        assert_instance_of ERBX::LibERBX::Buffer, buffer
+      Herb::LibHerb::Buffer.with do |buffer|
+        assert_instance_of Herb::LibHerb::Buffer, buffer
         assert buffer.pointer.is_a?(FFI::Pointer)
       end
     end
 
     test "buffer read" do
-      ERBX::LibERBX::Buffer.with do |buffer|
+      Herb::LibHerb::Buffer.with do |buffer|
         assert_equal "", buffer.read
       end
     end
 
     test "buffer value" do
-      ERBX::LibERBX::Buffer.with do |buffer|
+      Herb::LibHerb::Buffer.with do |buffer|
         assert_equal "", buffer.read
       end
     end
 
     test "buffer append" do
-      ERBX::LibERBX::Buffer.with do |buffer|
+      Herb::LibHerb::Buffer.with do |buffer|
         assert_equal "", buffer.read
 
         buffer.append("hello world")
@@ -39,7 +39,7 @@ module LibERBX
     end
 
     test "buffer append causing a realloc" do
-      ERBX::LibERBX::Buffer.with do |buffer|
+      Herb::LibHerb::Buffer.with do |buffer|
         assert_equal "", buffer.read
         assert_equal 0, buffer.length
         assert_equal 1024, buffer.capacity
@@ -61,7 +61,7 @@ module LibERBX
     end
 
     test "buffer length and capacity" do
-      ERBX::LibERBX::Buffer.with do |buffer|
+      Herb::LibHerb::Buffer.with do |buffer|
         assert_equal buffer.length, 0
         assert_equal buffer.capacity, 1024
 

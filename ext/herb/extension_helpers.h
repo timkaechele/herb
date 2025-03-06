@@ -1,9 +1,9 @@
-#ifndef ERBX_EXTENSION_ERBX_H
-#define ERBX_EXTENSION_ERBX_H
+#ifndef HERB_EXTENSION_HERB_H
+#define HERB_EXTENSION_HERB_H
 
 #include <ruby.h>
 
-#include "../../src/include/erbx.h"
+#include "../../src/include/herb.h"
 #include "../../src/include/location.h"
 #include "../../src/include/range.h"
 #include "../../src/include/token.h"

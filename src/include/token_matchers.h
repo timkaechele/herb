@@ -1,5 +1,5 @@
-#ifndef ERBX_TOKEN_MATCHERS_H
-#define ERBX_TOKEN_MATCHERS_H
+#ifndef HERB_TOKEN_MATCHERS_H
+#define HERB_TOKEN_MATCHERS_H
 
 #include "parser.h"
 #include "token.h"

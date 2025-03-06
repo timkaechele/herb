@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include "include/test.h"
-#include "../../src/include/erbx.h"
+#include "../../src/include/herb.h"
 #include "../../src/include/html_util.h"
 
 TEST(html_util_html_opening_tag_string)

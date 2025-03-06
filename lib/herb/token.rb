@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module ERBX
+module Herb
   class Token
     attr_reader :value, :range, :start_location, :end_location, :type
 
@@ -31,7 +31,7 @@ module ERBX
     end
 
     def inspect
-      %(#<ERBX::Token type="#{type}" value=#{value.inspect} range=#{range.tree_inspect} start=#{start_location.tree_inspect} end=#{end_location.tree_inspect}>)
+      %(#<Herb::Token type="#{type}" value=#{value.inspect} range=#{range.tree_inspect} start=#{start_location.tree_inspect} end=#{end_location.tree_inspect}>)
     end
   end
 end

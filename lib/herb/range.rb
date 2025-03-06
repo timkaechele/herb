@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module ERBX
+module Herb
   class Range
     attr_reader :start_position, :end_position
 
@@ -22,7 +22,7 @@ module ERBX
     end
 
     def inspect
-      %(#<ERBX::Range #{to_a}>)
+      %(#<Herb::Range #{to_a}>)
     end
 
     def to_s

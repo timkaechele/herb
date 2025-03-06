@@ -1,31 +1,31 @@
 # frozen_string_literal: true
 
-require_relative "erbx/range"
-require_relative "erbx/location"
+require_relative "herb/range"
+require_relative "herb/location"
 
-require_relative "erbx/token"
-require_relative "erbx/token_list"
+require_relative "herb/token"
+require_relative "herb/token_list"
 
-require_relative "erbx/result"
-require_relative "erbx/lex_result"
-require_relative "erbx/parse_result"
+require_relative "herb/result"
+require_relative "herb/lex_result"
+require_relative "herb/parse_result"
 
-require_relative "erbx/ast"
-require_relative "erbx/ast/node"
-require_relative "erbx/ast/nodes"
+require_relative "herb/ast"
+require_relative "herb/ast/node"
+require_relative "herb/ast/nodes"
 
-require_relative "erbx/errors"
+require_relative "herb/errors"
 
-require_relative "erbx/cli"
-require_relative "erbx/project"
+require_relative "herb/cli"
+require_relative "herb/project"
 
-require_relative "erbx/version"
+require_relative "herb/version"
 
 begin
-  require_relative "erbx/#{RUBY_VERSION.split(".")[...2].join(".")}/erbx"
+  require_relative "herb/#{RUBY_VERSION.split(".")[...2].join(".")}/herb"
 rescue LoadError
-  require_relative "erbx/erbx"
+  require_relative "herb/herb"
 end
 
-module ERBX
+module Herb
 end

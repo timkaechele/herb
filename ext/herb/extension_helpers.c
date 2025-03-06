@@ -4,7 +4,7 @@
 #include "nodes.h"
 
 #include "../../src/include/ast_pretty_print.h"
-#include "../../src/include/erbx.h"
+#include "../../src/include/herb.h"
 #include "../../src/include/io.h"
 #include "../../src/include/token.h"
 
@@ -25,8 +25,8 @@ VALUE rb_location_from_c_struct(location_T* location) {
   args[0] = SIZET2NUM(location->line);
   args[1] = SIZET2NUM(location->column);
 
-  VALUE ERBX = rb_define_module("ERBX");
-  VALUE Location = rb_define_class_under(ERBX, "Location", rb_cObject);
+  VALUE Herb = rb_define_module("Herb");
+  VALUE Location = rb_define_class_under(Herb, "Location", rb_cObject);
 
   return rb_class_new_instance(2, args, Location);
 }
@@ -38,8 +38,8 @@ VALUE rb_range_from_c_struct(range_T* range) {
   args[0] = SIZET2NUM(range->start);
   args[1] = SIZET2NUM(range->end);
 
-  VALUE ERBX = rb_define_module("ERBX");
-  VALUE Range = rb_define_class_under(ERBX, "Range", rb_cObject);
+  VALUE Herb = rb_define_module("Herb");
+  VALUE Range = rb_define_class_under(Herb, "Range", rb_cObject);
 
   return rb_class_new_instance(2, args, Range);
 }
@@ -56,8 +56,8 @@ VALUE rb_token_from_c_struct(token_T* token) {
 
   VALUE args[5] = { value, range, start, end, type };
 
-  VALUE ERBX = rb_define_module("ERBX");
-  VALUE Token = rb_define_class_under(ERBX, "Token", rb_cObject);
+  VALUE Herb = rb_define_module("Herb");
+  VALUE Token = rb_define_class_under(Herb, "Token", rb_cObject);
 
   return rb_class_new_instance(5, args, Token);
 }
@@ -72,11 +72,11 @@ VALUE create_lex_result(array_T* tokens, VALUE source) {
     if (token != NULL) { rb_ary_push(value, rb_token_from_c_struct(token)); }
   }
 
-  VALUE ERBX = rb_define_module("ERBX");
-  VALUE Result = rb_define_class_under(ERBX, "Result", rb_cObject);
-  VALUE LexResult = rb_define_class_under(ERBX, "LexResult", Result);
+  VALUE Herb = rb_define_module("Herb");
+  VALUE Result = rb_define_class_under(Herb, "Result", rb_cObject);
+  VALUE LexResult = rb_define_class_under(Herb, "LexResult", Result);
 
-  erbx_free_tokens(&tokens);
+  herb_free_tokens(&tokens);
   VALUE args[4] = { value, source, warnings, errors };
   return rb_class_new_instance(4, args, LexResult);
 }
@@ -94,9 +94,9 @@ VALUE create_parse_result(AST_DOCUMENT_NODE_T* root, VALUE source) {
     ast_node_free((AST_NODE_T*) root);
   }
 
-  VALUE ERBX = rb_define_module("ERBX");
-  VALUE Result = rb_define_class_under(ERBX, "Result", rb_cObject);
-  VALUE ParseResult = rb_define_class_under(ERBX, "ParseResult", Result);
+  VALUE Herb = rb_define_module("Herb");
+  VALUE Result = rb_define_class_under(Herb, "Result", rb_cObject);
+  VALUE ParseResult = rb_define_class_under(Herb, "ParseResult", Result);
 
   buffer_free(&output);
   VALUE args[4] = { value, source, warnings, errors };
@@ -104,7 +104,7 @@ VALUE create_parse_result(AST_DOCUMENT_NODE_T* root, VALUE source) {
 }
 
 VALUE read_file_to_ruby_string(const char* file_path) {
-  char* source = erbx_read_file(file_path);
+  char* source = herb_read_file(file_path);
   VALUE source_value = rb_str_new_cstr(source);
 
   free(source);

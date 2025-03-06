@@ -1,5 +1,5 @@
-#ifndef ERBX_TOKEN_H
-#define ERBX_TOKEN_H
+#ifndef HERB_TOKEN_H
+#define HERB_TOKEN_H
 
 #include "lexer_struct.h"
 #include "token_struct.h"

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module ERBX
+module Herb
   module AST
     class Node
       attr_reader :type, :start_location, :end_location, :errors
