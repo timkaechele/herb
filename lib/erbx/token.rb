@@ -31,10 +31,7 @@ module ERBX
     end
 
     def inspect
-      # TODO: locations should use the same tree_inspect format as everywhere else:
-      # %(#<ERBX::Token type="#{type}" value=#{value.inspect} range=#{range.tree_inspect} start=#{start_location.tree_inspect} end=#{end_location.tree_inspect}>)
-
-      %(#<ERBX::Token type="#{type}" value=#{value.inspect} range=#{range.tree_inspect} start=#{start_location.line}:#{start_location.column} end=#{end_location.line}:#{end_location.column}>)
+      %(#<ERBX::Token type="#{type}" value=#{value.inspect} range=#{range.tree_inspect} start=#{start_location.tree_inspect} end=#{end_location.tree_inspect}>)
     end
   end
 end
