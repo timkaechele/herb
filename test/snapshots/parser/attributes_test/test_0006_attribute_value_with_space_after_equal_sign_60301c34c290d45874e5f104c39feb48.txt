@@ -4,15 +4,17 @@
         ├── open_tag:
         │   └── @ HTMLOpenTagNode (location: (1:0)-(1:24))
         │       ├── errors: (2 errors)
-        │       │   ├── @ UnexpectedTokenNode (location: (1:14)-(1:15))
-        │       │   │   ├── message: "[Parser]: Unexpected Token '\"' (expected 'TOKEN_IDENTIFIER, TOKEN_ERB_START, or TOKEN_WHITESPACE', got: 'TOKEN_QUOTE')"
+        │       │   ├── @ UnexpectedError (location: (1:14)-(1:15))
+        │       │   │   ├── message: "Unexpected Token. Expected: `TOKEN_IDENTIFIER, TOKEN_ERB_START, or TOKEN_WHITESPACE`, found: `TOKEN_QUOTE`."
+        │       │   │   ├── description: "Unexpected Token"
         │       │   │   ├── expected: "TOKEN_IDENTIFIER, TOKEN_ERB_START, or TOKEN_WHITESPACE"
-        │       │   │   └── got: "TOKEN_QUOTE"
+        │       │   │   └── found: "TOKEN_QUOTE"
         │       │   │
-        │       │   └── @ UnexpectedTokenNode (location: (1:20)-(1:21))
-        │       │       ├── message: "[Parser]: Unexpected Token '\"' (expected 'TOKEN_IDENTIFIER, TOKEN_ERB_START, or TOKEN_WHITESPACE', got: 'TOKEN_QUOTE')"
+        │       │   └── @ UnexpectedError (location: (1:20)-(1:21))
+        │       │       ├── message: "Unexpected Token. Expected: `TOKEN_IDENTIFIER, TOKEN_ERB_START, or TOKEN_WHITESPACE`, found: `TOKEN_QUOTE`."
+        │       │       ├── description: "Unexpected Token"
         │       │       ├── expected: "TOKEN_IDENTIFIER, TOKEN_ERB_START, or TOKEN_WHITESPACE"
-        │       │       └── got: "TOKEN_QUOTE"
+        │       │       └── found: "TOKEN_QUOTE"
         │       │
         │       ├── tag_opening: "<" (location: (1:0)-(1:1))
         │       ├── tag_name: "input" (location: (1:1)-(1:6))
@@ -26,10 +28,11 @@
         │       │   │   └── value:
         │       │   │       └── @ HTMLAttributeValueNode (location: (1:13)-(1:14))
         │       │   │           ├── errors: (1 error)
-        │       │   │           │   └── @ UnexpectedTokenNode (location: (1:13)-(1:14))
-        │       │   │           │       ├── message: "[Parser]: Unexpected Token ' ' (expected 'TOKEN_IDENTIFIER, TOKEN_QUOTE, TOKEN_ERB_START', got: 'TOKEN_WHITESPACE')"
+        │       │   │           │   └── @ UnexpectedError (location: (1:13)-(1:14))
+        │       │   │           │       ├── message: "Unexpected Token. Expected: `TOKEN_IDENTIFIER, TOKEN_QUOTE, TOKEN_ERB_START`, found: `TOKEN_WHITESPACE`."
+        │       │   │           │       ├── description: "Unexpected Token"
         │       │   │           │       ├── expected: "TOKEN_IDENTIFIER, TOKEN_QUOTE, TOKEN_ERB_START"
-        │       │   │           │       └── got: "TOKEN_WHITESPACE"
+        │       │   │           │       └── found: "TOKEN_WHITESPACE"
         │       │   │           │
         │       │   │           ├── open_quote: ∅
         │       │   │           ├── children: []

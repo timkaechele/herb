@@ -1,9 +1,8 @@
 @ DocumentNode (location: (1:0)-(7:7))
 ├── errors: (1 error)
-│   └── @ UnexpectedTokenNode (location: (6:9)-(6:11))
-│       ├── message: "[Parser]: Unexpected Token 'unclosed HTML tag at end of document (opened at 2:10)' (expected '</main>', got: 'EOF')"
-│       ├── expected: "</main>"
-│       └── got: "EOF"
+│   └── @ UnclosedElementError (location: (6:9)-(6:11))
+│       ├── message: "Tag `<main>` opened at (2:10) was never closed before the end of document."
+│       └── opening_tag: "main" (location: (2:10)-(2:14))
 │
 └── children: (5 items)
     ├── @ HTMLTextNode (location: (1:0)-(2:9))
@@ -26,10 +25,10 @@
     │   │   │
     │   │   ├── @ HTMLElementNode (location: (3:11)-(4:20))
     │   │   │   ├── errors: (1 error)
-    │   │   │   │   └── @ UnexpectedTokenNode (location: (4:13)-(4:20))
-    │   │   │   │       ├── message: "[Parser]: Unexpected Token 'mismatched closing tag, expected closing tag for 'div' (opened at 3:12)' (expected 'div', got: 'span')"
-    │   │   │   │       ├── expected: "div"
-    │   │   │   │       └── got: "span"
+    │   │   │   │   └── @ TagNamesMismatchError (location: (4:15)-(4:19))
+    │   │   │   │       ├── message: "Opening tag `<div>` at (3:12) closed with `</span>` at (4:15)."
+    │   │   │   │       ├── opening_tag: "div" (location: (3:12)-(3:15))
+    │   │   │   │       └── closing_tag: "span" (location: (4:15)-(4:19))
     │   │   │   │
     │   │   │   ├── open_tag:
     │   │   │   │   └── @ HTMLOpenTagNode (location: (3:11)-(3:16))
@@ -69,10 +68,9 @@
     │
     ├── @ HTMLCloseTagNode (location: (6:9)-(6:16))
     │   ├── errors: (1 error)
-    │   │   └── @ UnexpectedTokenNode (location: (6:9)-(6:16))
-    │   │       ├── message: "[Parser]: Unexpected Token 'expected element to have a start tag' (expected '<main>', got: '')"
-    │   │       ├── expected: "<main>"
-    │   │       └── got: ""
+    │   │   └── @ MissingOpeningTagError (location: (6:9)-(6:16))
+    │   │       ├── message: "Found closing tag `</main>` at (6:11) without a matching opening tag."
+    │   │       └── closing_tag: "main" (location: (6:11)-(6:15))
     │   │
     │   ├── tag_opening: "</" (location: (6:9)-(6:11))
     │   ├── tag_name: "main" (location: (6:11)-(6:15))
