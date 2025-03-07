@@ -21,40 +21,40 @@ hero:
       link: https://github.com/marcoroth/herb
 
 features:
-  - title: Fast
+  - title: Engineered for Speed
     icon: ⚡
-    details: Engineered for speed, it parses input swiftly enough to update on every keystroke, ensuring real-time responsiveness in text editors.
+    details: Parses input fast enough to update on every keystroke, ensuring real-time responsiveness in text editors and other tools.
 
   - title: HTML-aware
-    icon: 🌐
-    details: Designed to recognize and interpret HTML context, ensuring seamless integration and accurate parsing of HTML elements within HTML+ERB templates
+    icon: 🧩
+    details: Intelligently recognizes and navigates HTML structure within ERB templates, ensuring precise parsing across interleaved markup and Ruby code.
 
-  - title: Robust and Reliable
-    icon: 🛡️
-    details: Built to perform reliably under varied conditions, ensuring consistent behavior and stability across all operations.
+  - title: Built on Prism
+    icon: 💎
+    details: Powered by Prism, Ruby's new official default parser as of Ruby 3.4. Prism is designed to be error-tolerant and is adopted by major Ruby runtimes including CRuby, JRuby, TruffleRuby.
 
   - title: Error-Tolerant
     icon: 🚑
-    details: Designed to handle errors gracefully, it provides accurate results even when encountering syntax errors, enhancing user experience and productivity.
+    details: Designed to handle errors gracefully, it provides accurate results even when encountering syntax errors.
 
-  - title: White-space Intelligent
+  - title: Whitespace-Aware
     icon: 📏
-    details: Sophisticated handling of whitespace allows for precise representation in the Abstract Syntax Tree (AST), ensuring that even the subtlest nuances are captured.
+    details: Accurately preserves spacing and formatting in the Abstract Syntax Tree (AST).
 
-  - title: LSP Ready
-    icon: 🖥️
-    details: Future-proof architecture supports Language Server Protocols (LSP), integrating seamlessly with IDEs and modern editor tooling for an enhanced coding environment.
+  - title: LSP-Ready
+    icon: 🔌
+    details: Works seamlessly with Language Server Protocols (LSP) for a better experience in modern editors.
 
-  - title: Location-Aware Parsing
-    icon: 📍
-    details: Offers detailed location tracking for each token within the parse result, enabling precise debugging, annotations, and diagnostics.
+  - title: Precise Position Tracking
+    icon: 🎯
+    details: Tracks precise locations down to individual character offsets for every node and token, enabling precise debugging, annotations, and diagnostics.
 
-  - title: Language-Independent
+  - title: Works Across Languages
     icon: 🌎
-    details: Versatile enough to be utilized via bindings from high-level programming languages such as Ruby and JavaScript, providing broad compatibility and flexibility.
+    details: Native bindings for Ruby, JavaScript/TypeScript, and other high-level programming languages.
 
-  - title: Template-Language Inclusive
+  - title: Expanding Template Language Support
     icon: 🏗️
-    details: Comprehensive understanding of various template languages including ERB, EJS, and Handlebars, facilitating versatile and dynamic template processing.
+    details: Future updates will expand beyond ERB through a unified parser and AST architecture that maintains consistent APIs across different templating languages.
 
 ---
