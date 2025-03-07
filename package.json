@@ -2,7 +2,7 @@
   "name": "herb",
   "license": "MIT",
   "devDependencies": {
-    "vitepress": "^2.0.0-alpha.2"
+    "vitepress": "^2.0.0-alpha.3"
   },
   "scripts": {
     "docs:dev": "vitepress dev",
