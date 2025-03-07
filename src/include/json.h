@@ -1,5 +1,5 @@
-#ifndef ERBX_JSON_H
-#define ERBX_JSON_H
+#ifndef HERB_JSON_H
+#define HERB_JSON_H
 
 #include "buffer.h"
 

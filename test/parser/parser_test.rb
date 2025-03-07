@@ -19,7 +19,7 @@ module Parser
       file.write(%(<h1><%= RUBY_VERSION %></h1>))
       file.rewind
 
-      result = ERBX.parse_file(file.path)
+      result = Herb.parse_file(file.path)
 
       assert_equal <<~SNAPSHOT.chomp, result.value.inspect
         @ DocumentNode (location: (1:0)-(1:28))

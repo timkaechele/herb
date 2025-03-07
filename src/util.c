@@ -111,7 +111,7 @@ bool string_present(const char* input) {
   return !string_blank(input);
 }
 
-char* erbx_strdup(const char* s) {
+char* herb_strdup(const char* s) {
   size_t len = strlen(s) + 1;
   char* copy = malloc(len);
 

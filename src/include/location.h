@@ -1,5 +1,5 @@
-#ifndef ERBX_LOCATION_H
-#define ERBX_LOCATION_H
+#ifndef HERB_LOCATION_H
+#define HERB_LOCATION_H
 
 #include <stdlib.h>
 

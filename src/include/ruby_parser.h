@@ -1,6 +1,6 @@
-#ifndef ERBX_RUBY_PARSER_H
-#define ERBX_RUBY_PARSER_H
+#ifndef HERB_RUBY_PARSER_H
+#define HERB_RUBY_PARSER_H
 
-void erbx_parse_ruby_to_stdout(char* source);
+void herb_parse_ruby_to_stdout(char* source);
 
 #endif

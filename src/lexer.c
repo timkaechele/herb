@@ -65,7 +65,7 @@ token_T* lexer_error(const lexer_T* lexer, const char* message) {
     lexer->current_column
   );
 
-  return token_init(erbx_strdup(error_message), TOKEN_ERROR, lexer);
+  return token_init(herb_strdup(error_message), TOKEN_ERROR, lexer);
 }
 
 static void lexer_handle_newline(lexer_T* lexer) {

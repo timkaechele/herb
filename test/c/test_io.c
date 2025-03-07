@@ -12,13 +12,13 @@ void create_test_file(const char* filename, const char* content) {
 }
 
 // Test reading from a file
-TEST(test_erbx_read_file)
-  const char* filename = "test_erbx_read_file.txt";
+TEST(test_herb_read_file)
+  const char* filename = "test_herb_read_file.txt";
   const char* file_content = "Hello, World!\nThis is a test file.\n";
 
   create_test_file(filename, file_content);
 
-  char* result = erbx_read_file(filename);
+  char* result = herb_read_file(filename);
 
   ck_assert_ptr_nonnull(result);
   ck_assert_str_eq(result, file_content);
@@ -30,7 +30,7 @@ END
 TCase* io_tests(void) {
   TCase* io = tcase_create("IO");
 
-  tcase_add_test(io, test_erbx_read_file);
+  tcase_add_test(io, test_herb_read_file);
 
   return io;
 }

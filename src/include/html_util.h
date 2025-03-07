@@ -1,5 +1,5 @@
-#ifndef ERBX_HTML_UTIL_H
-#define ERBX_HTML_UTIL_H
+#ifndef HERB_HTML_UTIL_H
+#define HERB_HTML_UTIL_H
 
 #include <stdbool.h>
 

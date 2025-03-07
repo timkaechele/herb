@@ -19,16 +19,16 @@
 
   <%- node.fields.each do |field| -%>
   <%- case field -%>
-  <%- when ERBX::Template::TokenField -%>
+  <%- when Herb::Template::TokenField -%>
   <%= node.human %>-><%= field.name %> = token_copy(<%= field.name %>);
-  <%- when ERBX::Template::NodeField -%>
+  <%- when Herb::Template::NodeField -%>
   <%= node.human %>-><%= field.name %> = <%= field.name %>;
-  <%- when ERBX::Template::ArrayField -%>
+  <%- when Herb::Template::ArrayField -%>
   <%= node.human %>-><%= field.name %> = <%= field.name %>;
-  <%- when ERBX::Template::BooleanField -%>
+  <%- when Herb::Template::BooleanField -%>
   <%= node.human %>-><%= field.name %> = <%= field.name %>;
-  <%- when ERBX::Template::StringField -%>
-  <%= node.human %>-><%= field.name %> = erbx_strdup(<%= field.name %>);
+  <%- when Herb::Template::StringField -%>
+  <%= node.human %>-><%= field.name %> = herb_strdup(<%= field.name %>);
   <%- else -%>
   <%= field.inspect %>
   <%- end -%>
@@ -85,11 +85,11 @@ static void ast_free_<%= node.human %>(<%= node.struct_type %>* <%= node.human %
   <%- end -%>
   <%- node.fields.each do |field| -%>
   <%- case field -%>
-  <%- when ERBX::Template::TokenField -%>
+  <%- when Herb::Template::TokenField -%>
   if (<%= node.human %>-><%= field.name %> != NULL) { token_free(<%= node.human %>-><%= field.name %>); }
-  <%- when ERBX::Template::NodeField -%>
+  <%- when Herb::Template::NodeField -%>
   ast_node_free((AST_NODE_T*) <%= node.human %>-><%= field.name %>);
-  <%- when ERBX::Template::ArrayField -%>
+  <%- when Herb::Template::ArrayField -%>
   if (<%= node.human %>-><%= field.name %> != NULL) {
     for (size_t i = 0; i < array_size(<%= node.human %>-><%= field.name %>); i++) {
       AST_NODE_T* child = array_get(<%= node.human %>-><%= field.name %>, i);
@@ -98,9 +98,9 @@ static void ast_free_<%= node.human %>(<%= node.struct_type %>* <%= node.human %
 
     array_free(&<%= node.human %>-><%= field.name %>);
   }
-  <%- when ERBX::Template::StringField -%>
+  <%- when Herb::Template::StringField -%>
   if (<%= node.human %>-><%= field.name %> != NULL) { free((char*) <%= node.human %>-><%= field.name %>); }
-  <%- when ERBX::Template::BooleanField -%>
+  <%- when Herb::Template::BooleanField -%>
   <%- else -%>
   <%= field.inspect %>
   <%- end -%>

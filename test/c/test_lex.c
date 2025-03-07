@@ -1,22 +1,22 @@
 #include "include/test.h"
-#include "../../src/include/erbx.h"
+#include "../../src/include/herb.h"
 
-TEST(erbx_lex_to_buffer_empty_file)
+TEST(herb_lex_to_buffer_empty_file)
   char* html = "";
   buffer_T output = buffer_new();
 
-  erbx_lex_to_buffer(html, &output);
+  herb_lex_to_buffer(html, &output);
 
   ck_assert_str_eq(output.value, "#<Token type=TOKEN_EOF value='' range=[0, 0] start=1:0 end=1:0>\n");
 
   buffer_free(&output);
 END
 
-TEST(erbx_lex_to_buffer_basic_tag)
+TEST(herb_lex_to_buffer_basic_tag)
   char* html = "<html></html>";
   buffer_T output = buffer_new();
 
-  erbx_lex_to_buffer(html, &output);
+  herb_lex_to_buffer(html, &output);
 
   ck_assert_str_eq(
     output.value,
@@ -35,8 +35,8 @@ END
 TCase *lex_tests(void) {
   TCase *tags = tcase_create("Lex");
 
-  tcase_add_test(tags, erbx_lex_to_buffer_empty_file);
-  tcase_add_test(tags, erbx_lex_to_buffer_basic_tag);
+  tcase_add_test(tags, herb_lex_to_buffer_empty_file);
+  tcase_add_test(tags, herb_lex_to_buffer_basic_tag);
 
   return tags;
 }

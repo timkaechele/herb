@@ -1,5 +1,5 @@
-exec = erbx
-test_exec = run_erbx_tests
+exec = herb
+test_exec = run_herb_tests
 
 sources = $(wildcard src/*.c) $(wildcard src/**/*.c)
 headers = $(wildcard src/*.h) $(wildcard src/**/*.h)
@@ -21,7 +21,7 @@ non_main_objects = $(filter-out src/main.o, $(objects))
 
 soext ?= $(shell ruby -e 'puts RbConfig::CONFIG["DLEXT"]')
 lib_name = lib$(exec).$(soext)
-ruby_extension = ext/erbx/$(lib_name)
+ruby_extension = ext/herb/$(lib_name)
 
 os := $(shell uname -s)
 
@@ -91,7 +91,7 @@ test: $(test_objects) $(non_main_objects)
 
 clean:
 	rm -f $(exec) $(test_exec) $(lib_name) $(ruby_extension)
-	rm -rf $(objects) $(test_objects) $(extension_objects) lib/erbx/*.bundle tmp
+	rm -rf $(objects) $(test_objects) $(extension_objects) lib/herb/*.bundle tmp
 
 bundle_install:
 	bundle install

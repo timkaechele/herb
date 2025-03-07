@@ -5,19 +5,19 @@ require_relative "../test_helper"
 module Extractor
   class ExtractHTMLTest < Minitest::Spec
     test "basic silent" do
-      actual = ERBX.extract_html("<h1><% RUBY_VERSION %></h1>")
+      actual = Herb.extract_html("<h1><% RUBY_VERSION %></h1>")
 
       assert_equal "<h1>                  </h1>", actual
     end
 
     test "basic loud" do
-      actual = ERBX.extract_html("<h1><%= RUBY_VERSION %></h1>")
+      actual = Herb.extract_html("<h1><%= RUBY_VERSION %></h1>")
 
       assert_equal "<h1>                   </h1>", actual
     end
 
     test "with newlines" do
-      actual = ERBX.extract_html(<<~HTML)
+      actual = Herb.extract_html(<<~HTML)
         <h1>
           <% RUBY_VERSION %>
         </h1>
@@ -27,7 +27,7 @@ module Extractor
     end
 
     test "nested" do
-      actual = ERBX.extract_html(<<~HTML)
+      actual = Herb.extract_html(<<~HTML)
         <% array = [1, 2, 3] %>
 
         <ul>

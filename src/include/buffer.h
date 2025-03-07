@@ -1,5 +1,5 @@
-#ifndef ERBX_BUFFER_H
-#define ERBX_BUFFER_H
+#ifndef HERB_BUFFER_H
+#define HERB_BUFFER_H
 
 #include <stdbool.h>
 #include <stdlib.h>

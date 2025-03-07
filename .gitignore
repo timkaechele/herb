@@ -2,15 +2,15 @@
 .vitepress/dist
 .vitepress/cache
 
-# ERBX output
-/erbx
-/run_erbx_tests
+# Herb output
+/herb
+/run_herb_tests
 
-# ERBX Ruby extension
-/ext/erbx/extconf.h
-/ext/erbx/erbx.bundle
-/ext/erbx/Makefile
-/lib/erbx/erbx.bundle
+# Herb Ruby extension
+/ext/herb/extconf.h
+/ext/herb/herb.bundle
+/ext/herb/Makefile
+/lib/herb/herb.bundle
 
 # Prerequisites
 *.d
@@ -81,12 +81,12 @@ vendor/cache/*
 pkg/*
 
 # Templated Files
-ext/erbx/error_helpers.c
-ext/erbx/error_helpers.h
-ext/erbx/nodes.c
-ext/erbx/nodes.h
-lib/erbx/ast/nodes.rb
-lib/erbx/errors.rb
+ext/herb/error_helpers.c
+ext/herb/error_helpers.h
+ext/herb/nodes.c
+ext/herb/nodes.h
+lib/herb/ast/nodes.rb
+lib/herb/errors.rb
 src/ast_nodes.c
 src/ast_pretty_print.c
 src/errors.c

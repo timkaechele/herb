@@ -1,6 +1,6 @@
-#ifndef ERBX_VERSION_H
-#define ERBX_VERSION_H
+#ifndef HERB_VERSION_H
+#define HERB_VERSION_H
 
-#define ERBX_VERSION "0.0.1"
+#define HERB_VERSION "0.0.1"
 
 #endif

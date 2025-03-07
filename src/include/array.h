@@ -1,5 +1,5 @@
-#ifndef ERBX_ARRAY_H
-#define ERBX_ARRAY_H
+#ifndef HERB_ARRAY_H
+#define HERB_ARRAY_H
 
 #include <stdlib.h>
 

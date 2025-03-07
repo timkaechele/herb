@@ -1,31 +1,31 @@
-# `ERBX` JavaScript Bindings
+# `Herb` JavaScript Bindings
 
-ERBX is bundled and packaged up as an ES Module in an npm package and available to be downloaded from [npmjs.org](https://www.npmjs.com).
+Herb is bundled and packaged up as an ES Module in an npm package and available to be downloaded from [npmjs.org](https://www.npmjs.com).
 
 
 > [!TIP] More Language Bindings
-> ERBX also has [bindings for Ruby](/bindings/ruby/)
+> Herb also has [bindings for Ruby](/bindings/ruby/)
 
 ## Installation
 
-Add the `erbx` package to your `package.json`:
+Add the `herb` package to your `package.json`:
 
 :::code-group
 
 ```shell [npm]
-npm add erbx
+npm add herb
 ```
 
 ```shell [pnpm]
-pnpm add erbx
+pnpm add herb
 ```
 
 ```shell [yarn]
-yarn add erbx
+yarn add herb
 ```
 
 ```shell [bun]
-bun add erbx
+bun add herb
 ```
 :::
 

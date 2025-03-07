@@ -1,5 +1,5 @@
-#ifndef ERBX_TOKEN_STRUCT_H
-#define ERBX_TOKEN_STRUCT_H
+#ifndef HERB_TOKEN_STRUCT_H
+#define HERB_TOKEN_STRUCT_H
 
 #include "location.h"
 #include "range.h"

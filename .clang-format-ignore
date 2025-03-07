@@ -1,5 +1,5 @@
-ext/erbx/error_helpers.c
-ext/erbx/nodes.c
+ext/herb/error_helpers.c
+ext/herb/nodes.c
 src/ast_nodes.c
 src/ast_pretty_print.c
 src/errors.c

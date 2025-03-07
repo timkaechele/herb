@@ -10,4 +10,4 @@ if [[ "$(uname)" != "Darwin" ]]; then
   exit 0
 fi
 
-leaks --atExit -- ./erbx lex "$1"
+leaks --atExit -- ./herb lex "$1"

@@ -11,14 +11,14 @@ rake templates
 make
 rake compile
 
-./run_erbx_tests
+./run_herb_tests
 rake test
 
-./erbx lex examples/test.html.erb
-./erbx ruby examples/test.html.erb
-./erbx html examples/test.html.erb
-./erbx parse examples/test.html.erb
-./erbx prism examples/test.html.erb
+./herb lex examples/test.html.erb
+./herb ruby examples/test.html.erb
+./herb html examples/test.html.erb
+./herb parse examples/test.html.erb
+./herb prism examples/test.html.erb
 
 bin/leaks_lex examples/test.html.erb
 bin/leaks_parse examples/test.html.erb

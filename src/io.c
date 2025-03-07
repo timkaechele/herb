@@ -7,7 +7,7 @@
 
 #define FILE_READ_CHUNK 4096
 
-char* erbx_read_file(const char* filename) {
+char* herb_read_file(const char* filename) {
   FILE* fp = fopen(filename, "rb");
 
   if (fp == NULL) {

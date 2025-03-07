@@ -1,5 +1,5 @@
-#ifndef ERBX_RANGE_H
-#define ERBX_RANGE_H
+#ifndef HERB_RANGE_H
+#define HERB_RANGE_H
 
 #include <stdlib.h>
 
