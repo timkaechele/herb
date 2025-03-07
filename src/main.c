@@ -35,7 +35,7 @@ int main(const int argc, char* argv[]) {
   if (argc < 2) {
     printf("./herb [command] [options]\n\n");
 
-    printf("Herb - Seamless and powerful HTML+ERB parsing.\n\n");
+    printf("Herb 🌿 Seamless and powerful HTML-aware ERB parsing.\n\n");
 
     printf("./herb lex [file]      -  Lex a file\n");
     printf("./herb lex_json [file] -  Lex a file and return the result as json.\n");

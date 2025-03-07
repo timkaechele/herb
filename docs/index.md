@@ -3,9 +3,9 @@
 layout: home
 
 hero:
-  name: "Herb"
+  name: "🌿 Herb"
   text: ""
-  tagline: Seamless and powerful HTML+ERB parsing.
+  tagline: Seamless and powerful HTML-aware ERB parsing.
 
   actions:
     - theme: brand

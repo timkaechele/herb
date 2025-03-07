@@ -2,8 +2,8 @@ import { defineConfig } from "vitepress"
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
-  title: "Herb",
-  description: "Seamless and powerful HTML+ERB parsing.",
+  title: "🌿 Herb",
+  description: "Seamless and powerful HTML-aware ERB parsing.",
   srcDir: "./docs",
   base: "/herb/",
   themeConfig: {
