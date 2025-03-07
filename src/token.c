@@ -84,7 +84,7 @@ const char* token_type_to_string(const token_type_T type) {
 
 char* token_to_string(const token_T* token) {
   const char* type_string = token_type_to_string(token->type);
-  const char* template = "#<Token type=%s value='%s' range=[%d, %d] start=%d:%d end=%d:%d>";
+  const char* template = "#<Herb::Token type=\"%s\" value=\"%s\" range=[%d, %d] start=(%d:%d) end=(%d:%d)>";
 
   char* string = calloc(strlen(type_string) + strlen(template) + 8, sizeof(char));
 

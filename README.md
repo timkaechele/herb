@@ -90,17 +90,17 @@ Running the executable shows a pretty-printed output for the respective command 
 ```
 ❯ ./herb lex examples/simple_erb.html.erb
 
-#<Token type=TOKEN_ERB_START value='<%' range=[0, 2] start=1:1 end=1:3>
-#<Token type=TOKEN_ERB_CONTENT value=' title ' range=[2, 9] start=1:3 end=1:10>
-#<Token type=TOKEN_ERB_END value='%>' range=[9, 11] start=1:10 end=1:12>
-#<Token type=TOKEN_NEWLINE value='\n' range=[11, 12] start=1:0 end=2:1>
-#<Token type=TOKEN_EOF value='' range=[12, 12] start=2:1 end=2:1>
+#<Herb::Token type="TOKEN_ERB_START" value="<%" range=[0, 2] start=(1:0) end=(1:2)>
+#<Herb::Token type="TOKEN_ERB_CONTENT" value=" title " range=[2, 9] start=(1:2) end=(1:9)>
+#<Herb::Token type="TOKEN_ERB_END" value="%>" range=[9, 11] start=(1:9) end=(1:11)>
+#<Herb::Token type="TOKEN_NEWLINE" value="\n" range=[11, 12] start=(1:0) end=(2:1)>
+#<Herb::Token type="TOKEN_EOF" value="" range=[12, 12] start=(2:1) end=(2:1)>
 
 Finished lexing in:
 
-        24 µs
-     0.024 ms
-  0.000024  s
+        12 µs
+     0.012 ms
+  0.000012  s
 ```
 
 ### Test
