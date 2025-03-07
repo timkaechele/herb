@@ -86,7 +86,7 @@ export default defineConfig({
                 ]
               },
               {
-                text: "HTML Attribtues",
+                text: "HTML Attributes",
                 collapsed: true,
                 items: [
                   { text: "HTML_ATTRIBUTE_SET_NODE", link: "/ast/AST_HTML_ATTRIBUTE_SET_NODE" },

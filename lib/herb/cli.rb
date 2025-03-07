@@ -123,7 +123,7 @@ class Herb::CLI
                   puts Herb.version
                   exit(0)
                 when String
-                  puts "Unkown command: '#{@command}'"
+                  puts "Unknown command: '#{@command}'"
                   puts
 
                   help(1)

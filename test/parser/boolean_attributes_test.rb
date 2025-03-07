@@ -26,7 +26,7 @@ module Parser
       assert_parsed_snapshot(%(<input id="input" required />))
     end
 
-    test "boolean attribute surounded by regular attributes" do
+    test "boolean attribute surrounded by regular attributes" do
       assert_parsed_snapshot(%(<input class="classes" required id="ids"/>))
     end
   end

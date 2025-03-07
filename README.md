@@ -135,7 +135,7 @@ make prism_clean
 
 ### Local Integration Testing
 
-The `bin/integration` script allows for quick local iteration. On every run it clean the directory, builds the source from scratch and runs all checks, including the C-Tests, Ruby Tests, Linters, and examples in succession.
+The `bin/integration` script allows for quick local iteration. On every run it cleans the directory, builds the source from scratch and runs all checks, including the C-Tests, Ruby Tests, Linters, and examples in succession.
 
 ```bash
 bin/integration

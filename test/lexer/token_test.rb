@@ -14,7 +14,7 @@ module Lexer
       assert_lexed_snapshot("    ")
     end
 
-    test "multiple whitespace with newliens " do
+    test "multiple whitespace with newlines " do
       assert_lexed_snapshot(" \n  \n   \n")
     end
 
