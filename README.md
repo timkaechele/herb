@@ -1,4 +1,4 @@
-# 🌿 Herb
+# 🌿 Herb - HTML Embedded Ruby
 
 Seamless and powerful HTML-aware ERB parsing.
 
