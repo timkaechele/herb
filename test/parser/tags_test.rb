@@ -104,7 +104,14 @@ module Parser
       ))
     end
 
-    # TODO: it should also be able to recover from multiple out of order closing tags
+    # TODO: ideal parse result
+    #
+    # - match up the <main> and <div> tags
+    # - <p> should have a missing closing tag
+    # - </span> should have a missing opening tag
+    # - </p> should have a missing opening tag
+    # - no other errors
+    #
     test "should recover from multiple out of order closing tags" do
       skip
       assert_parsed_snapshot(%(
@@ -130,7 +137,13 @@ module Parser
       ))
     end
 
-    # TODO
+    # TODO: ideal parse result
+    #
+    # - matched up <main> and <div> tags
+    # - </br> VoidElementClosingTagError
+    # - </br> VoidElementClosingTagError
+    # - no other errors
+    #
     test "should recover from multiple void elements used as closing tag" do
       skip
       assert_parsed_snapshot(%(
