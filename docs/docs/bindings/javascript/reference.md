@@ -45,9 +45,9 @@ The `Herb` class exposes several methods for lexing, extracting, and parsing HTM
 
 ## Lexing
 
-Lexing converts the source code into tokens.
+The `Herb.lex` and `Herb.lexFile` methods allow you to tokenize an HTML document with embedded Ruby.
 
-### Example
+### `Herb.lex(source)`
 
 :::code-group
 ```js twoslash [javascript]
@@ -62,36 +62,29 @@ console.log(result)
 ```
 :::
 
+<br />
 
-## Extracting Code
-
-Herb allows you to extract either Ruby or HTML from mixed content.
-
-### Example
+### `Herb.lexFile(path)`
 
 :::code-group
 ```js twoslash [javascript]
 import { Herb } from "@herb-tools/node"
 
 // ---cut---
-const source = "<p>Hello <%= user.name %></p>"
+const result = await Herb.lexFile("./index.html.erb")
 
-const ruby = Herb.extractRuby(source)
-const html = Herb.extractHtml(source)
-
-console.log(ruby);
-// Outputs: "             user.name       "
-
-console.log(html)
-// Outputs: "<p>Hello                 </p>"
+console.log(result)
+```
+```erb [index.html.erb]
+<h1><%= "Hello World" %></h1>
 ```
 :::
 
 ## Parsing
 
-Herb provides a parser to transform HTML+ERB source into an AST (Abstract Syntax Tree).
+The `Herb.parse` and `Herb.parseFile` methods allow you to parse an HTML document with embedded Ruby and returns you a parsed result of your document containing an Abstract Syntax Tree (AST) that you can use to structurally traverse the parsed document.
 
-### Example
+### `Herb.parse(source)`
 
 :::code-group
 ```js twoslash [javascript]
@@ -106,11 +99,70 @@ console.log(result)
 ```
 :::
 
+<br />
+
+### `Herb.parseFile(path)`
+
+:::code-group
+```js twoslash [javascript]
+import { Herb } from "@herb-tools/node"
+
+// ---cut---
+const result = await Herb.parseFile("./index.html.erb")
+
+console.log(result)
+```
+```erb [index.html.erb]
+<h1><%= "Hello World" %></h1>
+```
+:::
+
+
+## Extracting Code
+
+Herb allows you to extract either Ruby or HTML from mixed content.
+
+### `Herb.extractRuby(source)`
+
+The `Herb.extractRuby` method allows you to extract only the Ruby parts of an HTML document with embedded Ruby.
+
+:::code-group
+```js twoslash [javascript]
+import { Herb } from "@herb-tools/node"
+
+// ---cut---
+const source = "<p>Hello <%= user.name %></p>"
+
+const ruby = Herb.extractRuby(source)
+
+console.log(ruby);
+// Outputs: "             user.name       "
+```
+:::
+
+### `Herb.extractHtml(source)`
+
+The `Herb.extractHtml` method allows you to extract only the HTML parts of an HTML document with embedded Ruby.
+
+:::code-group
+```js twoslash [javascript]
+import { Herb } from "@herb-tools/node"
+
+// ---cut---
+const source = "<p>Hello <%= user.name %></p>"
+
+const html = Herb.extractHtml(source)
+
+console.log(html)
+// Outputs: "<p>Hello                 </p>"
+```
+:::
+
 ## AST Traversal
 
 Herb supports AST traversal using visitors.
 
-### Example
+### Visitors
 
 :::code-group
 ```js twoslash [javascript]
@@ -133,4 +185,19 @@ result.visit(visitor)
 ```
 :::
 
-This allows you to analyze parsed HTML+ERB programmatically.
+This allows you to analyze the parsed HTML+ERB programmatically.
+
+
+## Metadata
+
+### `Herb.version`
+
+:::code-group
+```js twoslash [javascript]
+import { Herb } from "@herb-tools/node"
+
+// ---cut---
+console.log(Herb.version)
+// => "@herb-tools/node@0.0.1, @herb-tools/core@0.0.1, libherb@0.0.1 (native)"
+```
+:::
