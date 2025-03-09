@@ -19,12 +19,6 @@ gem "herb"
 ```
 :::
 
-:::code-group
-```erb [test.html.erb]
-<html><%= hello world %></html>
-```
-:::
-
 or use `bundler` to add the dependency to your project:
 
 :::code-group
