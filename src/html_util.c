@@ -23,6 +23,20 @@ bool is_void_element(const char* tag_name) {
   return false;
 }
 
+bool is_html4_void_element(const char* tag_name) {
+  if (tag_name == NULL) { return false; }
+
+  const char* html4_void_tags[] = {
+    "basefont", "bgsound", "command", "frame", "image", "keygen",
+  };
+
+  for (size_t i = 0; i < sizeof(html4_void_tags) / sizeof(char*); i++) {
+    if (strcasecmp(tag_name, html4_void_tags[i]) == 0) { return true; }
+  }
+
+  return false;
+}
+
 /**
  * @brief Creates an opening HTML tag string like "<tag_name>"
  *
