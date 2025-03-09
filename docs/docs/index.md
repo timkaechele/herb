@@ -3,9 +3,13 @@
 layout: home
 
 hero:
-  name: "🌿 Herb"
-  text: ""
-  tagline: Seamless and powerful HTML-aware ERB parsing.
+  name: "Herb"
+  text: "Seamless and powerful HTML-aware ERB parsing."
+  tagline: "Next-generation ERB parsing for smarter developer tooling and more."
+
+  image:
+    src: /assets/herb.svg
+    alt: Herb
 
   actions:
     - theme: brand

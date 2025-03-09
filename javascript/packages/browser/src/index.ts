@@ -1,6 +1,11 @@
-import { Herb } from "@herb-tools/core"
+export { Visitor } from "@herb-tools/core"
+import { Herb as HerbInstance } from "@herb-tools/core"
 import { backend } from "./libherb.js"
 
-const herb = new Herb(backend)
+/**
+ * An instance of the `Herb` class using a browser backend.
+ * This loads `libherb` using WebAssembly (WASM).
+ */
+const Herb = new HerbInstance(backend)
 
-export { herb as Herb }
+export { Herb }

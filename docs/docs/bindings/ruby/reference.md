@@ -2,7 +2,7 @@
 outline: deep
 ---
 
-# `Herb` Reference
+# Ruby Reference
 
 The `Herb` module exposes a few methods for you to lex, extract and parse HTML+ERB source code.
 
@@ -19,6 +19,7 @@ The `Herb` module exposes a few methods for you to lex, extract and parse HTML+E
 
 The `Herb.lex` method allows you to tokenize an HTML document with embedded Ruby (ERB).
 
+:::code-group
 ```ruby
 code = <<~HTML
   <h1><%= "Hello World" %></h1>
@@ -27,7 +28,7 @@ HTML
 Herb.lex(code)
 # => [TOKEN_HTML_TAG_START, TOKEN_HTML_TAG_NAME, TOKEN_HTML_TAG_END, ...]
 ```
-
+:::
 
 ## Extracting Code
 
@@ -35,6 +36,7 @@ Herb.lex(code)
 
 The `Herb.extract_ruby` method allows you to extract only the Ruby parts of an HTML document with embedded Ruby (ERB).
 
+:::code-group
 ```ruby
 code = <<~HTML
   <h1><%= "Hello World" %></h1>
@@ -43,11 +45,13 @@ HTML
 Herb.extract_ruby(code)
 # => "        "Hello World"        "
 ```
+:::
 
 ### `Herb.extract_html(source)`
 
 The `Herb.extract_html` method allows you to extract only the HTML parts of an HTML document with embedded Ruby (ERB).
 
+:::code-group
 ```ruby
 code = <<~HTML
   <h1><%= "Hello World" %></h1>
@@ -56,6 +60,7 @@ HTML
 Herb.extract_html(code)
 # => "<h1>                    </h1>"
 ```
+:::
 
 ## Parsing
 
@@ -63,6 +68,7 @@ Herb.extract_html(code)
 
 The `Herb.parse` method allows you to parse an HTML document with embedded Ruby (ERB) and returns you a parsed result of your document containing an Abstract Syntax Tree (AST) that you can use to structurally traverse the parsed document.
 
+:::code-group
 ```ruby
 code = <<~HTML
   <h1><%= "Hello World" %></h1>
@@ -71,6 +77,7 @@ HTML
 Herb.parse(code)
 # => #<Herb::ParseResult ...>"
 ```
+:::
 
 ## AST Traversal
 

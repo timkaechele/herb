@@ -2,9 +2,9 @@
 outline: deep
 ---
 
-# `Herb` Ruby Bindings
+# Herb Ruby Bindings
 
-Herb is bundled and packaged up as a precompiled rubygem and available to be installed from [RubyGems.org](https://rubygems.org).
+Herb is bundled and packaged up as a precompiled RubyGem and available to be installed from [RubyGems.org](https://rubygems.org).
 
 > [!TIP] More Language Bindings
 > Herb also has [bindings for JavaScript/Node.js](/bindings/javascript/)
@@ -13,23 +13,35 @@ Herb is bundled and packaged up as a precompiled rubygem and available to be ins
 
 Add the gem to your `Gemfile`:
 
-```ruby
+:::code-group
+```ruby [Gemfile]
 gem "herb"
 ```
+:::
+
+:::code-group
+```erb [test.html.erb]
+<html><%= hello world %></html>
+```
+:::
 
 or use `bundler` to add the dependency to your project:
 
+:::code-group
 ```shell
 bundle add herb
 ```
+:::
 
 
 ## Getting Started
 
 In your project `require` the gem:
 
+:::code-group
 ```ruby
 require "herb"
 ```
+:::
 
-and you are now ready to parse HTML+ERB from Ruby.
+You are now ready to parse HTML+ERB in Ruby.
