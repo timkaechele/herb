@@ -228,7 +228,7 @@ const themeConfig = {
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
   title: "Herb",
-  description: "Seamless and powerful HTML-aware ERB parsing.",
+  description: "Powerful and seamless HTML-aware ERB parsing.",
   srcDir: "./docs",
   base: "/herb/",
   markdown,

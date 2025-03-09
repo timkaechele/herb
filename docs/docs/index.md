@@ -4,7 +4,7 @@ layout: home
 
 hero:
   name: "Herb"
-  text: "Seamless and powerful HTML-aware ERB parsing."
+  text: "Powerful and seamless HTML-aware ERB parsing."
   tagline: "Next-generation HTML+ERB parsing for smarter developer tooling and more."
 
   image:

@@ -2,7 +2,7 @@
 
 #### HTML + ERB (HTML Embedded Ruby)
 
-Seamless and powerful HTML-aware ERB parsing.
+Powerful and seamless HTML-aware ERB parsing.
 
 ## Contributing
 
@@ -69,7 +69,7 @@ The `herb` executable exposes a few commands for interacting with `.html.erb` fi
 ❯ ./herb
 ./herb [command] [options]
 
-Herb 🌿 Seamless and powerful HTML-aware ERB parsing.
+Herb 🌿 Powerful and seamless HTML-aware ERB parsing.
 
 ./herb lex [file]      -  Lex a file
 ./herb lex_json [file] -  Lex a file and return the result as json.
