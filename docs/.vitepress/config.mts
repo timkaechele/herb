@@ -38,7 +38,7 @@ const vite = {
 }
 
 const themeConfig = {
-  logo: "/assets/herb.svg",
+  logo: "/herb.svg",
   // https://vitepress.dev/reference/default-theme-config
   nav: [
     { text: "Home", link: "/" },

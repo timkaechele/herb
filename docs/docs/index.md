@@ -8,7 +8,7 @@ hero:
   tagline: "Next-generation ERB parsing for smarter developer tooling and more."
 
   image:
-    src: /assets/herb.svg
+    src: /herb.svg
     alt: Herb
 
   actions:
