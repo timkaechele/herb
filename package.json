@@ -1,14 +1,26 @@
 {
-  "name": "herb",
+  "name": "@herb-tools/source",
+  "version": "0.0.0",
   "license": "MIT",
+  "private": true,
   "devDependencies": {
-    "vitepress": "^2.0.0-alpha.3"
+    "@nx/js": "20.5.0",
+    "@nx/node": "^20.5.0",
+    "@nx/web": "20.5.0",
+    "nx": "20.5.0",
+    "prettier": "3.5.3"
   },
   "scripts": {
-    "dev": "yarn playground",
-    "playground": "cd playground && yarn install && yarn dev",
-    "docs:dev": "vitepress dev",
-    "docs:build": "vitepress build",
-    "docs:preview": "vitepress preview"
-  }
+    "docs": "nx dev docs",
+    "playground": "nx dev playground",
+    "build": "nx run-many --target=build",
+    "test": "nx run-many --target=test",
+    "lint": "yarn prettier --check javascript/**/*",
+    "format": "yarn prettier --write javascript/**/*"
+  },
+  "workspaces": [
+    "javascript/packages/*",
+    "playground",
+    "docs"
+  ]
 }

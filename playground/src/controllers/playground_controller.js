@@ -15,6 +15,11 @@ import LightEditor from 'light-pen/exports/components/light-editor/light-editor.
 import { loader as ERBLoader } from 'prism-esm/components/prism-erb.js'
 LightEditor.define()
 
+import { Herb } from "@herb-tools/browser";
+
+window.Herb = Herb;
+
+
 const exampleFile = dedent`
   <!-- Example HTML+ERB File -->
 
@@ -43,7 +48,16 @@ const exampleFile = dedent`
 `
 
 export default class extends Controller {
-  static targets = ['input', 'simpleViewer', 'fullViewer', 'viewerButton']
+  static targets = [
+    "input",
+    "prettyViewer",
+    "rubyViewer",
+    "htmlViewer",
+    "lexViewer",
+    "fullViewer",
+    "viewerButton",
+    "version",
+  ]
 
   connect () {
     this.restoreInput()
@@ -55,6 +69,10 @@ export default class extends Controller {
 
     this.inputTarget.setAttribute('language', 'erb')
     this.inputTarget.requestUpdate('highlighter')
+
+    if (this.hasVersionTarget) {
+      this.versionTarget.textContent = Herb.version;
+    }
   }
 
   updateURL () {
@@ -115,77 +133,106 @@ export default class extends Controller {
     this.viewerButtonTargets.forEach((button) => { button.dataset.active = false })
     button.dataset.active = true
 
-    if (button.dataset.viewer === 'simple') {
-      this.simpleViewerTarget.classList.remove('hidden')
-      this.fullViewerTarget.classList.add('hidden')
-    } else {
-      this.simpleViewerTarget.classList.add('hidden')
-      this.fullViewerTarget.classList.remove('hidden')
-    }
+    this.element.querySelectorAll("[data-viewer-target]").forEach(viewer => viewer.classList.add("hidden"))
+
+    console.log("button.dataset.viewer", button.dataset.viewer, this.element.querySelector(`[data-viewer-target=${button.dataset.viewer}]`))
+
+    this.element.querySelector(`[data-viewer-target=${button.dataset.viewer}]`)?.classList.remove('hidden')
+
+    // if (button.dataset.viewer === 'pretty') {
+    //   this.prettyViewerTarget.classList.remove('hidden')
+    //   this.fullViewerTarget.classList.add('hidden')
+    // } else {
+    //   this.prettyViewerTarget.classList.add('hidden')
+    //   this.fullViewerTarget.classList.remove('hidden')
+    // }
   }
 
   async analyze () {
-    this.updateURL()
+     this.updateURL()
 
-    if (this.timeout) {
-      clearTimeout(this.timeout)
-    }
+     if (this.timeout) {
+       clearTimeout(this.timeout)
+     }
 
-    this.timeout = setTimeout(() => {
-      this.simpleViewerTarget.textContent = '...'
-    }, 2000)
+     this.timeout = setTimeout(() => {
+       this.prettyViewerTarget.textContent = '...'
+     }, 2000)
 
-    let response
-    let json
+     let response
+     let json
 
-    try {
-      response = await fetch('/api/analyze', {
-        method: 'POST',
-        body: this.inputTarget.value
-      })
-    } catch (error) {
-      this.simpleViewerTarget.data = { error, message: error.message }
-      this.fullViewerTarget.data = { error, message: error.message }
-      return
-    }
+     try {
+       response = await fetch('/api/analyze', {
+         method: 'POST',
+         body: this.inputTarget.value
+       })
+     } catch (error) {
+       this.prettyViewerTarget.data = { error, message: error.message }
+       this.fullViewerTarget.data = { error, message: error.message }
+       return
+     }
 
-    clearTimeout(this.timeout)
+     clearTimeout(this.timeout)
 
-    if (response.ok) {
-      try {
-        json = await response.json()
+     if (response.ok) {
+       try {
+         json = await response.json()
 
-        if (this.hasSimpleViewerTarget) {
-          this.simpleViewerTarget.classList.add('language-tree')
-          this.simpleViewerTarget.textContent = json.string
+         if (this.hasPrettyViewerTarget) {
+           this.prettyViewerTarget.classList.add('language-tree')
+           this.prettyViewerTarget.textContent = json.string
 
-          Prism.highlightElement(this.simpleViewerTarget)
-        }
+           Prism.highlightElement(this.prettyViewerTarget)
+         }
 
-        if (this.hasFullViewerTarget) {
-          const isEmpty = !this.fullViewerTarget.data
+         if (this.hasHtmlViewerTarget) {
+           this.htmlViewerTarget.classList.add('language-html')
+           this.htmlViewerTarget.textContent = json.html
 
-          this.fullViewerTarget.data = { ast: json.ast }
+           Prism.highlightElement(this.htmlViewerTarget)
+         }
 
-          if (isEmpty) {
-            this.fullViewerTarget.expand('ast')
-          }
-        }
-      } catch (error) {
-        this.simpleViewerTarget.data = { error: "Server didn't return JSON", response: error.message }
-        this.fullViewerTarget.data = { error: "Server didn't return JSON", response: error.message }
-      }
-    } else {
-      this.simpleViewerTarget.data = { error: "Server didn't respond with a 200 response" }
-      this.fullViewerTarget.data = { error: "Server didn't respond with a 200 response" }
-    }
-  }
+         if (this.hasRubyViewerTarget) {
+           this.rubyViewerTarget.classList.add('language-ruby')
+           this.rubyViewerTarget.textContent = json.ruby
 
-  get compressedValue () {
-    return lz.compressToEncodedURIComponent(this.inputTarget.value)
-  }
+           Prism.highlightElement(this.rubyViewerTarget)
+         }
 
-  get decompressedValue () {
-    return lz.decompressFromEncodedURIComponent(window.location.hash.slice(1))
-  }
-}
+         if (this.hasLexViewerTarget) {
+           this.lexViewerTarget.classList.add('language-javascript')
+           this.lexViewerTarget.textContent = json.lex
+
+           console.log(json)
+
+           Prism.highlightElement(this.lexViewerTarget)
+         }
+
+         if (this.hasFullViewerTarget) {
+           const isEmpty = !this.fullViewerTarget.data
+
+           this.fullViewerTarget.data = { ast: json.ast }
+
+           if (isEmpty) {
+             this.fullViewerTarget.expand('ast')
+           }
+         }
+       } catch (error) {
+         this.prettyViewerTarget.data = { error: "Server didn't return JSON", response: error.message }
+         this.fullViewerTarget.data = { error: "Server didn't return JSON", response: error.message }
+       }
+     } else {
+       this.prettyViewerTarget.data = { error: "Server didn't respond with a 200 response" }
+       this.fullViewerTarget.data = { error: "Server didn't respond with a 200 response" }
+     }
+   }
+
+   get compressedValue () {
+     return lz.compressToEncodedURIComponent(this.inputTarget.value)
+   }
+
+   get decompressedValue () {
+     return lz.decompressFromEncodedURIComponent(window.location.hash.slice(1))
+   }
+ }
