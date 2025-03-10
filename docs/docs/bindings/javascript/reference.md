@@ -66,6 +66,9 @@ console.log(result)
 
 ### `Herb.lexFile(path)`
 
+> [!WARNING]
+> File operations are not supported in the `@herb-tools/browser` package and will throw an error when called.
+
 :::code-group
 ```js twoslash [javascript]
 import { Herb } from "@herb-tools/node"
@@ -102,6 +105,9 @@ console.log(result)
 <br />
 
 ### `Herb.parseFile(path)`
+
+> [!WARNING]
+> File operations are not supported in the `@herb-tools/browser` package and will throw an error when called.
 
 :::code-group
 ```js twoslash [javascript]
