@@ -1,33 +1,73 @@
 import { Location, SerializedLocation } from "./location.js"
-import { Position, SerializedPosition } from "./position.js"
 import { Token, SerializedToken } from "./token.js"
 
-export interface NodeError {
+export interface HerbError {
   message: string;
   location: Location;
 }
 
-export interface BaseNodeProps {
-  type: string;
+export interface SerializedError {
+  message: string;
+  location: SerializedLocation;
+}
+
+// TODO: implement
+export interface HerbWarning {
+  message: string;
   location: Location;
-  errors: NodeError[];
+}
+
+// TODO: implement
+export interface SerializedWarning {
+  message: string;
+  location: SerializedLocation;
+}
+
+export type NodeType =
+  <%- nodes.each_with_index.map do |node, index| -%>
+  | "<%= node.type %>"
+  <%- end -%>
+
+export type SerializedNodeType = string
+
+export interface SerializedNode {
+  type: SerializedNodeType;
+  location: SerializedLocation;
+  errors: SerializedError[];
+}
+
+export interface BaseNodeProps {
+  type: NodeType;
+  location: Location;
+  errors: HerbError[];
 }
 
 export abstract class Node {
   readonly type: string;
   readonly location: Location;
-  readonly errors: NodeError[];
+  readonly errors: HerbError[];
 
-  constructor(type: string, location: SerializedLocation, errors: NodeError[]) {
+  static from(node: SerializedNode): Node {
+    switch (node.type) {
+      <%- nodes.each do |node| -%>
+      case "<%= node.type %>": return <%= node.name %>.from(node as Serialized<%= node.name %>);
+      <%- end -%>
+
+      default:
+        throw new Error(`Unknown node type: ${node.type}`);
+    }
+  }
+
+  constructor(type: string, location: Location, errors: HerbError[]) {
     this.type = type;
-    this.location = Location.from(location);
+    this.location = location;
     this.errors = errors;
   }
 
-  toJSON(): Record<string, any> {
+  toJSON(): SerializedNode {
     return {
       type: this.type,
-      location: this.location,
+      location: this.location.toJSON(),
       errors: this.errors
     };
   }
@@ -74,15 +114,37 @@ export abstract class Node {
     return output;
   }
 }
-
 <%- nodes.each do |node| -%>
-export interface <%= node.name %>Props extends BaseNodeProps {
+
+export interface Serialized<%= node.name %> {
+  type: "<%= node.type %>";
+  location: SerializedLocation;
+  errors: SerializedError[];
   <%- node.fields.each do |field| -%>
   <%- case field -%>
   <%- when Herb::Template::StringField -%>
   <%= field.name %>: string;
   <%- when Herb::Template::TokenField -%>
   <%= field.name %>: SerializedToken | null;
+  <%- when Herb::Template::BooleanField -%>
+  <%= field.name %>: boolean;
+  <%- when Herb::Template::NodeField -%>
+  <%= field.name %>: SerializedNode | null;
+  <%- when Herb::Template::ArrayField -%>
+  <%= field.name %>: SerializedNode[];
+  <%- else -%>
+  <%= field.name %>: any; // <%= field.inspect %>
+  <%- end -%>
+  <%- end -%>
+}
+
+export interface <%= node.name %>Props extends BaseNodeProps {
+  <%- node.fields.each do |field| -%>
+  <%- case field -%>
+  <%- when Herb::Template::StringField -%>
+  <%= field.name %>: string;
+  <%- when Herb::Template::TokenField -%>
+  <%= field.name %>: Token | null;
   <%- when Herb::Template::BooleanField -%>
   <%= field.name %>: boolean;
   <%- when Herb::Template::NodeField -%>
@@ -113,35 +175,75 @@ export class <%= node.name %> extends Node {
   <%- end -%>
   <%- end -%>
 
+  static from(data: Serialized<%= node.name %>): <%= node.name %> {
+    return new <%= node.name %>({
+      type: data.type,
+      location: Location.from(data.location),
+      errors: data.errors.map(error => ({
+        message: error.message,
+        location: Location.from(error.location)
+      })),
+      <%- node.fields.each do |field| -%>
+      <%- case field -%>
+      <%- when Herb::Template::StringField -%>
+      <%= field.name %>: data.<%= field.name %>,
+      <%- when Herb::Template::TokenField -%>
+      <%= field.name %>: data.<%= field.name %> ? Token.from(data.<%= field.name %>) : null,
+      <%- when Herb::Template::BooleanField -%>
+      <%= field.name %>: data.<%= field.name %>,
+      <%- when Herb::Template::NodeField -%>
+      <%= field.name %>: data.<%= field.name %> ? Node.from((data.<%= field.name %> as any)) : null,
+      <%- when Herb::Template::ArrayField -%>
+      <%= field.name %>: data.<%= field.name %>.map(node => Node.from(node)),
+      <%- else -%>
+      <%= field.name %>: data.<%= field.name %>,
+      <%- end -%>
+      <%- end -%>
+    })
+  }
+
   constructor(props: <%= node.name %>Props) {
     super(props.type, props.location, props.errors);
     <%- node.fields.each do |field| -%>
     <%- case field -%>
     <%- when Herb::Template::ArrayField -%>
-    this.<%= field.name %> = props.<%= field.name %>.map(node => createNode(node));
+    this.<%= field.name %> = props.<%= field.name %>;
     <%- when Herb::Template::TokenField -%>
-    this.<%= field.name %> = (props.<%= field.name %>) ? Token.from(props.<%= field.name %>) : null;
+    this.<%= field.name %> = props.<%= field.name %>;
     <%- when Herb::Template::NodeField -%>
-
-    // this.<%= field.name %> = createNode(props.<%= field.name %> as any); // TODO: fix any (should probably be SerializedNode)
-    this.<%= field.name %> = null
+    this.<%= field.name %> = props.<%= field.name %>
     <%- else -%>
     this.<%= field.name %> = props.<%= field.name %>;
     <%- end -%>
     <%- end -%>
   }
 
-  toJSON(): Record<string, any> {
+  toJSON(): Serialized<%= node.name %> {
     return {
       ...super.toJSON(),
+      type: "<%= node.type %>",
       <%- node.fields.each do |field| -%>
+      <%- case field -%>
+      <%- when Herb::Template::StringField -%>
       <%= field.name %>: this.<%= field.name %>,
+      <%- when Herb::Template::TokenField -%>
+      <%= field.name %>: this.<%= field.name %> ? this.<%= field.name %>.toJSON() : null,
+      <%- when Herb::Template::BooleanField -%>
+      <%= field.name %>: this.<%= field.name %>,
+      <%- when Herb::Template::NodeField -%>
+      <%= field.name %>: this.<%= field.name %> ? this.<%= field.name %>.toJSON() : null,
+      <%- when Herb::Template::ArrayField -%>
+      <%= field.name %>: this.<%= field.name %>.map(node => node.toJSON()),
+      <%- else -%>
+      <%= field.name %>: this.<%= field.name %>,
+      <%- end -%>
       <%- end -%>
     };
   }
 
   treeInspect(indent = 0): string {
     let output = "";
+
     output += `@ <%= node.name %> ${this.location.treeInspect()}\n`;
     output += this.inspectErrors({ prefix: "<%= node.fields.any? ? "│   " : "    " %>" });
 
@@ -183,23 +285,8 @@ export class <%= node.name %> extends Node {
     <%- end -%>
 
     output += "\n";
+
     return output.replace(/^/gm, "    ".repeat(indent));
   }
 }
 <%- end -%>
-
-export function createNode(data: Record<string, any>): Node {
-  switch (data.type) {
-    <%- nodes.each do |node| -%>
-    case "<%= node.type %>":
-      return new <%= node.name %>(data as <%= node.name %>Props);
-    <%- end -%>
-    default:
-      throw new Error(`Unknown node type: ${data.type}`);
-  }
-}
-
-export function parseJSON(json: string): Node {
-  const data = JSON.parse(json);
-  return createNode(data);
-}

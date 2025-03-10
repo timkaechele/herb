@@ -1,12 +1,14 @@
-import { createNode } from "./nodes.js"
 import { Result } from "./result.js"
+import { DocumentNode } from "./nodes.js"
 
-import type { DocumentNode } from "./nodes.js"
+import type { HerbError, HerbWarning, SerializedDocumentNode } from "./nodes.js"
 import type { Visitor } from "./visitor.js"
 
 export type SerializedParseResult = {
-  value: any // TODO: should be SerializedNode or SerializedDocumentNode
+  value: SerializedDocumentNode
   source: string
+  warnings: HerbWarning[]
+  errors: HerbError[]
 }
 
 /**
@@ -24,8 +26,10 @@ export class ParseResult extends Result {
    */
   static from(result: SerializedParseResult) {
     return new ParseResult(
-      createNode(result.value) as DocumentNode,
+      DocumentNode.from(result.value),
       result.source,
+      result.warnings,
+      result.errors,
     )
   }
 
@@ -39,8 +43,8 @@ export class ParseResult extends Result {
   constructor(
     value: DocumentNode,
     source: string,
-    warnings: any[] = [],
-    errors: any[] = [],
+    warnings: HerbWarning[] = [],
+    errors: HerbError[] = [],
   ) {
     super(source, warnings, errors)
     this.value = value
@@ -69,6 +73,14 @@ export class ParseResult extends Result {
    */
   prettyErrors(): string {
     return JSON.stringify([...this.errors, ...this.value.errors], null, 2)
+  }
+
+  /**
+   * Returns a pretty-printed string of the parse result.
+   * @returns A string representation of the parse result.
+   */
+  inspect(): string {
+    return this.value.inspect()
   }
 
   /**

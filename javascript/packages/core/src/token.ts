@@ -30,7 +30,7 @@ export class Token {
     this.type = type
   }
 
-  toHash(): Record<string, any> {
+  toHash(): SerializedToken {
     return {
       value: this.value,
       range: this.range?.toArray(),
@@ -39,7 +39,7 @@ export class Token {
     }
   }
 
-  toJSON(): Record<string, any> {
+  toJSON(): SerializedToken {
     return this.toHash()
   }
 

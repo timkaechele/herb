@@ -1,12 +1,18 @@
+import { HerbError, HerbWarning } from "./nodes.js"
+
 export class Result {
   readonly source: string
-  readonly warnings: any[] // TODO: update
-  readonly errors: any[] // TODO: update
+  readonly warnings: HerbWarning[]
+  readonly errors: HerbError[]
 
-  constructor(source: string, warnings: any[] = [], errors: any[] = []) {
+  constructor(
+    source: string,
+    warnings: HerbWarning[] = [],
+    errors: HerbError[] = [],
+  ) {
     this.source = source
-    this.warnings = warnings
-    this.errors = errors
+    this.warnings = warnings || []
+    this.errors = errors || []
   }
 
   success(): boolean {

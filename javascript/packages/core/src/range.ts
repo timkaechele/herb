@@ -13,11 +13,11 @@ export class Range {
     this.end = end
   }
 
-  toArray(): number[] {
+  toArray(): SerializedRange {
     return [this.start, this.end]
   }
 
-  toJSON(): number[] {
+  toJSON(): SerializedRange {
     return this.toArray()
   }
 
