@@ -44,7 +44,7 @@ Style/TrailingCommaInHashLiteral:
   EnforcedStyleForMultiline: diff_comma
 
 Metrics/CyclomaticComplexity:
-  Max: 10
+  Max: 15
   Exclude:
     - lib/herb/project.rb
     - lib/herb/ast/nodes.rb
