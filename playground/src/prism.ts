@@ -26,8 +26,9 @@ Prism.languages.tree = {
   },
 
   // Property names
-  'property': {
-    pattern: /\b(?:errors|children|tag_opening|content|tag_closing|open_tag|tag_name|attributes|equals|value|open_quote|close_quote|quoted|is_void|body|close_tag|message|opening_tag|closing_tag)\b:/,
+  property: {
+    pattern:
+      /\b(?:errors|children|tag_opening|content|tag_closing|open_tag|tag_name|attributes|equals|value|open_quote|close_quote|quoted|is_void|body|close_tag|message|opening_tag|closing_tag|comment_start|comment_end|name)\b:/,
     lookbehind: true,
     greedy: true
   },
