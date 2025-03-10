@@ -30,9 +30,9 @@ const exampleFile = dedent`
 
   <h2>
     <% if Date.today.friday? %>
-      <div>Title 1</div>
+      <div>Happy Friday!</div>
     <% else %>
-      <div>Title 2</div>
+      <div>Happy Day!</div>
     <% end %>
   </h2>
 
