@@ -2,27 +2,27 @@ import Prism from "prismjs"
 
 Prism.languages.tree = {
   // Node definitions (@ DocumentNode, @ HTMLElementNode, etc.)
-  'node': {
+  node: {
     pattern: /@ [A-Za-z]+Node\b/,
-    greedy: true
+    greedy: true,
   },
 
   // Location markers
-  'location': {
+  location: {
     pattern: /\(location: \(\d+:\d+\)-\(\d+:\d+\)\)/,
-    greedy: true
+    greedy: true,
   },
 
   // Tree structure symbols
-  'tree-symbol': {
+  "tree-symbol": {
     pattern: /[│├└─]/,
-    greedy: true
+    greedy: true,
   },
 
   // Empty set
-  'tree-null': {
+  "tree-null": {
     pattern: /[∅]/,
-    greedy: true
+    greedy: true,
   },
 
   // Property names
@@ -30,44 +30,44 @@ Prism.languages.tree = {
     pattern:
       /\b(?:errors|children|tag_opening|content|tag_closing|open_tag|tag_name|attributes|equals|value|open_quote|close_quote|quoted|is_void|body|close_tag|message|opening_tag|closing_tag|comment_start|comment_end|name)\b:/,
     lookbehind: true,
-    greedy: true
+    greedy: true,
   },
 
   // Error class names
-  'error-class': {
+  "error-class": {
     pattern: /@ [A-Za-z]+Error\b/,
-    greedy: true
+    greedy: true,
   },
 
   // Numbers (counts, indices)
-  'number': {
+  number: {
     pattern: /\b\d+\b/,
-    greedy: true
+    greedy: true,
   },
 
   // Strings
-  'string': [
+  string: [
     {
       // Handle standard quoted strings with possible escaped quotes
       pattern: /"(?:[^"\\]|\\.|"(?="))*"/,
-      greedy: true
+      greedy: true,
     },
     {
       // Handle consecutive quotes (like triple quotes)
       pattern: /"{2,3}/,
-      greedy: true
-    }
+      greedy: true,
+    },
   ],
 
   // Counts (items)
-  'count': {
+  count: {
     pattern: /\(\d+ (?:items?|errors?)\)/,
-    greedy: true
+    greedy: true,
   },
 
   // Boolean values
-  'boolean': {
+  boolean: {
     pattern: /\b(?:true|false)\b/,
-    greedy: true
-  }
-};
+    greedy: true,
+  },
+}
