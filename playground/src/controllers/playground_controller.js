@@ -170,12 +170,12 @@ export default class extends Controller {
 
   enclargeViewer(event) {
     this.currentViewer.style.position = "absolute"
-    this.currentViewer.style.top = `10px`
+    this.currentViewer.style.top = `0px`
     this.currentViewer.style.right = `10px`
     this.currentViewer.style.left = `10px`
     this.currentViewer.style.bottom = `10px`
     this.currentViewer.style.zIndex = `1000`
-    this.currentViewer.style.height = "calc(100% - 30px)"
+    this.currentViewer.style.height = "calc(100% - 20px)"
     this.currentViewer.style.width = "calc(100% - 20px)"
     this.currentViewer.style.cursor = "zoom-out"
   }
