@@ -27,6 +27,14 @@ bundle add herb
 ```
 :::
 
+or add it to your gemspec when you want to use Herb in a gem:
+
+:::code-group
+```ruby [yourgem.gemspec]
+spec.add_dependency "herb", "~> 0.1"
+```
+:::
+
 
 ## Getting Started
 

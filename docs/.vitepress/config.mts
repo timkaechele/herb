@@ -19,6 +19,7 @@ const groupIconPlugin = groupIconVitePlugin({
   customIcon: {
     "ruby": "vscode-icons:file-type-ruby",
     ".rb": "vscode-icons:file-type-ruby",
+    ".gemspec": "vscode-icons:file-type-ruby",
     "gemfile": "vscode-icons:file-type-bundler",
     "browser": "vscode-icons:file-type-js",
     "Node.js": "vscode-icons:file-type-js",
