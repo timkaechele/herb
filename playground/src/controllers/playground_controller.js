@@ -131,6 +131,18 @@ export default class extends Controller {
       : element.closest("button")
   }
 
+  get currentViewer() {
+    return this.element.querySelector(
+      `[data-viewer-target=${this.activeViewerButton.dataset.viewer}]`,
+    )
+  }
+
+  get activeViewerButton() {
+    return this.viewerButtonTargets.find(
+      (button) => button.dataset.active === "true",
+    )
+  }
+
   selectViewer(event) {
     const button = this.getClosestButton(event.target)
 
@@ -143,25 +155,41 @@ export default class extends Controller {
       .querySelectorAll("[data-viewer-target]")
       .forEach((viewer) => viewer.classList.add("hidden"))
 
-    console.log(
-      "button.dataset.viewer",
-      button.dataset.viewer,
-      this.element.querySelector(
-        `[data-viewer-target=${button.dataset.viewer}]`,
-      ),
-    )
+    this.currentViewer?.classList.remove("hidden")
+  }
 
-    this.element
-      .querySelector(`[data-viewer-target=${button.dataset.viewer}]`)
-      ?.classList.remove("hidden")
+  toggleViewer() {
+    if (this.currentViewer) {
+      if (this.currentViewer.style.position === "absolute") {
+        this.shrinkViewer()
+      } else {
+        this.enclargeViewer()
+      }
+    }
+  }
 
-    // if (button.dataset.viewer === 'pretty') {
-    //   this.prettyViewerTarget.classList.remove('hidden')
-    //   this.fullViewerTarget.classList.add('hidden')
-    // } else {
-    //   this.prettyViewerTarget.classList.add('hidden')
-    //   this.fullViewerTarget.classList.remove('hidden')
-    // }
+  enclargeViewer(event) {
+    this.currentViewer.style.position = "absolute"
+    this.currentViewer.style.top = `10px`
+    this.currentViewer.style.right = `10px`
+    this.currentViewer.style.left = `10px`
+    this.currentViewer.style.bottom = `10px`
+    this.currentViewer.style.zIndex = `1000`
+    this.currentViewer.style.height = "calc(100% - 30px)"
+    this.currentViewer.style.width = "calc(100% - 20px)"
+    this.currentViewer.style.cursor = "zoom-out"
+  }
+
+  shrinkViewer(event) {
+    this.currentViewer.style.position = null
+    this.currentViewer.style.left = null
+    this.currentViewer.style.top = null
+    this.currentViewer.style.right = null
+    this.currentViewer.style.bottom = null
+    this.currentViewer.style.zIndex = null
+    this.currentViewer.style.height = null
+    this.currentViewer.style.width = null
+    this.currentViewer.style.cursor = null
   }
 
   async analyze() {
