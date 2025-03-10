@@ -95,9 +95,11 @@ export abstract class Node {
     array: any[] | null | undefined,
     options: { prefix: string } = { prefix: "" }
   ): string {
-    if (!array || array.length === 0) return "∅\n";
+    if (!array) return "∅\n";
+    if (array.length === 0) return "[]\n";
 
     let output = "\n";
+
     array.forEach((item, index) => {
       const isLast = index === array.length - 1;
       const symbol = isLast ? "└──" : "├──";
