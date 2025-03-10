@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "optparse"
+require "lz_string"
 
 class Herb::CLI
   attr_accessor :json, :silent
@@ -81,13 +82,14 @@ class Herb::CLI
         bundle exec herb [command] [options]
 
       Commands:
-        bundle exec herb lex [file]      Lex a file.
-        bundle exec herb parse [file]    Parse a file.
-        bundle exec herb analyze [path]  Analyze a project by passing a directory to the root of the project
-        bundle exec herb ruby [file]     Extract Ruby from a file.
-        bundle exec herb html [file]     Extract HTML from a file.
-        bundle exec herb prism [file]    Extract Ruby from a file and parse the Ruby source with Prism.
-        bundle exec herb version         Prints the versions of the Herb gem and the libherb library.
+        bundle exec herb lex [file]         Lex a file.
+        bundle exec herb parse [file]       Parse a file.
+        bundle exec herb analyze [path]     Analyze a project by passing a directory to the root of the project
+        bundle exec herb ruby [file]        Extract Ruby from a file.
+        bundle exec herb html [file]        Extract HTML from a file.
+        bundle exec herb prism [file]       Extract Ruby from a file and parse the Ruby source with Prism.
+        bundle exec herb playground [file]  Open the content of the source file in the playground
+        bundle exec herb version            Prints the versions of the Herb gem and the libherb library.
 
       Options:
         #{option_parser.to_s.strip.gsub(/^    /, "  ")}
@@ -114,6 +116,14 @@ class Herb::CLI
                 when "html"
                   puts Herb.extract_html(file_content)
                   exit(0)
+                when "playground"
+                  if Dir.pwd.include?("/herb")
+                    system(%(npx concurrently "nx dev playground" "sleep 1 && open http://localhost:5173##{LZString::UriSafe.compress(file_content)}"))
+                    exit(0)
+                  else
+                    puts "This command can currently only be run within the herb repo itself"
+                    exit(1)
+                  end
                 when "help", "-h", "--help"
                   help
                 when "version", "-v", "--version"

@@ -27,6 +27,7 @@ GEM
     json (2.10.1)
     language_server-protocol (3.17.0.4)
     lint_roller (1.1.0)
+    lz_string (0.2.0)
     maxitest (5.8.0)
       minitest (>= 5.14.0, < 5.26.0)
     minitest (5.25.4)
@@ -79,6 +80,7 @@ PLATFORMS
 
 DEPENDENCIES
   herb!
+  lz_string
   maxitest
   minitest-difftastic (~> 0.2)
   prism!
