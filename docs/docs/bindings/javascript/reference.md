@@ -26,11 +26,7 @@ Learn more on [how to install the NPM packages](/bindings/javascript/){target="_
 
 :::
 
-## Herb Reference
-
-The `Herb` class exposes several methods for lexing, extracting, and parsing HTML+ERB source code.
-
-### JavaScript API
+## JavaScript API
 
 `Herb` provides the following key methods:
 

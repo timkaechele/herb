@@ -8,6 +8,8 @@ The `Herb` module exposes a few methods for you to lex, extract and parse HTML+E
 
 ## Ruby API
 
+`Herb` provides the following key methods:
+
 * `Herb.lex(source)`
 * `Herb.lex_file(path)`
 * `Herb.parse(source)`
