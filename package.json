@@ -16,8 +16,8 @@
     "playground": "nx dev playground",
     "build": "nx run-many --target=build",
     "test": "nx run-many --target=test",
-    "lint": "yarn prettier --check javascript/**/*",
-    "format": "yarn prettier --write javascript/**/*"
+    "lint": "yarn prettier '**/*.{js,mjs,cjs,ts,mts,cts,css,html}' --check",
+    "format": "yarn prettier '**/*.{js,mjs,cjs,ts,mts,cts,css,html}' --write"
   },
   "workspaces": [
     "javascript/packages/*",

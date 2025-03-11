@@ -30,13 +30,13 @@ export default defineConfig({
           } catch (e) {
             console.error("Error in API route:", e)
             return response.status(500).json({
-              error: e.message || "An error occurred during parsing"
+              error: e.message || "An error occurred during parsing",
             })
           }
         })
 
         server.middlewares.use(app)
-      }
-    }
-  ]
+      },
+    },
+  ],
 })
