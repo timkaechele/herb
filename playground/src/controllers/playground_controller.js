@@ -68,10 +68,6 @@ export default class extends Controller {
 
     this.inputTarget.setAttribute("language", "erb")
     this.inputTarget.requestUpdate("highlighter")
-
-    if (this.hasVersionTarget) {
-      this.versionTarget.textContent = Herb.version
-    }
   }
 
   updateURL() {
@@ -222,6 +218,10 @@ export default class extends Controller {
     if (response.ok) {
       try {
         json = await response.json()
+
+        if (this.hasVersionTarget) {
+          this.versionTarget.textContent = json.version
+        }
 
         if (this.hasPrettyViewerTarget) {
           this.prettyViewerTarget.classList.add("language-tree")

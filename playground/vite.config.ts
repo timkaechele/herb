@@ -2,6 +2,7 @@ import express from "express"
 
 import { defineConfig } from "vite"
 import { Herb } from "@herb-tools/node"
+import { analyze } from "./src/analyze"
 
 import type { Request, Response } from "express"
 
@@ -16,17 +17,7 @@ export default defineConfig({
 
         app.post("/api/analyze", (request: Request, response: Response) => {
           try {
-            const source = request.body
-
-            const result = {
-              string: Herb.parse(source).value.inspect(),
-              json: JSON.stringify(Herb.parse(source).value, null, 2),
-              lex: Herb.lex(source).value.inspect(),
-              ruby: Herb.extractRuby(source),
-              html: Herb.extractHtml(source),
-            }
-
-            return response.json(result)
+            return response.json(analyze(Herb, request.body))
           } catch (e) {
             console.error("Error in API route:", e)
             return response.status(500).json({
