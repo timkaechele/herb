@@ -9,7 +9,9 @@
     "@nx/web": "20.5.0",
     "concurrently": "^9.1.2",
     "nx": "20.5.0",
-    "prettier": "3.5.3"
+    "prettier": "3.5.3",
+    "tsx": "^4.19.3",
+    "verdaccio": "^6.0.5"
   },
   "scripts": {
     "docs": "nx dev docs",
@@ -17,11 +19,15 @@
     "build": "nx run-many --target=build",
     "test": "nx run-many --target=test",
     "lint": "yarn prettier '**/*.{js,mjs,cjs,ts,mts,cts,css,html}' --check",
-    "format": "yarn prettier '**/*.{js,mjs,cjs,ts,mts,cts,css,html}' --write"
+    "format": "yarn prettier '**/*.{js,mjs,cjs,ts,mts,cts,css,html}' --write",
+    "release": "tsx javascript/tools/scripts/release.ts"
   },
   "workspaces": [
     "javascript/packages/*",
     "playground",
     "docs"
-  ]
+  ],
+  "nx": {
+    "includedScripts": []
+  }
 }

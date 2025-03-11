@@ -43,5 +43,13 @@
     "node-pre-gyp-github": "^2.0.0",
     "vitest": "^3.0.0",
     "typescript": "^5.8.2"
-  }
+  },
+  "files": [
+    "package.json",
+    "README.md",
+    "binding.gyp",
+    "dist/",
+    "src/",
+    "extension/"
+  ]
 }
