@@ -18,7 +18,7 @@
   "scripts": {
     "install": "yarn libherb:vendor && node-pre-gyp install --fallback-to-build",
     "build": "yarn rebuild",
-    "libherb:vendor": "yarn clean && rake templates && mkdir -p ./extension/libherb && cp -R ../../../src/ ./extension/libherb/",
+    "libherb:vendor": "yarn clean && rake templates && cp -r ../../../src ./extension/libherb",
     "rebuild": "yarn clean && yarn libherb:vendor && node-pre-gyp rebuild && tsc -p tsconfig.json && node bin/build.js",
     "configure": "node-pre-gyp configure",
     "package": "node-pre-gyp package",
