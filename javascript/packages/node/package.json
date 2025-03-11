@@ -1,6 +1,6 @@
 {
   "name": "@herb-tools/node",
-  "version": "0.0.1",
+  "version": "0.0.0",
   "type": "module",
   "gypfile": true,
   "main": "./dist/herb-node.cjs",
@@ -24,7 +24,7 @@
     "clean": "node-pre-gyp clean && rimraf dist && rimraf build",
     "test": "vitest run",
     "test:watch": "vitest --watch",
-    "prepublishOnly": "yarn test"
+    "prepublishOnly": "yarn build && yarn test"
   },
   "binary": {
     "module_name": "herb",
@@ -34,11 +34,11 @@
     "host": "https://github.com/marcoroth/herb/releases/download/"
   },
   "dependencies": {
-    "@herb-tools/core": "0.0.1",
-    "@mapbox/node-pre-gyp": "^2.0.0",
-    "node-addon-api": "^5.1.0"
+    "@herb-tools/core": "0.0.0"
   },
   "devDependencies": {
+    "@mapbox/node-pre-gyp": "^2.0.0",
+    "node-addon-api": "^5.1.0",
     "rimraf": "^6.0.1",
     "node-pre-gyp-github": "^2.0.0",
     "vitest": "^3.0.0",

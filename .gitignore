@@ -101,3 +101,5 @@ src/include/errors.h
 .nx/
 .nx/cache
 .nx/workspace-data
+vite.config.*.timestamp*
+vitest.config.*.timestamp*

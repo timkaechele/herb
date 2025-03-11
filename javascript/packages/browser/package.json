@@ -1,6 +1,6 @@
 {
   "name": "@herb-tools/browser",
-  "version": "0.0.1",
+  "version": "0.0.0",
   "type": "module",
   "main": "./dist/herb-browser.esm.js",
   "module": "./dist/herb-browser.esm.js",
@@ -8,7 +8,8 @@
   "scripts": {
     "build": "yarn clean && tsc -p tsconfig.json && node bin/build.js",
     "clean": "rimraf dist",
-    "test": "vitest run"
+    "test": "vitest run",
+    "prepublishOnly": "yarn build && yarn test"
   },
   "exports": {
     "./package.json": "./package.json",
@@ -19,7 +20,7 @@
     }
   },
   "dependencies": {
-    "@herb-tools/core": "0.0.1"
+    "@herb-tools/core": "0.0.0"
   },
   "devDependencies": {
     "rimraf": "^6.0.1",
