@@ -1,11 +1,11 @@
 extern "C" {
-#include "../../../../src/include/herb.h"
-#include "../../../../src/include/array.h"
-#include "../../../../src/include/ast_nodes.h"
-#include "../../../../src/include/buffer.h"
-#include "../../../../src/include/location.h"
-#include "../../../../src/include/range.h"
-#include "../../../../src/include/token.h"
+#include "libherb/include/herb.h"
+#include "libherb/include/array.h"
+#include "libherb/include/ast_nodes.h"
+#include "libherb/include/buffer.h"
+#include "libherb/include/location.h"
+#include "libherb/include/range.h"
+#include "libherb/include/token.h"
 }
 
 #include "error_helpers.h"

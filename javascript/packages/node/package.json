@@ -16,12 +16,13 @@
     }
   },
   "scripts": {
-    "install": "node-pre-gyp install --fallback-to-build",
+    "install": "yarn libherb:vendor && node-pre-gyp install --fallback-to-build",
     "build": "yarn rebuild",
-    "rebuild": "yarn clean && node-pre-gyp rebuild && tsc -p tsconfig.json && node bin/build.js",
+    "libherb:vendor": "yarn clean && rake templates && mkdir -p ./extension/libherb && cp -R ../../../src/ ./extension/libherb/",
+    "rebuild": "yarn clean && yarn libherb:vendor && node-pre-gyp rebuild && tsc -p tsconfig.json && node bin/build.js",
     "configure": "node-pre-gyp configure",
     "package": "node-pre-gyp package",
-    "clean": "node-pre-gyp clean && rimraf dist && rimraf build",
+    "clean": "node-pre-gyp clean && rimraf dist/ && rimraf src/herb/ && rimraf build/",
     "test": "vitest run",
     "test:watch": "vitest --watch",
     "prepublishOnly": "yarn build && yarn test"
@@ -50,6 +51,8 @@
     "binding.gyp",
     "dist/",
     "src/",
-    "extension/"
+    "extension/**/*.c",
+    "extension/**/*.cpp",
+    "extension/**/*.h"
   ]
 }
