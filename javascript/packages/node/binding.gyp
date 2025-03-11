@@ -35,14 +35,10 @@
       "include_dirs": [
         "<!@(node -p \"require('node-addon-api').include\")",
         "../../../src",
-        "../../../src/include",
-        "<!@(bundle show prism)/include"
+        "../../../src/include"
       ],
       "dependencies": [
         "<!(node -p \"require('node-addon-api').gyp\")"
-      ],
-      "libraries": [
-        "<!@(bundle show prism)/build/libprism.a"
       ]
     }
   ]
