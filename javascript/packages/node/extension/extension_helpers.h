@@ -4,8 +4,8 @@
 #include <node_api.h>
 
 extern "C" {
-#include "libherb/include/array.h"
-#include "libherb/include/ast_nodes.h"
+#include "../extension/libherb/include/array.h"
+#include "../extension/libherb/include/ast_nodes.h"
 }
 
 char* CheckString(napi_env env, napi_value value);

@@ -4,11 +4,11 @@
 #include "nodes.h"
 
 extern "C" {
-#include "./libherb/include/herb.h"
-#include "./libherb/include/token.h"
-#include "./libherb/include/array.h"
-#include "./libherb/include/ast_node.h"
-#include "./libherb/include/ast_nodes.h"
+#include "../extension/libherb/include/herb.h"
+#include "../extension/libherb/include/token.h"
+#include "../extension/libherb/include/array.h"
+#include "../extension/libherb/include/ast_node.h"
+#include "../extension/libherb/include/ast_nodes.h"
 }
 
 napi_value NodeFromCStruct(napi_env env, AST_NODE_T* node);
