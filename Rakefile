@@ -20,7 +20,6 @@ task "make" do
 end
 
 begin
-  # require "rake/compiler"
   require "rake/extensiontask"
 
   PLATFORMS = %w[
@@ -59,38 +58,34 @@ begin
   end
 
   task "gem:native" do
-    begin
-      require "rake_compiler_dock"
-      sh "bundle config set cache_all true"
+    require "rake_compiler_dock"
+    sh "bundle config set cache_all true"
 
-      PLATFORMS.each do |platform|
-        RakeCompilerDock.sh "bundle --local && rake native:#{platform} gem", platform: platform
-      end
-
-      RakeCompilerDock.sh "bundle --local && rake java gem", rubyvm: :jruby
-    rescue LoadError
-      abort "rake_compiler_dock is required to build native gems"
+    PLATFORMS.each do |platform|
+      RakeCompilerDock.sh "bundle --local && rake native:#{platform} gem", platform: platform
     end
+
+    RakeCompilerDock.sh "bundle --local && rake java gem", rubyvm: :jruby
+  rescue LoadError
+    abort "rake_compiler_dock is required to build native gems"
   end
 
   namespace "gem" do
     task "prepare" do
-      begin
-        require "rake_compiler_dock"
-        require "io/console"
+      require "rake_compiler_dock"
+      require "io/console"
 
-        sh "bundle config set cache_all true"
-        sh "cp ~/.gem/gem-*.pem build/gem/ || true"
+      sh "bundle config set cache_all true"
+      sh "cp ~/.gem/gem-*.pem build/gem/ || true"
 
-        gemspec_path = File.expand_path("./herb.gemspec", __dir__)
-        spec = eval(File.read(gemspec_path), binding, gemspec_path)
+      gemspec_path = File.expand_path("./herb.gemspec", __dir__)
+      spec = eval(File.read(gemspec_path), binding, gemspec_path)
 
-        RakeCompilerDock.set_ruby_cc_version(spec.required_ruby_version.as_list)
+      RakeCompilerDock.set_ruby_cc_version(spec.required_ruby_version.as_list)
 
-        # ENV["GEM_PRIVATE_KEY_PASSPHRASE"] = STDIN.getpass("Enter passphrase of gem signature key: ")
-      rescue LoadError
-        abort "rake_compiler_dock is required for this task"
-      end
+      # ENV["GEM_PRIVATE_KEY_PASSPHRASE"] = STDIN.getpass("Enter passphrase of gem signature key: ")
+    rescue LoadError
+      abort "rake_compiler_dock is required for this task"
     end
 
     exttask.cross_platform.each do |platform|
@@ -110,7 +105,17 @@ rescue LoadError => e
   desc "Compile task not available (rake-compiler not installed)"
   task :compile do
     puts e
-    abort "rake-compiler is required for this task. Are you running `rake` using `bundle exec rake`? Otherwise, try to run bundle install, add it to your Gemfile or install it with: gem install rake-compiler"
+    abort <<~MESSAGE
+
+      "rake-compiler is required for this task.
+
+      Are you running `rake` using `bundle exec rake`?
+
+      Otherwise
+        * try to run bundle install
+        * add it to your Gemfile
+        * or install it with: gem install rake-compiler
+    MESSAGE
   end
 end
 
@@ -126,46 +131,44 @@ end
 namespace :templates do
   desc "Watch template files and regenerate on changes"
   task :watch do
-    begin
-      require "listen"
+    require "listen"
+
+    Rake::Task[:templates].execute
+
+    puts
+    puts "Watching config.yml and templates/**/*.erb for changes..."
+
+    ignore = Dir.glob("*/").map { |dir| Regexp.escape(dir.chomp("/")) }.map { |dir| %r{^#{dir}/} }
+
+    config_listener = Listen.to(".", only: /config\.yml$/, ignore: ignore) do
+      puts
+      puts "#{Time.now.strftime("[%Y-%m-%d %H:%M:%S]")} config.yml changed, regenerating all templates ..."
+      puts
 
       Rake::Task[:templates].execute
-
-      puts
-      puts "Watching config.yml and templates/**/*.erb for changes..."
-
-      ignore = Dir.glob("*/").map { |dir| Regexp.escape(dir.chomp("/")) }.map { |dir| %r{^#{dir}/} }
-
-      config_listener = Listen.to(".", only: /config\.yml$/, ignore: ignore) do
-        puts
-        puts "#{Time.now.strftime("[%Y-%m-%d %H:%M:%S]")} config.yml changed, regenerating all templates ..."
-        puts
-
-        Rake::Task[:templates].execute
-      end
-
-      template_listener = Listen.to("templates", only: /\.erb$/) do |modified, added, removed|
-        puts
-        (added + modified).each do |template|
-          template_file = template.delete_prefix("#{__dir__}/")
-
-          puts "#{Time.now.strftime("[%Y-%m-%d %H:%M:%S]")} Detected change, regenerating #{template_file} ..."
-          Herb::Template.render(template_file)
-        end
-
-        removed.each do |template|
-          puts
-          puts "#{template} was removed. Make sure to also remove the generated file."
-        end
-      end
-
-      config_listener.start
-      template_listener.start
-
-      sleep
-    rescue LoadError
-      abort "listen gem is required for this task. Add it to your Gemfile or install it with: gem install listen"
     end
+
+    template_listener = Listen.to("templates", only: /\.erb$/) do |modified, added, removed|
+      puts
+      (added + modified).each do |template|
+        template_file = template.delete_prefix("#{__dir__}/")
+
+        puts "#{Time.now.strftime("[%Y-%m-%d %H:%M:%S]")} Detected change, regenerating #{template_file} ..."
+        Herb::Template.render(template_file)
+      end
+
+      removed.each do |template|
+        puts
+        puts "#{template} was removed. Make sure to also remove the generated file."
+      end
+    end
+
+    config_listener.start
+    template_listener.start
+
+    sleep
+  rescue LoadError
+    abort "listen gem is required for this task. Add it to your Gemfile or install it with: gem install listen"
   end
 end
 
