@@ -20,7 +20,8 @@
     "test": "nx run-many --target=test",
     "lint": "yarn prettier '**/*.{js,mjs,cjs,ts,mts,cts,css,html}' --check",
     "format": "yarn prettier '**/*.{js,mjs,cjs,ts,mts,cts,css,html}' --write",
-    "release": "tsx javascript/tools/scripts/release.ts"
+    "release": "tsx javascript/tools/scripts/release.ts",
+    "registry": "nx local-registry"
   },
   "workspaces": [
     "javascript/packages/*",
