@@ -6061,10 +6061,10 @@ leven@^3.1.0:
   resolved "https://registry.yarnpkg.com/leven/-/leven-3.1.0.tgz#77891de834064cccba82ae7842bb6b14a13ed7f2"
   integrity sha512-qsda+H8jTaUaN/x5vzW2rzc+8Rw4TAQ/4KjB46IwK5VH+IlVeeeje/EoZRpiXvIqjFgK84QffqPztGI3VBLG1A==
 
-light-pen@^4.2.3:
-  version "4.2.4"
-  resolved "https://registry.yarnpkg.com/light-pen/-/light-pen-4.2.4.tgz#18447233744c4738528a6c1af720dbcce6d2d1a8"
-  integrity sha512-bJvUErMKxgtAKyaTyFvt0Inx/51csjqkL9ElLynb1m1nuHKnIbYu5hGaRL+V6Gn+7ym1julcHSWjRK7Ie1B6TQ==
+light-pen@^4.2.5:
+  version "4.2.5"
+  resolved "https://registry.yarnpkg.com/light-pen/-/light-pen-4.2.5.tgz#7920634bb76615062ed13725c4ee67328aac1eef"
+  integrity sha512-BhkFQXNHERKJn+J0FnAI+MpRgUzp5F1dLUnjeUAQ6yHuoE/+ux+evvWHOftkaK2glbvxKhSEIvyviUQdGeLK/w==
   dependencies:
     "@open-wc/semantic-dom-diff" "^0.20.1"
     diff "^5.2.0"
