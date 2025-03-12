@@ -68,6 +68,8 @@ export default class extends Controller {
 
     this.inputTarget.setAttribute("language", "erb")
     this.inputTarget.requestUpdate("highlighter")
+
+    this.inputTarget.focus()
   }
 
   updateURL() {
