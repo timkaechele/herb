@@ -7,12 +7,12 @@
     "build": "vite build",
     "dev": "vite dev",
     "preview": " vite preview",
-    "serve": "vite serve --host"
+    "serve": "vite serve --host",
+    "clean": "rimraf dist/"
   },
   "dependencies": {
     "@alenaksu/json-viewer": "^2.0.1",
     "@herb-tools/browser": "^0.0.0",
-    "@herb-tools/node": "^0.0.0",
     "@hotwired/stimulus": "^3.2.2",
     "dedent": "^1.5.1",
     "element-internals-polyfill": "^3.0.1",
@@ -26,6 +26,7 @@
   "devDependencies": {
     "@types/express": "^4.17.21",
     "@types/node": "^20.10.5",
+    "rimraf": "^6.0.1",
     "typescript": "^5.8.2"
   }
 }

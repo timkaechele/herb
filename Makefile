@@ -7,7 +7,7 @@ objects = $(sources:.c=.o)
 
 extension_sources = $(wildcard ext/**/*.c)
 extension_headers = $(wildcard ext/**/*.h)
-extension_objects = $(wildcard ext/**/*.o)
+extension_objects = $(extension_sources:.o)
 
 prism_objects = $(filter-out src/main.c, $(sources))
 
@@ -76,7 +76,7 @@ ifeq ($(os),Darwin)
   clang_tidy = $(llvm_path)/bin/clang-tidy
 endif
 
-all: prism $(exec) $(lib_name) $(static_lib_name) test
+all: prism $(exec) $(lib_name) $(static_lib_name) test wasm
 
 $(exec): $(objects)
 	$(cc) $(objects) $(flags) $(ldflags) $(prism_ldflags) -o $(exec)
@@ -116,3 +116,6 @@ lint:
 
 tidy:
 	$(clang_tidy) $(project_files) -- $(flags)
+
+wasm:
+	cd wasm && make

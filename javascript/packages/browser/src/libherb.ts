@@ -1,42 +1,52 @@
 import { name, version } from "../package.json"
-import libHerbBinary from "./wasm.js"
+import LibHerb from "../build/libherb.js"
 
-import type { LibHerbBackend } from "@herb-tools/core"
+import type {
+  LibHerbBackend,
+  SerializedLexResult,
+  SerializedParseResult,
+} from "@herb-tools/core"
 
 const backend: LibHerbBackend = {
-  lex: (source: string) => {
-    return libHerbBinary.lex(source)
+  async lex(source: string): Promise<SerializedLexResult> {
+    const libherb = await LibHerb()
+    return libherb.lex(source)
   },
 
-  lexFile: (_path: string) => {
+  async lexFile(_path: string): Promise<SerializedLexResult> {
     throw new Error("File system operations are not supported in the browser.")
   },
 
-  lexToJson: (source: string) => {
-    return libHerbBinary.lexToJson(source)
+  async lexToJson(_source: string): Promise<string> {
+    throw new Error("not supported in the browser.")
   },
 
-  parse: (source: string) => {
-    return libHerbBinary.parse(source)
+  async parse(source: string): Promise<SerializedParseResult> {
+    const libherb = await LibHerb()
+    return libherb.parse(source)
   },
 
-  parseFile: (_path: string) => {
+  async parseFile(_path: string): Promise<SerializedParseResult> {
     throw new Error("File system operations are not supported in the browser.")
   },
 
-  extractRuby: (source: string) => {
-    return libHerbBinary.extractRuby(source)
+  async extractRuby(source: string): Promise<string> {
+    const libherb = await LibHerb()
+    return libherb.extractRuby(source)
   },
 
-  extractHtml: (source: string) => {
-    return libHerbBinary.extractHtml(source)
+  async extractHtml(source: string): Promise<string> {
+    const libherb = await LibHerb()
+    return libherb.extractHTML(source)
   },
 
-  version: () => {
-    return libHerbBinary.version()
+  async version(): Promise<string> {
+    const libherb = await LibHerb()
+
+    return libherb.version()
   },
 
-  backend: () => {
+  backend(): string {
     return `${name}@${version}`
   },
 }

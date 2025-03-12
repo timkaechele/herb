@@ -7,10 +7,13 @@
   "module": "./dist/herb-browser.esm.js",
   "types": "./dist/types/index.d.ts",
   "scripts": {
-    "build": "yarn clean && rollup -c",
+    "build": "yarn clean && yarn build:wasm && yarn build:javascript",
+    "build:wasm": "cd ../../../wasm && make && cd -",
+    "build:javascript": "rollup -c",
     "dev": "rollup -c -w",
-    "clean": "rimraf dist",
+    "clean": "rimraf dist && rimraf build",
     "test": "vitest run",
+    "test:ui": "vitest --watch --ui",
     "prepublishOnly": "yarn clean && yarn build && yarn test"
   },
   "exports": {
@@ -28,6 +31,10 @@
     "@rollup/plugin-json": "^6.1.0",
     "@rollup/plugin-node-resolve": "^15.2.3",
     "@rollup/plugin-typescript": "^12.1.2",
+    "@testing-library/dom": "^10.4.0",
+    "@vitest/browser": "^3.0.8",
+    "@vitest/ui": "3.0.8",
+    "playwright": "^1.51.0",
     "rimraf": "^6.0.1",
     "rollup": "^4.35.0",
     "tslib": "^2.8.1",
