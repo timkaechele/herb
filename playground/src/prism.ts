@@ -7,6 +7,11 @@ Prism.languages.tree = {
     greedy: true,
   },
 
+  namedspaced_class: {
+    pattern: /Herb::(\w)+\b/,
+    greedy: true,
+  },
+
   // Location markers
   location: {
     pattern: /\(location: \(\d+:\d+\)-\(\d+:\d+\)\)/,

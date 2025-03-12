@@ -13,6 +13,10 @@ json-viewer::part(key) {
   font-weight: bold;
 }
 
+.language-tree .token.namedspaced_class {
+  color: #e5c07b;
+}
+
 .language-tree .token.location {
   color: #abb2bf;
   font-style: italic;

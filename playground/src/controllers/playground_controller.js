@@ -245,7 +245,7 @@ export default class extends Controller {
         }
 
         if (this.hasLexViewerTarget) {
-          this.lexViewerTarget.classList.add("language-javascript")
+          this.lexViewerTarget.classList.add("language-tree")
           this.lexViewerTarget.textContent = json.lex
 
           console.log(json)
