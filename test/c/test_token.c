@@ -14,7 +14,7 @@ TEST(test_token_to_string)
   ck_assert_str_eq(
     output.value,
     "#<Herb::Token type=\"TOKEN_IDENTIFIER\" value=\"hello\" range=[0, 5] start=(1:0) end=(1:5)>\n"
-    "#<Herb::Token type=\"TOKEN_EOF\" value=\"\" range=[5, 5] start=(1:5) end=(1:5)>\n"
+    "#<Herb::Token type=\"TOKEN_EOF\" value=\"<EOF>\" range=[5, 5] start=(1:5) end=(1:5)>\n"
   );
 
   buffer_free(&output);

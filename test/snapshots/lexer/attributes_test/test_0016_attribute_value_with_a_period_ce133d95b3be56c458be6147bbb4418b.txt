@@ -14,4 +14,4 @@
 #<Herb::Token type="TOKEN_HTML_TAG_START_CLOSE" value="</" range=[27, 29] start=(1:27) end=(1:29)>
 #<Herb::Token type="TOKEN_IDENTIFIER" value="div" range=[29, 32] start=(1:29) end=(1:32)>
 #<Herb::Token type="TOKEN_HTML_TAG_END" value=">" range=[32, 33] start=(1:32) end=(1:33)>
-#<Herb::Token type="TOKEN_EOF" value="" range=[33, 33] start=(1:33) end=(1:33)>
+#<Herb::Token type="TOKEN_EOF" value="<EOF>" range=[33, 33] start=(1:33) end=(1:33)>

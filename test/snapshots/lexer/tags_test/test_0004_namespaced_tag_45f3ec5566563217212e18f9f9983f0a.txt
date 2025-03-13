@@ -4,4 +4,4 @@
 #<Herb::Token type="TOKEN_HTML_TAG_START_CLOSE" value="</" range=[10, 12] start=(1:10) end=(1:12)>
 #<Herb::Token type="TOKEN_IDENTIFIER" value="ns:table" range=[12, 20] start=(1:12) end=(1:20)>
 #<Herb::Token type="TOKEN_HTML_TAG_END" value=">" range=[20, 21] start=(1:20) end=(1:21)>
-#<Herb::Token type="TOKEN_EOF" value="" range=[21, 21] start=(1:21) end=(1:21)>
+#<Herb::Token type="TOKEN_EOF" value="<EOF>" range=[21, 21] start=(1:21) end=(1:21)>

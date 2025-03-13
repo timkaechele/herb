@@ -3,4 +3,4 @@
 #<Herb::Token type="TOKEN_WHITESPACE" value=" " range=[9, 10] start=(1:9) end=(1:10)>
 #<Herb::Token type="TOKEN_IDENTIFIER" value="World" range=[10, 15] start=(1:10) end=(1:15)>
 #<Herb::Token type="TOKEN_HTML_COMMENT_END" value="-->" range=[15, 18] start=(1:15) end=(1:18)>
-#<Herb::Token type="TOKEN_EOF" value="" range=[18, 18] start=(1:18) end=(1:18)>
+#<Herb::Token type="TOKEN_EOF" value="<EOF>" range=[18, 18] start=(1:18) end=(1:18)>

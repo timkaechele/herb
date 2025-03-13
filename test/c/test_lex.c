@@ -7,7 +7,7 @@ TEST(herb_lex_to_buffer_empty_file)
 
   herb_lex_to_buffer(html, &output);
 
-  ck_assert_str_eq(output.value, "#<Herb::Token type=\"TOKEN_EOF\" value=\"\" range=[0, 0] start=(1:0) end=(1:0)>\n");
+  ck_assert_str_eq(output.value, "#<Herb::Token type=\"TOKEN_EOF\" value=\"<EOF>\" range=[0, 0] start=(1:0) end=(1:0)>\n");
 
   buffer_free(&output);
 END
@@ -26,7 +26,7 @@ TEST(herb_lex_to_buffer_basic_tag)
     "#<Herb::Token type=\"TOKEN_HTML_TAG_START_CLOSE\" value=\"</\" range=[6, 8] start=(1:6) end=(1:8)>\n"
     "#<Herb::Token type=\"TOKEN_IDENTIFIER\" value=\"html\" range=[8, 12] start=(1:8) end=(1:12)>\n"
     "#<Herb::Token type=\"TOKEN_HTML_TAG_END\" value=\">\" range=[12, 13] start=(1:12) end=(1:13)>\n"
-    "#<Herb::Token type=\"TOKEN_EOF\" value=\"\" range=[13, 13] start=(1:13) end=(1:13)>\n"
+    "#<Herb::Token type=\"TOKEN_EOF\" value=\"<EOF>\" range=[13, 13] start=(1:13) end=(1:13)>\n"
   );
 
   buffer_free(&output);

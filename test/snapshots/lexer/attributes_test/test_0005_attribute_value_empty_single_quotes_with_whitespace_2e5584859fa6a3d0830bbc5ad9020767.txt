@@ -7,4 +7,4 @@
 #<Herb::Token type="TOKEN_QUOTE" value="'" range=[12, 13] start=(1:12) end=(1:13)>
 #<Herb::Token type="TOKEN_WHITESPACE" value=" " range=[13, 14] start=(1:13) end=(1:14)>
 #<Herb::Token type="TOKEN_HTML_TAG_SELF_CLOSE" value="/>" range=[14, 16] start=(1:14) end=(1:16)>
-#<Herb::Token type="TOKEN_EOF" value="" range=[16, 16] start=(1:16) end=(1:16)>
+#<Herb::Token type="TOKEN_EOF" value="<EOF>" range=[16, 16] start=(1:16) end=(1:16)>

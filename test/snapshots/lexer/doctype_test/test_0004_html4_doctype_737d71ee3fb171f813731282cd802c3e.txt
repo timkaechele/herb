@@ -42,4 +42,4 @@
 #<Herb::Token type="TOKEN_IDENTIFIER" value="dtd" range=[85, 88] start=(1:85) end=(1:88)>
 #<Herb::Token type="TOKEN_QUOTE" value="\"" range=[88, 89] start=(1:88) end=(1:89)>
 #<Herb::Token type="TOKEN_HTML_TAG_END" value=">" range=[89, 90] start=(1:89) end=(1:90)>
-#<Herb::Token type="TOKEN_EOF" value="" range=[90, 90] start=(1:90) end=(1:90)>
+#<Herb::Token type="TOKEN_EOF" value="<EOF>" range=[90, 90] start=(1:90) end=(1:90)>

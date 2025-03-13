@@ -85,9 +85,14 @@ char* token_to_string(const token_T* token) {
   const char* type_string = token_type_to_string(token->type);
   const char* template = "#<Herb::Token type=\"%s\" value=\"%s\" range=[%d, %d] start=(%d:%d) end=(%d:%d)>";
 
-  char* string = calloc(strlen(type_string) + strlen(template) + 8, sizeof(char));
+  char* string = calloc(strlen(type_string) + strlen(template) + strlen(token->value) + 16, sizeof(char));
+  char* escaped;
 
-  char* escaped = escape_newlines(token->value);
+  if (token->type == TOKEN_EOF) {
+    escaped = herb_strdup("<EOF>");
+  } else {
+    escaped = escape_newlines(token->value);
+  }
 
   sprintf(
     string,

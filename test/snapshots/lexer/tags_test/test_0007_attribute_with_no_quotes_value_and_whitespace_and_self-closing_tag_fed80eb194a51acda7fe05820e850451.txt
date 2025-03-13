@@ -6,4 +6,4 @@
 #<Herb::Token type="TOKEN_IDENTIFIER" value="hello" range=[11, 16] start=(1:11) end=(1:16)>
 #<Herb::Token type="TOKEN_WHITESPACE" value=" " range=[16, 17] start=(1:16) end=(1:17)>
 #<Herb::Token type="TOKEN_HTML_TAG_SELF_CLOSE" value="/>" range=[17, 19] start=(1:17) end=(1:19)>
-#<Herb::Token type="TOKEN_EOF" value="" range=[19, 19] start=(1:19) end=(1:19)>
+#<Herb::Token type="TOKEN_EOF" value="<EOF>" range=[19, 19] start=(1:19) end=(1:19)>

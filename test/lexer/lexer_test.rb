@@ -31,7 +31,7 @@ module Lexer
         #<Herb::Token type="TOKEN_HTML_TAG_START_CLOSE" value="</" range=[23, 25] start=(1:23) end=(1:25)>
         #<Herb::Token type="TOKEN_IDENTIFIER" value="h1" range=[25, 27] start=(1:25) end=(1:27)>
         #<Herb::Token type="TOKEN_HTML_TAG_END" value=">" range=[27, 28] start=(1:27) end=(1:28)>
-        #<Herb::Token type="TOKEN_EOF" value="" range=[28, 28] start=(1:28) end=(1:28)>
+        #<Herb::Token type="TOKEN_EOF" value="<EOF>" range=[28, 28] start=(1:28) end=(1:28)>
       SNAPSHOT
 
       assert_equal snapshot, result.value.inspect

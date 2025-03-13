@@ -28,8 +28,16 @@ module Herb
       %("#{value}" #{location.tree_inspect})
     end
 
+    def value_inspect
+      if type == "TOKEN_EOF"
+        "<EOF>".inspect
+      else
+        value.inspect
+      end
+    end
+
     def inspect
-      %(#<Herb::Token type="#{type}" value=#{value.inspect} range=#{range.tree_inspect} start=#{location.start.tree_inspect} end=#{location.end.tree_inspect}>)
+      %(#<Herb::Token type="#{type}" value=#{value_inspect} range=#{range.tree_inspect} start=#{location.start.tree_inspect} end=#{location.end.tree_inspect}>)
     end
   end
 end

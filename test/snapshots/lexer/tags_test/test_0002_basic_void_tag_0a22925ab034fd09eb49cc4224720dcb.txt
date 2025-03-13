@@ -2,4 +2,4 @@
 #<Herb::Token type="TOKEN_IDENTIFIER" value="img" range=[1, 4] start=(1:1) end=(1:4)>
 #<Herb::Token type="TOKEN_WHITESPACE" value=" " range=[4, 5] start=(1:4) end=(1:5)>
 #<Herb::Token type="TOKEN_HTML_TAG_SELF_CLOSE" value="/>" range=[5, 7] start=(1:5) end=(1:7)>
-#<Herb::Token type="TOKEN_EOF" value="" range=[7, 7] start=(1:7) end=(1:7)>
+#<Herb::Token type="TOKEN_EOF" value="<EOF>" range=[7, 7] start=(1:7) end=(1:7)>

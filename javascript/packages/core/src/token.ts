@@ -47,8 +47,14 @@ export class Token {
     return `"${this.value}" ${this.location.treeInspectWithLabel()}`
   }
 
+  valueInspect(): string {
+    return this.type === "TOKEN_EOF"
+      ? JSON.stringify("<EOF>")
+      : JSON.stringify(this.value)
+  }
+
   inspect(): string {
-    return `#<Herb::Token type="${this.type}" value=${JSON.stringify(this.value)} range=${this.range.treeInspect()} start=${this.location.start.treeInspect()} end=${this.location.end.treeInspect()}>`
+    return `#<Herb::Token type="${this.type}" value=${this.valueInspect()} range=${this.range.treeInspect()} start=${this.location.start.treeInspect()} end=${this.location.end.treeInspect()}>`
   }
 
   toString(): string {
