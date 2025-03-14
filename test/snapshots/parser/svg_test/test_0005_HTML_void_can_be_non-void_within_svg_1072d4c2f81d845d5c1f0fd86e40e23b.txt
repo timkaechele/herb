@@ -12,7 +12,7 @@
     │   │
     │   ├── tag_name: "svg" (location: (1:1)-(1:4))
     │   ├── body: (3 items)
-    │   │   ├── @ HTMLTextNode (location: (1:0)-(2:3))
+    │   │   ├── @ HTMLTextNode (location: (1:5)-(2:3))
     │   │   │   └── content: "\n  "
     │   │   │
     │   │   ├── @ HTMLElementNode (location: (2:3)-(2:12))
@@ -35,7 +35,7 @@
     │   │   │   │
     │   │   │   └── is_void: false
     │   │   │
-    │   │   └── @ HTMLTextNode (location: (2:0)-(3:1))
+    │   │   └── @ HTMLTextNode (location: (2:12)-(3:1))
     │   │       └── content: "\n"
     │   │
     │   ├── close_tag:
@@ -46,5 +46,5 @@
     │   │
     │   └── is_void: false
     │
-    └── @ HTMLTextNode (location: (3:0)-(4:1))
+    └── @ HTMLTextNode (location: (3:7)-(4:1))
         └── content: "\n"

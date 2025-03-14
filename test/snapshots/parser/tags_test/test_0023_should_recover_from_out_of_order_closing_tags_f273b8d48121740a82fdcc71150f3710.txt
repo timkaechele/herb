@@ -20,7 +20,7 @@
     │   │
     │   ├── tag_name: "main" (location: (2:10)-(2:14))
     │   ├── body: (3 items)
-    │   │   ├── @ HTMLTextNode (location: (2:0)-(3:11))
+    │   │   ├── @ HTMLTextNode (location: (2:15)-(3:11))
     │   │   │   └── content: "\n          "
     │   │   │
     │   │   ├── @ HTMLElementNode (location: (3:11)-(4:20))
@@ -41,7 +41,7 @@
     │   │   │   │
     │   │   │   ├── tag_name: "div" (location: (3:12)-(3:15))
     │   │   │   ├── body: (1 item)
-    │   │   │   │   └── @ HTMLTextNode (location: (3:0)-(4:13))
+    │   │   │   │   └── @ HTMLTextNode (location: (3:16)-(4:13))
     │   │   │   │       └── content: "\n            "
     │   │   │   │
     │   │   │   ├── close_tag:
@@ -52,7 +52,7 @@
     │   │   │   │
     │   │   │   └── is_void: false
     │   │   │
-    │   │   └── @ HTMLTextNode (location: (4:0)-(5:11))
+    │   │   └── @ HTMLTextNode (location: (4:20)-(5:11))
     │   │       └── content: "\n          "
     │   │
     │   ├── close_tag:
@@ -63,7 +63,7 @@
     │   │
     │   └── is_void: false
     │
-    ├── @ HTMLTextNode (location: (5:0)-(6:9))
+    ├── @ HTMLTextNode (location: (5:17)-(6:9))
     │   └── content: "\n        "
     │
     ├── @ HTMLCloseTagNode (location: (6:9)-(6:16))
@@ -76,5 +76,5 @@
     │   ├── tag_name: "main" (location: (6:11)-(6:15))
     │   └── tag_closing: ">" (location: (6:15)-(6:16))
     │
-    └── @ HTMLTextNode (location: (6:0)-(7:7))
+    └── @ HTMLTextNode (location: (6:16)-(7:7))
         └── content: "\n      "

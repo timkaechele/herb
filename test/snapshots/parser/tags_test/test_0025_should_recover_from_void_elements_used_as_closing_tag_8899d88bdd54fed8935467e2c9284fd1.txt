@@ -15,7 +15,7 @@
     │   │
     │   ├── tag_name: "main" (location: (2:10)-(2:14))
     │   ├── body: (3 items)
-    │   │   ├── @ HTMLTextNode (location: (2:0)-(3:11))
+    │   │   ├── @ HTMLTextNode (location: (2:15)-(3:11))
     │   │   │   └── content: "\n          "
     │   │   │
     │   │   ├── @ HTMLElementNode (location: (3:11)-(7:17))
@@ -30,7 +30,7 @@
     │   │   │   │
     │   │   │   ├── tag_name: "div" (location: (3:12)-(3:15))
     │   │   │   ├── body: (7 items)
-    │   │   │   │   ├── @ HTMLTextNode (location: (3:0)-(4:13))
+    │   │   │   │   ├── @ HTMLTextNode (location: (3:16)-(4:13))
     │   │   │   │   │   └── content: "\n            "
     │   │   │   │   │
     │   │   │   │   ├── @ HTMLCloseTagNode (location: (4:13)-(4:18))
@@ -45,7 +45,7 @@
     │   │   │   │   │   ├── tag_name: "br" (location: (4:15)-(4:17))
     │   │   │   │   │   └── tag_closing: ">" (location: (4:17)-(4:18))
     │   │   │   │   │
-    │   │   │   │   ├── @ HTMLTextNode (location: (4:0)-(5:13))
+    │   │   │   │   ├── @ HTMLTextNode (location: (4:18)-(5:13))
     │   │   │   │   │   └── content: "\n            "
     │   │   │   │   │
     │   │   │   │   ├── @ HTMLElementNode (location: (5:13)-(5:31))
@@ -71,7 +71,7 @@
     │   │   │   │   │   │
     │   │   │   │   │   └── is_void: false
     │   │   │   │   │
-    │   │   │   │   ├── @ HTMLTextNode (location: (5:0)-(6:13))
+    │   │   │   │   ├── @ HTMLTextNode (location: (5:31)-(6:13))
     │   │   │   │   │   └── content: "\n            "
     │   │   │   │   │
     │   │   │   │   ├── @ HTMLElementNode (location: (6:13)-(6:25))
@@ -97,7 +97,7 @@
     │   │   │   │   │   │
     │   │   │   │   │   └── is_void: false
     │   │   │   │   │
-    │   │   │   │   └── @ HTMLTextNode (location: (6:0)-(7:11))
+    │   │   │   │   └── @ HTMLTextNode (location: (6:25)-(7:11))
     │   │   │   │       └── content: "\n          "
     │   │   │   │
     │   │   │   ├── close_tag:
@@ -108,7 +108,7 @@
     │   │   │   │
     │   │   │   └── is_void: false
     │   │   │
-    │   │   └── @ HTMLTextNode (location: (7:0)-(8:9))
+    │   │   └── @ HTMLTextNode (location: (7:17)-(8:9))
     │   │       └── content: "\n        "
     │   │
     │   ├── close_tag:
@@ -119,5 +119,5 @@
     │   │
     │   └── is_void: false
     │
-    └── @ HTMLTextNode (location: (8:0)-(9:7))
+    └── @ HTMLTextNode (location: (8:16)-(9:7))
         └── content: "\n      "

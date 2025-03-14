@@ -12,7 +12,7 @@
     │   │
     │   ├── tag_name: "svg" (location: (1:1)-(1:4))
     │   ├── body: (3 items)
-    │   │   ├── @ HTMLTextNode (location: (1:0)-(2:3))
+    │   │   ├── @ HTMLTextNode (location: (1:5)-(2:3))
     │   │   │   └── content: "\n  "
     │   │   │
     │   │   ├── @ HTMLElementNode (location: (2:3)-(4:7))
@@ -27,7 +27,7 @@
     │   │   │   │
     │   │   │   ├── tag_name: "g" (location: (2:4)-(2:5))
     │   │   │   ├── body: (3 items)
-    │   │   │   │   ├── @ HTMLTextNode (location: (2:0)-(3:5))
+    │   │   │   │   ├── @ HTMLTextNode (location: (2:6)-(3:5))
     │   │   │   │   │   └── content: "\n    "
     │   │   │   │   │
     │   │   │   │   ├── @ HTMLElementNode (location: (3:5)-(3:12))
@@ -45,7 +45,7 @@
     │   │   │   │   │   ├── close_tag: ∅
     │   │   │   │   │   └── is_void: true
     │   │   │   │   │
-    │   │   │   │   └── @ HTMLTextNode (location: (3:0)-(4:3))
+    │   │   │   │   └── @ HTMLTextNode (location: (3:12)-(4:3))
     │   │   │   │       └── content: "\n  "
     │   │   │   │
     │   │   │   ├── close_tag:
@@ -56,7 +56,7 @@
     │   │   │   │
     │   │   │   └── is_void: false
     │   │   │
-    │   │   └── @ HTMLTextNode (location: (4:0)-(5:1))
+    │   │   └── @ HTMLTextNode (location: (4:7)-(5:1))
     │   │       └── content: "\n"
     │   │
     │   ├── close_tag:
@@ -67,5 +67,5 @@
     │   │
     │   └── is_void: false
     │
-    └── @ HTMLTextNode (location: (5:0)-(6:1))
+    └── @ HTMLTextNode (location: (5:7)-(6:1))
         └── content: "\n"
