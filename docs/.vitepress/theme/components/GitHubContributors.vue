@@ -1,5 +1,6 @@
 <script setup>
 import { ref, onMounted } from 'vue'
+import contributorsFile from '../../data/contributors.json'
 
 const props = defineProps({
   owner: {
@@ -22,10 +23,7 @@ const error = ref(null)
 
 onMounted(async () => {
   try {
-    const dataFile = `contributors.json`
-    const module = await import(`../../data/${dataFile}`)
-
-    contributors.value = module.default.slice(0, props.limit)
+    contributors.value = contributorsFile.slice(0, props.limit)
     loading.value = false
   } catch (err) {
     error.value = `Failed to load contributors data for ${props.owner}/${props.repo}. Make sure the data file exists.`
