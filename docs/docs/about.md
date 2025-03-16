@@ -22,6 +22,6 @@ The Herb Project was created and is lead by Marco Roth.
 
 ## Project Contributors
 
-Herb wouldn't we possible without all it's contributors. Thank you to all the amazing people who have directly contributed to the project:
+Herb wouldn't be possible without all it's contributors. Thank you to all the amazing people who have directly contributed to the project:
 
 <GitHubContributors owner="marcoroth" repo="herb" :limit="30" />
