@@ -2,23 +2,19 @@ import "../style.css"
 import "../prism"
 
 // import "@alenaksu/json-viewer"
-import "element-internals-polyfill"
 
 import lz from "lz-string"
 import dedent from "dedent"
 import Prism from "prismjs"
 
 import { Controller } from "@hotwired/stimulus"
-
-import LightEditor from "light-pen/exports/components/light-editor/light-editor.js"
-
-import { loader as ERBLoader } from "prism-esm/components/prism-erb.js"
-LightEditor.define()
+import { replaceTextareaWithMonaco } from "../monaco"
+import { findTreeLocationItemWithSmallestRangeFromPosition } from "../ranges"
 
 import { Herb } from "@herb-tools/browser"
-window.Herb = Herb
-
 import { analyze } from "../analyze"
+
+window.Herb = Herb
 window.analyze = analyze
 
 const exampleFile = dedent`
@@ -26,7 +22,7 @@ const exampleFile = dedent`
 
   <input required />
 
-  <h1 class="bg-gray-300 text-gray" id='' data-controller="example">
+  <h1 class='bg-gray-300 text-gray" id='' data-controller="example">
     Hello World <%= RUBY_VERSION %>
   </h1>
 
@@ -64,17 +60,64 @@ export default class extends Controller {
 
   connect() {
     this.restoreInput()
-
-    this.highlighter = this.inputTarget.highlighter
-
-    ERBLoader(this.highlighter)
-
-    this.inputTarget.setAttribute("language", "erb")
-    this.inputTarget.requestUpdate("highlighter")
-
     this.inputTarget.focus()
-
     this.load()
+
+    this.urlUpdatedFromChangeEvent = false
+
+    this.editor = replaceTextareaWithMonaco("input", this.inputTarget, {
+      language: "erb",
+      theme: "",
+      automaticLayout: true,
+      minimap: { enabled: false },
+    })
+
+    this.editor.onEditorClick((position) => {
+      this.editor.clearAllHighlights()
+      this.clearTreeLocationHighlights()
+
+      const range = findTreeLocationItemWithSmallestRangeFromPosition(
+        this.treeLocations,
+        position.lineNumber,
+        position.column - 1,
+      )
+
+      if (range) {
+        range.element.classList.add("tree-location-highlight")
+        range.element.scrollIntoView({
+          behavior: "smooth",
+          block: "center",
+          inline: "center",
+        })
+      }
+    })
+
+    this.editor.onDidChangeCursorPosition(({ position }) => {
+      this.updatePosition(
+        position.lineNumber,
+        position.column - 1,
+        this.editor.getValue().length,
+      )
+    })
+
+    window.addEventListener("popstate", this.handlePopState)
+    window.editor = this.editor
+  }
+
+  updatePosition(line, column, length) {
+    if (this.hasPositionTarget) {
+      this.positionTarget.textContent = `Position: ${`(${line}:${column})`.toString().padStart(8)}, Length: ${length.toString().padStart(4)}`
+    }
+  }
+
+  disconnect() {
+    window.removeEventListener("popstate", this.handlePopState)
+  }
+
+  handlePopState = async (event) => {
+    if (this.urlUpdatedFromChangeEvent === false) {
+      this.editor.setValue(this.decompressedValue)
+    }
   }
 
   async load() {
@@ -94,7 +137,11 @@ export default class extends Controller {
       return
     }
 
-    this.inputTarget.value = exampleFile
+    if (this.editor) {
+      this.editor.setValue(exampleFile)
+    } else {
+      this.inputTarget.value = exampleFile
+    }
 
     const button = this.getClosestButton(event.target)
 
@@ -200,24 +247,68 @@ export default class extends Controller {
     this.currentViewer.style.cursor = null
   }
 
-  updatePosition() {
-    if (this.hasPositionTarget) {
-      const textarea = this.inputTarget
+  setupHoverListener(element, location) {
+    element.addEventListener("mouseenter", () => {
+      this.clearTreeLocationHighlights()
+      this.editor.clearAllHighlights()
+      this.editor.highlightAndRevealSection(
+        ...location,
+        element.classList.contains("error-class")
+          ? "error-highlight"
+          : "info-highlight",
+      )
+    })
 
-      const textLines = textarea.value
-        .substr(0, textarea.selectionStart)
-        .split("\n")
-      const currentColumnIndex = textLines[textLines.length - 1].length
+    element.classList.add("hover-highlight")
+  }
 
-      this.positionTarget.textContent = `Position: (${this.inputTarget.currentLineNumber}:${currentColumnIndex}), Length: ${this.inputTarget.value.length.toString().padStart(4)}`
-    }
+  clearTreeLocationHighlights() {
+    this.prettyViewerTarget
+      .querySelectorAll(".tree-location-highlight")
+      .forEach((element) => {
+        element.classList.remove("tree-location-highlight")
+      })
+  }
+
+  get treeLocations() {
+    return Array.from(
+      this.prettyViewerTarget?.querySelectorAll(".token.location") || [],
+    ).map((locationElement) => {
+      const element = locationElement.previousElementSibling
+      const location = Array.from(
+        locationElement.textContent.matchAll(/\d+/g),
+      ).map((i) => parseInt(i))
+
+      location[1] += 1
+      location[3] += 1
+
+      return { element, locationElement, location }
+    })
+  }
+
+  async input() {
+    this.urlUpdatedFromChangeEvent = true
+    await this.analyze()
+    this.urlUpdatedFromChangeEvent = false
   }
 
   async analyze() {
     this.updateURL()
-    this.updatePosition()
 
-    const result = await analyze(Herb, this.inputTarget.value)
+    const value = this.editor ? this.editor.getValue() : this.inputTarget.value
+    const result = await analyze(Herb, value)
+
+    this.updatePosition(1, 0, value.length)
+
+    this.editor.clearDiagnostics()
+
+    if (result.parseResult) {
+      const errors = result.parseResult.recursiveErrors()
+
+      this.editor.addDiagnostics(
+        errors.flatMap((error) => error.toDiagnostics()),
+      )
+    }
 
     if (this.hasTimeTarget) {
       if (result.duration.toFixed(2) == 0.0) {
@@ -236,6 +327,15 @@ export default class extends Controller {
       this.prettyViewerTarget.textContent = result.string
 
       Prism.highlightElement(this.prettyViewerTarget)
+
+      this.treeLocations.forEach(({ element, locationElement, location }) => {
+        this.setupHoverListener(locationElement, location)
+        this.setupHoverListener(element, location)
+
+        if (element.classList.contains("string")) {
+          this.setupHoverListener(element.previousElementSibling, location)
+        }
+      })
     }
 
     if (this.hasHtmlViewerTarget) {
@@ -261,7 +361,8 @@ export default class extends Controller {
   }
 
   get compressedValue() {
-    return lz.compressToEncodedURIComponent(this.inputTarget.value)
+    const value = this.editor ? this.editor.getValue() : this.inputTarget.value
+    return lz.compressToEncodedURIComponent(value)
   }
 
   get decompressedValue() {
