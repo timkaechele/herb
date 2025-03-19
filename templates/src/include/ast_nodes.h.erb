@@ -2,12 +2,14 @@
 #define HERB_AST_NODES_H
 
 #include <stdbool.h>
+#include <prism.h>
 
 #include "array.h"
 #include "buffer.h"
 #include "position.h"
 #include "location.h"
 #include "token_struct.h"
+#include "analyzed_ruby.h"
 
 typedef enum {
 <%- nodes.each do |node| -%>
@@ -25,7 +27,7 @@ typedef struct AST_NODE_STRUCT {
 <%- nodes.each do |node| -%>
 <%- arguments = node.fields.any? ? node.fields.map { |field| [field.c_type, " ", field.name, ";"].join }.join("\n  ") : "/* no additional fields */" -%>
 
-typedef struct {
+typedef struct <%= node.struct_name %> {
   AST_NODE_T base;
   <%= arguments %>
 } <%= node.struct_type %>;
@@ -33,7 +35,7 @@ typedef struct {
 
 <%- nodes.each do |node| -%>
 <%- node_arguments = node.fields.any? ? node.fields.map { |field| [field.c_type, " ", field.name].join } : [] -%>
-<%- arguments = node_arguments + ["position_T* start", "position_T* end", "array_T* errors"] -%>
+<%- arguments = node_arguments + ["position_T* start_position", "position_T* end_position", "array_T* errors"] -%>
 <%= node.struct_type %>* ast_<%= node.human %>_init(<%= arguments.join(", ") %>);
 <%- end -%>
 

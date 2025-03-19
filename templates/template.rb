@@ -58,7 +58,7 @@ module Herb
 
       def c_type
         if specific_kind
-          "AST_#{specific_kind.gsub(/(?<=[a-zA-Z])(?=[A-Z][a-z])/, "_").upcase}_T*"
+          "struct AST_#{specific_kind.gsub(/(?<=[a-zA-Z])(?=[A-Z][a-z])/, "_").upcase}_STRUCT*"
         else
           "AST_NODE_T*"
         end
@@ -133,7 +133,7 @@ module Herb
       end
 
       def c_type
-        "const size_t"
+        "size_t"
       end
     end
 
@@ -144,6 +144,36 @@ module Herb
 
       def c_type
         "bool"
+      end
+    end
+
+    class PrismNodeField < Field
+      def ruby_type
+        "Prism::Node"
+      end
+
+      def c_type
+        "pm_node_t*"
+      end
+    end
+
+    class VoidPointerField < Field
+      def ruby_type
+        "nil"
+      end
+
+      def c_type
+        "void*"
+      end
+    end
+
+    class AnalyzedRubyField < Field
+      def ruby_type
+        "nil"
+      end
+
+      def c_type
+        "analyzed_ruby_T*"
       end
     end
 
@@ -175,6 +205,9 @@ module Herb
         when "position"   then PositionField
         when "size_t"     then SizeTField
         when "boolean"    then BooleanField
+        when "prism_node" then PrismNodeField
+        when "analyzed_ruby" then AnalyzedRubyField
+        when "void*" then VoidPointerField
         else raise("Unknown field type: #{name.inspect}")
         end
       end
@@ -183,7 +216,7 @@ module Herb
     class ErrorType
       include ConfigType
 
-      attr_reader :name, :type, :struct_type, :human, :fields, :message_template, :message_arguments
+      attr_reader :name, :type, :struct_type, :struct_name, :human, :fields, :message_template, :message_arguments
 
       def initialize(config)
         @name = config.fetch("name")
@@ -193,6 +226,7 @@ module Herb
         camelized = @name.gsub(/(?<=[a-zA-Z])(?=[A-Z][a-z])/, "_")
         @type = camelized.upcase
         @struct_type = "#{camelized.upcase}_T"
+        @struct_name = "#{camelized.upcase}_STRUCT"
         @human = camelized.downcase
 
         @fields = config.fetch("fields", []).map do |field|
@@ -208,13 +242,14 @@ module Herb
     class NodeType
       include ConfigType
 
-      attr_reader :name, :type, :struct_type, :human, :fields
+      attr_reader :name, :type, :struct_type, :struct_name, :human, :fields
 
       def initialize(config)
         @name = config.fetch("name")
         camelized = @name.gsub(/(?<=[a-zA-Z])(?=[A-Z][a-z])/, "_")
         @type = "AST_#{camelized.upcase}"
         @struct_type = "AST_#{camelized.upcase}_T"
+        @struct_name = "AST_#{camelized.upcase}_STRUCT"
         @human = camelized.downcase
 
         @fields = config.fetch("fields", []).map do |field|

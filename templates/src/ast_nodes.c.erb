@@ -1,6 +1,9 @@
 #include <stdio.h>
 #include <stdbool.h>
 
+#include <prism.h>
+
+#include "include/analyzed_ruby.h"
 #include "include/array.h"
 #include "include/ast_node.h"
 #include "include/ast_nodes.h"
@@ -10,12 +13,12 @@
 
 <%- nodes.each do |node| -%>
 <%- node_arguments = node.fields.any? ? node.fields.map { |field| [field.c_type, " ", field.name].join } : [] -%>
-<%- arguments = node_arguments + ["position_T* start", "position_T* end", "array_T* errors"] -%>
+<%- arguments = node_arguments + ["position_T* start_position", "position_T* end_position", "array_T* errors"] -%>
 
 <%= node.struct_type %>* ast_<%= node.human %>_init(<%= arguments.join(", ") %>) {
   <%= node.struct_type %>* <%= node.human %> = malloc(sizeof(<%= node.struct_type %>));
 
-  ast_node_init(&<%= node.human %>->base, <%= node.type %>, start, end, errors);
+  ast_node_init(&<%= node.human %>->base, <%= node.type %>, start_position, end_position, errors);
 
   <%- node.fields.each do |field| -%>
   <%- case field -%>
@@ -27,8 +30,14 @@
   <%= node.human %>-><%= field.name %> = <%= field.name %>;
   <%- when Herb::Template::BooleanField -%>
   <%= node.human %>-><%= field.name %> = <%= field.name %>;
+  <%- when Herb::Template::PrismNodeField -%>
+  <%= node.human %>-><%= field.name %> = <%= field.name %>;
   <%- when Herb::Template::StringField -%>
   <%= node.human %>-><%= field.name %> = herb_strdup(<%= field.name %>);
+  <%- when Herb::Template::AnalyzedRubyField -%>
+  <%= node.human %>-><%= field.name %> = <%= field.name %>;
+  <%- when Herb::Template::VoidPointerField -%>
+  <%= node.human %>-><%= field.name %> = <%= field.name %>;
   <%- else -%>
   <%= field.inspect %>
   <%- end -%>
@@ -99,6 +108,17 @@ static void ast_free_<%= node.human %>(<%= node.struct_type %>* <%= node.human %
   }
   <%- when Herb::Template::StringField -%>
   if (<%= node.human %>-><%= field.name %> != NULL) { free((char*) <%= node.human %>-><%= field.name %>); }
+  <%- when Herb::Template::PrismNodeField -%>
+  if (<%= node.human %>-><%= field.name %> != NULL) {
+    // The first argument to `pm_node_destroy` is a `pm_parser_t`, but it's currently unused:
+    // See: https://github.com/ruby/ruby/blob/efb2d4363709b36a205791787f6812259027c6e1/prism/templates/src/node.c.erb#L100-L104
+    //
+    pm_node_destroy(NULL, <%= node.human %>-><%= field.name %>);
+  }
+  <%- when Herb::Template::AnalyzedRubyField -%>
+  // TODO: free
+  <%- when Herb::Template::VoidPointerField -%>
+  free(<%= node.human %>-><%= field.name %>);
   <%- when Herb::Template::BooleanField -%>
   <%- else -%>
   <%= field.inspect %>

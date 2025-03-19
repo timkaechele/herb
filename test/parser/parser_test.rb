@@ -29,7 +29,6 @@ module Parser
                 │   └── @ HTMLOpenTagNode (location: (1:0)-(1:4))
                 │       ├── tag_opening: "<" (location: (1:0)-(1:1))
                 │       ├── tag_name: "h1" (location: (1:1)-(1:3))
-                │       ├── attributes: []
                 │       ├── tag_closing: ">" (location: (1:3)-(1:4))
                 │       ├── children: []
                 │       └── is_void: false
@@ -39,7 +38,9 @@ module Parser
                 │   └── @ ERBContentNode (location: (1:4)-(1:23))
                 │       ├── tag_opening: "<%=" (location: (1:4)-(1:7))
                 │       ├── content: " RUBY_VERSION " (location: (1:7)-(1:21))
-                │       └── tag_closing: "%>" (location: (1:21)-(1:23))
+                │       ├── tag_closing: "%>" (location: (1:21)-(1:23))
+                │       ├── parsed: false
+                │       └── valid: false
                 │
                 ├── close_tag:
                 │   └── @ HTMLCloseTagNode (location: (1:23)-(1:28))

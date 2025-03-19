@@ -352,7 +352,6 @@ static AST_HTML_ATTRIBUTE_NODE_T* parser_parse_html_attribute(parser_T* parser) 
 static AST_HTML_OPEN_TAG_NODE_T* parser_parse_html_open_tag(parser_T* parser) {
   array_T* errors = array_init(8);
   array_T* children = array_init(8);
-  array_T* attributes = array_init(8);
 
   token_T* tag_start = parser_consume_expected(parser, TOKEN_HTML_TAG_START, errors);
   token_T* tag_name = parser_consume_expected(parser, TOKEN_IDENTIFIER, errors);
@@ -378,7 +377,7 @@ static AST_HTML_OPEN_TAG_NODE_T* parser_parse_html_open_tag(parser_T* parser) {
     }
 
     if (parser->current_token->type == TOKEN_IDENTIFIER) {
-      array_append(attributes, parser_parse_html_attribute(parser));
+      array_append(children, parser_parse_html_attribute(parser));
       continue;
     }
 
@@ -410,7 +409,6 @@ static AST_HTML_OPEN_TAG_NODE_T* parser_parse_html_open_tag(parser_T* parser) {
   AST_HTML_OPEN_TAG_NODE_T* open_tag_node = ast_html_open_tag_node_init(
     tag_start,
     tag_name,
-    attributes,
     tag_end,
     children,
     is_self_closing,
@@ -566,6 +564,9 @@ static AST_ERB_CONTENT_NODE_T* parser_parse_erb_tag(parser_T* parser) {
     opening_tag,
     content,
     closing_tag,
+    NULL,
+    false,
+    false,
     opening_tag->location->start,
     closing_tag->location->end,
     errors
@@ -600,7 +601,22 @@ static void parser_parse_in_data_state(parser_T* parser, array_T* children, arra
       continue;
     }
 
-    if (token_is_any_of(parser, TOKEN_IDENTIFIER, TOKEN_WHITESPACE, TOKEN_NEWLINE)) {
+    if (token_is_any_of(
+          parser,
+          TOKEN_AMPERSAND,
+          TOKEN_CHARACTER,
+          TOKEN_COLON,
+          TOKEN_DASH,
+          TOKEN_EQUALS,
+          TOKEN_EXCLAMATION,
+          TOKEN_IDENTIFIER,
+          TOKEN_NEWLINE,
+          TOKEN_PERCENT,
+          TOKEN_SEMICOLON,
+          TOKEN_SLASH,
+          TOKEN_UNDERSCORE,
+          TOKEN_WHITESPACE
+        )) {
       array_append(children, parser_parse_text_content(parser));
       continue;
     }
