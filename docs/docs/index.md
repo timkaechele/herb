@@ -43,7 +43,7 @@ features:
 
   - title: Whitespace-Aware
     icon: 📏
-    details: Accurately preserves spacing and formatting in the Abstract Syntax Tree (AST).
+    details: Accurately preserves spacing and formatting in the parse result.
 
   - title: LSP-Ready
     icon: 🔌
