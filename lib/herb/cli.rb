@@ -75,7 +75,7 @@ class Herb::CLI
       ▐▛▀▜▌▐▛▀▀▘▐▛▀▚▖▐▛▀▚▖
       ▐▌ ▐▌▐▙▄▄▖▐▌ ▐▌▐▙▄▞▘
 
-      Herb 🌿 Powerful and seamless HTML-aware ERB parsing.
+      Herb 🌿 Powerful and seamless HTML-aware ERB parsing and tooling.
 
       Usage:
         bundle exec herb [command] [options]

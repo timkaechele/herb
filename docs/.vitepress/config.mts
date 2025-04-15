@@ -133,7 +133,7 @@ const themeConfig = {
 export default defineConfig({
   title: "Herb",
   titleTemplate: "HTML-aware ERB parsing",
-  description: "Powerful and seamless HTML-aware ERB parsing.",
+  description: "Powerful and seamless HTML-aware ERB parsing and tooling.",
   srcDir: "./docs",
   head: [
     ['link', { rel: 'icon', href: '/favicon.ico' }],
