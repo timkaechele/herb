@@ -1,8 +1,12 @@
-# 🌿 Herb
+<div align="center">
+  <img alt="Herb HTML+ERB parser" height="256px" src="https://github.com/user-attachments/assets/d0714ee1-ca33-4aa4-aaa9-d632ba79d54a">
+</div>
 
-#### HTML + ERB (HTML Embedded Ruby)
+<h2 align="center">Herb</h2>
 
-Powerful and seamless HTML-aware ERB parsing and tooling.
+<h4 align="center">HTML + ERB (HTML Embedded Ruby)</h4>
+
+<div align="center">Powerful and seamless HTML-aware ERB parsing and tooling.</div>
 
 ## Contributing
 
