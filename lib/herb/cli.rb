@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require "optparse"
-require "lz_string"
 
 class Herb::CLI
   attr_accessor :json, :silent
@@ -117,6 +116,8 @@ class Herb::CLI
                   puts Herb.extract_html(file_content)
                   exit(0)
                 when "playground"
+                  require "lz_string"
+
                   if Dir.pwd.include?("/herb")
                     system(%(npx concurrently "nx dev playground" "sleep 1 && open http://localhost:5173##{LZString::UriSafe.compress(file_content)}"))
                     exit(0)
