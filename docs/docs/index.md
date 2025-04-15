@@ -25,10 +25,6 @@ hero:
       link: https://github.com/marcoroth/herb
 
 features:
-  - title: Engineered for Speed
-    icon: ⚡
-    details: Parses input fast enough to update on every keystroke, ensuring real-time responsiveness in text editors and other tools.
-
   - title: HTML-aware
     icon: 🧩
     details: Intelligently recognizes and navigates HTML structure within ERB templates, ensuring precise parsing across interleaved markup and Ruby code.
@@ -40,6 +36,10 @@ features:
   - title: Error-Tolerant
     icon: 🚑
     details: Designed to handle errors gracefully, it provides accurate results even when encountering syntax errors.
+
+  - title: Engineered for Speed
+    icon: ⚡
+    details: Parses input fast enough to update on every keystroke, ensuring real-time responsiveness in text editors and other tools.
 
   - title: Whitespace-Aware
     icon: 📏
@@ -59,6 +59,6 @@ features:
 
   - title: Expanding Template Language Support
     icon: 🏗️
-    details: Future updates will expand beyond ERB through a unified parser and AST architecture that maintains consistent APIs across different templating languages.
+    details: Future updates will expand beyond ERB through a unified parser and syntax tree architecture that maintains consistent APIs across different templating languages.
 
 ---
