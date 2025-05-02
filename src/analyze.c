@@ -37,6 +37,7 @@ static analyzed_ruby_T* herb_analyze_ruby(char* source) {
   search_when_nodes(analyzed);
   search_rescue_nodes(analyzed);
   search_ensure_nodes(analyzed);
+  search_yield_nodes(analyzed);
   search_block_closing_nodes(analyzed);
 
   return analyzed;
@@ -93,6 +94,7 @@ static control_type_t detect_control_type(AST_ERB_CONTENT_NODE_T* erb_node) {
   if (has_until_node(ruby)) { return CONTROL_TYPE_UNTIL; }
   if (has_for_node(ruby)) { return CONTROL_TYPE_FOR; }
   if (has_block_node(ruby)) { return CONTROL_TYPE_BLOCK; }
+  if (has_yield_node(ruby)) { return CONTROL_TYPE_YIELD; }
   if (has_block_closing(ruby)) { return CONTROL_TYPE_BLOCK_CLOSE; }
 
   return CONTROL_TYPE_UNKNOWN;
@@ -318,6 +320,11 @@ static AST_NODE_T* create_control_node(
         end_position,
         errors
       );
+    }
+
+    case CONTROL_TYPE_YIELD: {
+      return (AST_NODE_T*)
+        ast_erb_yield_node_init(tag_opening, content, tag_closing, start_position, end_position, errors);
     }
 
     default: array_free(&errors); return NULL;
@@ -914,6 +921,7 @@ static array_T* rewrite_node_array(AST_NODE_T* node, array_T* array, analyze_rub
       case CONTROL_TYPE_UNTIL:
       case CONTROL_TYPE_FOR:
       case CONTROL_TYPE_BLOCK:
+      case CONTROL_TYPE_YIELD:
         index = process_control_structure(node, array, index, new_array, context, type);
         continue;
 
@@ -981,9 +989,14 @@ void herb_analyze_parse_errors(AST_DOCUMENT_NODE_T* document, const char* source
 
   for (const pm_diagnostic_t* error = (const pm_diagnostic_t*) parser.error_list.head; error != NULL;
        error = (const pm_diagnostic_t*) error->node.next) {
-    array_append(
-      document->base.errors,
-      ruby_parse_error_from_prism_error(error, (AST_NODE_T*) document, source, &parser)
-    );
+
+    RUBY_PARSE_ERROR_T* parse_error = ruby_parse_error_from_prism_error(error, (AST_NODE_T*) document, source, &parser);
+
+    // TODO: ideally this shouldn't be hard-coded
+    if (strcmp(parse_error->diagnostic_id, "invalid_yield") == 0) {
+      error_free((ERROR_T*) parse_error);
+    } else {
+      array_append(document->base.errors, parse_error);
+    }
   }
 }
