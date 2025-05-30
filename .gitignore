@@ -117,3 +117,6 @@ vitest.config.*.timestamp*
 
 # Doxygen
 docs/docs/public/c-reference
+
+# TypeScript
+*.tsbuildinfo
