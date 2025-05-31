@@ -25,7 +25,6 @@
   },
   "devDependencies": {
     "@shikijs/vitepress-twoslash": "^3.4.2",
-    "rimraf": "^6.0.1",
     "vitepress": "^2.0.0-alpha.5",
     "vitepress-plugin-group-icons": "^1.5.5"
   }
