@@ -41,7 +41,7 @@ class Herb::CLI
     end
 
     unless File.exist?(@file)
-      puts "Not a directory: '#{@file}'."
+      puts "Not a file: '#{@file}'."
       puts
     end
 
