@@ -656,6 +656,10 @@ static void parser_parse_stray_closing_tags(parser_T* parser, array_T* children,
   while (token_is_not(parser, TOKEN_EOF)) {
     if (token_is_not(parser, TOKEN_HTML_TAG_START_CLOSE)) {
       parser_append_unexpected_token_error(parser, TOKEN_HTML_TAG_START_CLOSE, errors);
+
+      token_T* unexpected = parser_advance(parser);
+      token_free(unexpected);
+
       continue;
     }
 
