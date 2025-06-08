@@ -178,10 +178,22 @@ void buffer_concat(buffer_T* destination, buffer_T* source) {
   destination->value[destination->length] = '\0';
 }
 
-bool buffer_reserve(buffer_T* buffer, const size_t min_capacity) {
-  const size_t required_length = min_capacity - buffer->length;
+bool buffer_ensure_capacity(buffer_T* buffer, const size_t min_capacity) {
+  if (buffer->capacity >= min_capacity) { return true; }
 
-  return buffer_increase_capacity(buffer, required_length);
+  if (min_capacity > SIZE_MAX) {
+    fprintf(stderr, "Error: Buffer capacity would overflow system limits.\n");
+    return false;
+  }
+
+  char* new_value = safe_realloc(buffer->value, min_capacity);
+
+  if (unlikely(new_value == NULL)) { return false; }
+
+  buffer->value = new_value;
+  buffer->capacity = min_capacity;
+
+  return true;
 }
 
 void buffer_clear(buffer_T* buffer) {

@@ -76,12 +76,29 @@ TEST(test_buffer_increase_capacity)
   buffer_free(&buffer);
 END
 
-// Test buffer reservation (preallocating memory)
-TEST(test_buffer_reserve)
+// Test ensuring buffer capacity
+TEST(test_buffer_ensure_capacity)
   buffer_T buffer = buffer_new();
 
-  ck_assert(buffer_reserve(&buffer, 2048)); // Ensure space for 4096 bytes
-  ck_assert_int_eq(buffer.capacity, 4096);
+  ck_assert_int_eq(buffer.capacity, 1024);
+
+  ck_assert(buffer_ensure_capacity(&buffer, 512)); // Should not reallocate
+  ck_assert_int_eq(buffer.capacity, 1024);
+
+  ck_assert(buffer_ensure_capacity(&buffer, 1023)); // Should not reallocate
+  ck_assert_int_eq(buffer.capacity, 1024);
+
+  ck_assert(buffer_ensure_capacity(&buffer, 1024)); // Should not reallocate
+  ck_assert_int_eq(buffer.capacity, 1024);
+
+  ck_assert(buffer_ensure_capacity(&buffer, 1025));
+  ck_assert_int_eq(buffer.capacity, 1025);
+
+  ck_assert(buffer_ensure_capacity(&buffer, 2048));
+  ck_assert_int_eq(buffer.capacity, 2048);
+
+  ck_assert(buffer_ensure_capacity(&buffer, 2049));
+  ck_assert_int_eq(buffer.capacity, 2049);
 
   buffer_free(&buffer);
 END
@@ -178,7 +195,7 @@ TCase *buffer_tests(void) {
   tcase_add_test(buffer, test_buffer_prepend);
   tcase_add_test(buffer, test_buffer_concat);
   tcase_add_test(buffer, test_buffer_increase_capacity);
-  tcase_add_test(buffer, test_buffer_reserve);
+  tcase_add_test(buffer, test_buffer_ensure_capacity);
   tcase_add_test(buffer, test_buffer_clear);
   tcase_add_test(buffer, test_buffer_free);
   tcase_add_test(buffer, test_buffer_utf8_integrity);

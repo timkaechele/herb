@@ -14,7 +14,7 @@ bool buffer_init(buffer_T* buffer);
 buffer_T buffer_new(void);
 
 bool buffer_increase_capacity(buffer_T* buffer, size_t required_length);
-bool buffer_reserve(buffer_T* buffer, size_t min_capacity);
+bool buffer_ensure_capacity(buffer_T* buffer, size_t min_capacity);
 
 void buffer_append(buffer_T* buffer, const char* text);
 void buffer_append_with_length(buffer_T* buffer, const char* text, size_t length);
