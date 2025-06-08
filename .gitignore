@@ -127,4 +127,4 @@ docs/docs/public/c-reference
 .github/instructions/nx.instructions.md
 
 # NPM
-node_modules/
+**/node_modules/**/*
