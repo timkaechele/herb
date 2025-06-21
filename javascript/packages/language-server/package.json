@@ -22,7 +22,8 @@
     "prebuild": "yarn run clean",
     "build": "tsc -b && rollup -c rollup.config.mjs",
     "postbuild": "node scripts/executable.mjs",
-    "watch": "tsc -b -w"
+    "watch": "tsc -b -w",
+    "prepublishOnly": "yarn clean && yarn build && yarn test"
   },
   "files": [
     "dist"
