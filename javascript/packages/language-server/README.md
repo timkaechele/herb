@@ -9,11 +9,11 @@ Used by the [Herb LSP](https://marketplace.visualstudio.com/items?itemName=marco
 ## Install
 
 ```bash
-npm install -g herb-language-server
+npm install -g @herb-tools/language-server
 ```
 
 ```bash
-yarn global add herb-language-server
+yarn global add @herb-tools/language-server
 ```
 
 ## Run
