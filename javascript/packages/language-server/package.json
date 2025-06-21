@@ -1,7 +1,7 @@
 {
   "name": "@herb-tools/language-server",
   "description": "Powerful and seamless HTML-aware ERB parsing and tooling.",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "author": "Marco Roth",
   "license": "MIT",
   "engines": {
@@ -28,7 +28,7 @@
     "dist"
   ],
   "dependencies": {
-    "@herb-tools/node-wasm": "0.2.0",
+    "@herb-tools/node-wasm": "0.3.0",
     "dedent": "^1.6.0",
     "typescript": "^5.8.3",
     "vscode-languageserver": "^9.0.1",
