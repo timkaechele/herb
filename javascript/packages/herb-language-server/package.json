@@ -1,5 +1,5 @@
 {
-  "name": "@herb-tools/language-server",
+  "name": "herb-language-server",
   "description": "Powerful and seamless HTML-aware ERB parsing and tooling.",
   "version": "0.3.0",
   "author": "Marco Roth",
@@ -7,15 +7,16 @@
   "engines": {
     "node": "*"
   },
-  "bugs": "https://github.com/marcoroth/herb/issues/new?title=Package%20%60@herb-tools/language-server%60:%20",
+  "homepage": "https://herb-tools.dev",
+  "bugs": "https://github.com/marcoroth/herb/issues/new?title=Package%20%60herb-language-server%60:%20",
   "repository": {
     "type": "git",
     "url": "https://github.com/marcoroth/herb.git",
     "directory": "javascript/packages/language-server"
   },
-  "main": "./dist/herb-language-server.cjs",
-  "module": "./dist/server.js",
-  "types": "./dist/types/server.d.ts",
+  "main": "./dist/herb-language-server.js",
+  "module": "./dist/index.js",
+  "types": "./dist/types/index.d.ts",
   "scripts": {
     "build": "yarn clean && rollup -c",
     "dev": "rollup -c -w",
@@ -26,21 +27,16 @@
   "exports": {
     "./package.json": "./package.json",
     ".": {
-      "types": "./dist/types/server.d.ts",
-      "import": "./dist/server.js",
-      "require": "./dist/herb-language-server.cjs",
-      "default": "./dist/server.js"
+      "types": "./dist/types/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/herb-language-server.js",
+      "default": "./dist/index.js"
     }
-  },
-  "homepage": "https://herb-tools.dev",
-  "bin": {
-    "herb-language-server": "./dist/herb-language-server"
   },
   "scripts": {
     "clean": "rimraf dist",
     "prebuild": "yarn run clean",
     "build": "tsc -b && rollup -c rollup.config.mjs",
-    "postbuild": "node scripts/executable.mjs",
     "watch": "tsc -b -w",
     "test": "echo 'TODO: add tests'",
     "prepublishOnly": "yarn clean && yarn build && yarn test"
@@ -49,11 +45,7 @@
     "dist"
   ],
   "dependencies": {
-    "@herb-tools/node-wasm": "0.3.0",
-    "dedent": "^1.6.0",
-    "typescript": "^5.8.3",
-    "vscode-languageserver": "^9.0.1",
-    "vscode-languageserver-textdocument": "^1.0.12"
+    "@herb-tools/language-server": "0.3.0"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^28.0.6",
