@@ -1,6 +1,6 @@
 {
   "name": "herb-language-server",
-  "description": "Powerful and seamless HTML-aware ERB parsing and tooling.",
+  "description": "Placeholder package to reserve the herb-language-server name on NPM; use @herb-tools/language-server instead.",
   "version": "0.3.0",
   "author": "Marco Roth",
   "license": "MIT",

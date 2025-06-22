@@ -1,6 +1,6 @@
 # Herb Language Server (`@herb-tools/language-server`)
 
-[Language Server Protocol](https://github.com/Microsoft/language-server-protocol) integration for HTML-aware ERB using the [Herb Parser](https://herb-tools.dev).
+[Language Server Protocol](https://github.com/Microsoft/language-server-protocol) integration for HTML-aware ERB parsing using the [Herb Parser](https://herb-tools.dev).
 
 ![](./assets/herb-lsp.png)
 

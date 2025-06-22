@@ -1,6 +1,6 @@
 {
   "name": "@herb-tools/language-server",
-  "description": "Powerful and seamless HTML-aware ERB parsing and tooling.",
+  "description": "Herb HTML+ERB Language Tools and Language Server Protocol integration.",
   "version": "0.3.0",
   "author": "Marco Roth",
   "license": "MIT",

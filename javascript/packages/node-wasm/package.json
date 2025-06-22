@@ -1,6 +1,7 @@
 {
   "name": "@herb-tools/node-wasm",
   "version": "0.3.0",
+  "description": "WebAssembly-based HTML-aware ERB parser for Node.js.",
   "type": "module",
   "license": "MIT",
   "homepage": "https://herb-tools.dev",

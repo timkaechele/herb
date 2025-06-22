@@ -1,6 +1,7 @@
 {
   "name": "@herb-tools/node",
   "version": "0.3.0",
+  "description": "Native Node.js addon for HTML-aware ERB parsing using Herb.",
   "type": "module",
   "license": "MIT",
   "homepage": "https://herb-tools.dev",

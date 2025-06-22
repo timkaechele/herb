@@ -1,5 +1,7 @@
 # `@herb-tools/node-wasm`
 
+WebAssembly-based HTML-aware ERB parser for Node.js.
+
 ## Building
 
 Run `nx build node-wasm` to build the library.
