@@ -1,4 +1,4 @@
-# Herb for Visual Studio Code
+## Herb for Visual Studio Code
 
 A Visual Studio Code extension for connecting with the [Herb Language Server](https://github.com/marcoroth/herb/tree/main/javascript/packages/language-server#readme) and Language Tools for HTML+ERB files using the [Herb](https://herb-tools.dev) HTML-aware ERB parser.
 

@@ -1,4 +1,4 @@
-# Herb Language Server
+## Herb Language Server
 
 ##### Package: [`@herb-tools/language-server`](https://www.npmjs.com/package/@herb-tools/language-server)
 
