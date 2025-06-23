@@ -35,7 +35,6 @@
     "url": "http://github.com/sponsors/marcoroth"
   },
   "activationEvents": [
-    "onLanguage:ruby",
     "onLanguage:erb",
     "onLanguage:html"
   ],
