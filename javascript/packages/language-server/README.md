@@ -24,7 +24,7 @@ The Herb Language Server is part of the official [Ruby extension for Zed](https:
 
 Read more in the [documentation](https://zed.dev/docs/languages/ruby).
 
-#### Neovim (using `nvim-lspconfig`)
+#### Neovim (using `nvim-lspconfig`)
 
 Coming soon, see [#3925](https://github.com/neovim/nvim-lspconfig/pull/3925).
 
