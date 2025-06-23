@@ -10,13 +10,13 @@ A Visual Studio Code extension for connecting with the [Herb Language Server](ht
 
 Install the [Herb LSP extension](https://marketplace.visualstudio.com/items?itemName=marcoroth.herb-lsp) from the Visual Studio Marketplace.
 
-[![](./assets/herb-vscode.png)](https://marketplace.visualstudio.com/items?itemName=marcoroth.herb-lsp)
+[![](https://github.com/marcoroth/herb/raw/main/javascript/packages/vscode/assets/herb-vscode.png)](https://marketplace.visualstudio.com/items?itemName=marcoroth.herb-lsp)
 
 #### Other editors
 
 If you are looking to use Herb in another editor, check out the instruction on the [Herb Language Server](https://github.com/marcoroth/herb/tree/main/javascript/packages/language-server#readme) page.
 
-[![](./assets/herb-lsp.png)](https://github.com/marcoroth/herb/tree/main/javascript/packages/language-server#readme)
+[![](https://github.com/marcoroth/herb/raw/main/javascript/packages/vscode/assets/herb-lsp.png)](https://github.com/marcoroth/herb/tree/main/javascript/packages/language-server#readme)
 
 ## Functionality
 

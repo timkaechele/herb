@@ -2,7 +2,7 @@
   "name": "herb-lsp",
   "displayName": "Herb LSP - HTML+ERB Language Tools",
   "description": "VS Code extension for connecting with the Herb Language Server and Language Tools for HTML+ERB files",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "private": true,
   "license": "MIT",
   "pricing": "Free",
@@ -78,8 +78,8 @@
     "prepublishOnly": "yarn clean && yarn build && yarn test"
   },
   "devDependencies": {
-    "@herb-tools/node-wasm": "0.3.0",
-    "@types/vscode": "1.43.0",
+    "@herb-tools/node-wasm": "0.3.1",
+    "@types/vscode": "^1.43.0",
     "@types/mocha": "^10.0.10",
     "@types/node": "20.x",
     "@typescript-eslint/eslint-plugin": "^8.31.1",
