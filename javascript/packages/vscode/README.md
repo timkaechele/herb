@@ -6,7 +6,7 @@ A Visual Studio Code extension for connecting with the [Herb Language Server](ht
 
 ### Installation
 
-#### Visual Studio Code
+#### Visual Studio Code
 
 Install the [Herb LSP extension](https://marketplace.visualstudio.com/items?itemName=marcoroth.herb-lsp) from the Visual Studio Marketplace.
 
@@ -31,7 +31,7 @@ If you are looking to use Herb in another editor, check out the instruction on t
 * (`UnexpectedTokenError`)
 * (`VoidElementClosingTagError`)
 
-#### Formatting (coming soon)
+#### Formatting (coming soon)
 
 Formatting and Auto-formatting are underway. We are planning to integrate the [Herb Formatter](https://x.com/marcoroth_/status/1936935430173471079) directly and conveniently into the Visual Studio Code extension.
 
