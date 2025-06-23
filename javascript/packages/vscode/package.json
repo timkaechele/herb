@@ -1,7 +1,7 @@
 {
   "name": "herb-lsp",
   "displayName": "Herb LSP - HTML+ERB Language Tools",
-  "description": "Language Server integration and Language Tools for HTML+ERB files.",
+  "description": "VS Code extension for connecting with the Herb Language Server and Language Tools for HTML+ERB files",
   "version": "0.3.0",
   "private": true,
   "license": "MIT",
@@ -22,7 +22,7 @@
   "keywords": [
     "HTML",
     "Ruby",
-    "Hotwire"
+    "ERB"
   ],
   "homepage": "https://herb-tools.dev",
   "bugs": "https://github.com/marcoroth/herb/issues/new?title=Package%20%60@herb-lsp-vscode%60:%20",
