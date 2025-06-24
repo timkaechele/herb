@@ -21,13 +21,13 @@ assignees: ''
 
 <!-- Provide examples of valid (✅ good) and invalid (🚫 bad) code. -->
 
-### ✅ Good
+##### ✅ Good
 
 ```html+erb
 
 ```
 
-###### 🚫 Bad
+##### 🚫 Bad
 
 ```html+erb
 
