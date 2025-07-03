@@ -101,7 +101,12 @@ export default class extends Generator {
 
     this.className = this.ruleName
       .split("-")
-      .map(part => part.charAt(0).toUpperCase() + part.slice(1))
+      .map(part => {
+        if (part.toLowerCase() === "html") return "HTML"
+        if (part.toLowerCase() === "erb") return "ERB"
+
+        return part.charAt(0).toUpperCase() + part.slice(1)
+      })
       .join("")
 
     this.ruleClassName = this.className + "Rule"
