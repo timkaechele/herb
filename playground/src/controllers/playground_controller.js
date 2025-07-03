@@ -60,6 +60,7 @@ export default class extends Controller {
     "errorCount",
     "warningCount",
     "infoCount",
+    "commitHash",
   ]
 
   connect() {
@@ -351,7 +352,39 @@ export default class extends Controller {
     }
 
     if (this.hasVersionTarget) {
-      this.versionTarget.textContent = result.version
+      const fullVersion = result.version
+      const shortVersion = fullVersion.split(',')[0]
+
+      const icon = this.versionTarget.querySelector('i')
+      if (icon) {
+        const textNodes = Array.from(this.versionTarget.childNodes).filter(node => node.nodeType === Node.TEXT_NODE)
+        textNodes.forEach(node => node.remove())
+        this.versionTarget.insertBefore(document.createTextNode(shortVersion), icon)
+      } else {
+        this.versionTarget.textContent = shortVersion
+      }
+
+      this.versionTarget.title = fullVersion
+    }
+
+    if (this.hasCommitHashTarget) {
+      if (typeof __COMMIT_INFO__ !== 'undefined') {
+        const commitInfo = __COMMIT_INFO__
+        const githubUrl = `https://github.com/marcoroth/herb/commit/${commitInfo.hash}`
+
+        if (commitInfo.ahead > 0) {
+          this.commitHashTarget.textContent = `${commitInfo.tag} (+${commitInfo.ahead} commits) ${commitInfo.hash}`
+        } else {
+          this.commitHashTarget.textContent = `${commitInfo.tag} ${commitInfo.hash}`
+        }
+
+        this.commitHashTarget.href = githubUrl
+        this.commitHashTarget.title = `View commit ${commitInfo.hash} on GitHub`
+      } else {
+        this.commitHashTarget.textContent = 'unknown'
+        this.commitHashTarget.removeAttribute('href')
+        this.commitHashTarget.removeAttribute('title')
+      }
     }
 
     if (this.hasPrettyViewerTarget) {
