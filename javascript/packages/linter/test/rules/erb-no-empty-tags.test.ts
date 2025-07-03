@@ -37,6 +37,32 @@ describe("ERBNoEmptyTagsRule", () => {
     expect(lintResult.offenses).toHaveLength(0)
   })
 
+  test("should not report errors for incomplete erb tags", () => {
+    const html = dedent`
+      <%
+    `
+    const result = Herb.parse(html)
+    const linter = new Linter([ERBNoEmptyTagsRule])
+    const lintResult = linter.lint(result.value)
+
+    expect(lintResult.errors).toBe(0)
+    expect(lintResult.warnings).toBe(0)
+    expect(lintResult.offenses).toHaveLength(0)
+  })
+
+  test("should not report errors for incomplete erb output tags", () => {
+    const html = dedent`
+      <%=
+    `
+    const result = Herb.parse(html)
+    const linter = new Linter([ERBNoEmptyTagsRule])
+    const lintResult = linter.lint(result.value)
+
+    expect(lintResult.errors).toBe(0)
+    expect(lintResult.warnings).toBe(0)
+    expect(lintResult.offenses).toHaveLength(0)
+  })
+
   test("should report errors for completely empty ERB tags", () => {
     const html = dedent`
       <h1>

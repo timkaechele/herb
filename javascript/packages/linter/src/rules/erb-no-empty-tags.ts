@@ -7,8 +7,11 @@ class ERBNoEmptyTagsVisitor extends BaseRuleVisitor {
   visitERBContentNode(node: ERBContentNode): void {
     this.visitChildNodes(node)
 
-    if (!node.content) return
-    if (node.content.value.trim().length > 0) return
+    const { content, tag_closing } = node
+
+    if (!content) return
+    if (tag_closing?.value === "") return
+    if (content.value.trim().length > 0) return
 
     this.addOffense(
       "ERB tag should not be empty. Remove empty ERB tags or add content.",
