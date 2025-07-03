@@ -30,7 +30,7 @@ export default class extends Generator {
       if (useIssue.useIssue) {
         try {
           const issues = execSync(
-            "gh issue list --repo marcoroth/herb --label linter --state open --limit 100 --json number,title",
+            "gh issue list --repo marcoroth/herb --label linter-rule --state open --limit 100 --json number,title",
             { encoding: "utf8" }
           )
 
@@ -156,19 +156,19 @@ export default class extends Generator {
     // Update default-rules.ts
     const defaultRulesPath = path.join(this.destinationRoot(), "src/default-rules.ts")
     const newImport = `import { ${this.ruleClassName} } from "./rules/${this.ruleName}.js"`
-    
+
     try {
       let defaultRulesContent = await fs.readFile(defaultRulesPath, "utf8")
-      
+
       // Add import at the top
       const lines = defaultRulesContent.split("\n")
       const lastImportIndex = lines.findLastIndex(line => line.startsWith("import"))
       lines.splice(lastImportIndex + 1, 0, newImport)
-      
+
       // Add to defaultRules array (before the closing bracket)
       const arrayEndIndex = lines.findLastIndex(line => line.includes("]"))
       lines.splice(arrayEndIndex, 0, `  ${this.ruleClassName},`)
-      
+
       await fs.writeFile(defaultRulesPath, lines.join("\n"))
     } catch (error) {
       this.log(colorize(`Warning: Could not update default-rules.ts automatically. Please add import and rule class manually.`, "yellow"))
