@@ -78,8 +78,8 @@ export function createThemeConfig() {
           collapsed: false,
           items: [
             { text: "Highlighter", link: "/projects/highlighter" },
+            { text: "Syntax Tree Printer", link: "/projects/printer" },
             { text: "Minifier", link: "/projects/minifier" },
-            { text: "Printer", link: "/projects/printer" },
             { text: "Core", link: "/projects/core" },
           ],
         },
