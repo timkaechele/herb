@@ -1,6 +1,6 @@
-# Linter Rule: Aria role heading requires a level
+# Linter Rule: ARIA role with heading requires level
 
-**Rule:** `aria-role-heading-requires-level`
+**Rule:** `html-aria-role-heading-requires-level`
 
 ## Description
 
