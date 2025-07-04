@@ -1,12 +1,12 @@
-# Linter Rule: Enforce whitespace around ERB tag contents 
+# Linter Rule: Enforce whitespace around ERB tag contents
 
-### Rule: `erb-require-whitespace-inside-tags`
+**Rule:** `erb-require-whitespace-inside-tags`
 
-##### Description
+## Description
 
 Require a single space before and after Ruby code inside ERB tags (`<% ... %>` and `<%= ... %>`). This improves readability and keeps ERB code visually consistent with Ruby style guides.
 
-##### Rationale
+## Rationale
 
 Without spacing, ERB tags can become hard to read and visually cramped:
 
@@ -18,9 +18,9 @@ Without spacing, ERB tags can become hard to read and visually cramped:
 
 By enforcing consistent spacing around Ruby expressions, templates become easier to read, review, and maintain. It also aligns with standard Ruby formatting conventions, where spaces are used around control keywords and operators.
 
-#### Examples
+## Examples
 
-##### ✅ Good
+### ✅ Good
 
 ```erb
 <%= user.name %>
@@ -30,7 +30,7 @@ By enforcing consistent spacing around Ruby expressions, templates become easier
 <% end %>
 ```
 
-##### 🚫 Bad
+### 🚫 Bad
 
 ```erb
 <%=user.name%>
@@ -40,6 +40,6 @@ By enforcing consistent spacing around Ruby expressions, templates become easier
 <%end%>
 ```
 
-#### References
+## References
 
--
+\-
