@@ -77,6 +77,7 @@ export function createThemeConfig() {
           text: "Utility Libraries",
           collapsed: false,
           items: [
+            { text: "Language Service", link: "/projects/language-service" },
             { text: "Highlighter", link: "/projects/highlighter" },
             { text: "Syntax Tree Printer", link: "/projects/printer" },
             { text: "Minifier", link: "/projects/minifier" },
