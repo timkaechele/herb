@@ -11,6 +11,7 @@ function createBuildStartPlugin() {
         console.log('✅ Herb initialized successfully at build start')
       } catch (error) {
         console.error('❌ Failed to initialize Herb at build start:', error)
+        throw error
       }
     },
     configResolved(config) {
