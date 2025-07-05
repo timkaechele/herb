@@ -1,5 +1,5 @@
 <div align="center">
-  <img alt="Herb HTML+ERB parser" height="256px" src="https://github.com/user-attachments/assets/d0714ee1-ca33-4aa4-aaa9-d632ba79d54a">
+  <img alt="Herb HTML+ERB parser" style="height: 256px" height="256px" src="https://github.com/user-attachments/assets/d0714ee1-ca33-4aa4-aaa9-d632ba79d54a">
 </div>
 
 <h2 align="center">Herb</h2>
