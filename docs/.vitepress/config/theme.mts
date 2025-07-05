@@ -26,7 +26,7 @@ export function createThemeConfig() {
       copyright: "Copyright © 2024-2025 Marco Roth and the Herb Contributors.",
     },
     editLink: {
-      pattern: "https://github.com/marcoroth/herb/edit/main/docs/:path",
+      pattern: "https://github.com/marcoroth/herb/edit/main/docs/docs/:path",
       text: "Edit this page on GitHub",
     },
     sidebar: {
