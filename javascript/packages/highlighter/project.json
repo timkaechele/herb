@@ -1,7 +1,7 @@
 {
-  "name": "@herb-tools/linter",
+  "name": "@herb-tools/highlighter",
   "$schema": "../../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "javascript/packages/linter/src",
+  "sourceRoot": "javascript/packages/highlighter/src",
   "projectType": "library",
   "targets": {
     "build": {
@@ -9,7 +9,7 @@
       "options": {
         "script": "build"
       },
-      "dependsOn": ["@herb-tools/browser:build", "@herb-tools/highlighter:build"]
+      "dependsOn": ["@herb-tools/core:build", "@herb-tools/node-wasm:build"]
     },
     "test": {
       "executor": "nx:run-script",
