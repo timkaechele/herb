@@ -64,6 +64,10 @@ export default class extends Controller {
   ]
 
   connect() {
+    if (this.isDarkMode) {
+      document.documentElement.classList.add('dark')
+    }
+    
     this.restoreInput()
     this.inputTarget.focus()
     this.load()
@@ -72,7 +76,7 @@ export default class extends Controller {
 
     this.editor = replaceTextareaWithMonaco("input", this.inputTarget, {
       language: "erb",
-      theme: "",
+      theme: this.isDarkMode ? 'vs-dark' : 'vs',
       automaticLayout: true,
       minimap: { enabled: false },
     })
@@ -107,6 +111,26 @@ export default class extends Controller {
 
     window.addEventListener("popstate", this.handlePopState)
     window.editor = this.editor
+
+    this.setupThemeListener()
+  }
+
+  get isDarkMode() {
+    const actualTheme = localStorage.getItem('vitepress-theme-actual')
+
+    if (actualTheme) {
+      return actualTheme === 'dark'
+    }
+
+    return window.matchMedia('(prefers-color-scheme: dark)').matches
+  }
+
+  setupThemeListener() {
+    window.addEventListener('storage', (event) => {
+      if (event.key === 'vitepress-theme-actual' && event.newValue) {
+        window.location.reload()
+      }
+    })
   }
 
   updatePosition(line, column, length) {
