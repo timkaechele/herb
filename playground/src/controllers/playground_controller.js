@@ -353,7 +353,21 @@ export default class extends Controller {
 
     if (this.hasVersionTarget) {
       const fullVersion = result.version
-      const shortVersion = fullVersion.split(',')[0]
+      let displayVersion = fullVersion
+
+      if (typeof __COMMIT_INFO__ !== 'undefined') {
+        const commitInfo = __COMMIT_INFO__
+
+        displayVersion = fullVersion.split(',').map(component => {
+          if (component.includes('libprism')) {
+            return component
+          }
+
+          return component.replace(/@[\d]+\.[\d]+\.[\d]+/g, `@${commitInfo.hash}`)
+        }).join(',')
+      }
+
+      const shortVersion = displayVersion.split(',')[0]
 
       const icon = this.versionTarget.querySelector('i')
       if (icon) {
@@ -364,7 +378,7 @@ export default class extends Controller {
         this.versionTarget.textContent = shortVersion
       }
 
-      this.versionTarget.title = fullVersion
+      this.versionTarget.title = displayVersion
     }
 
     if (this.hasCommitHashTarget) {
