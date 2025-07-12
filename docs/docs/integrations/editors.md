@@ -7,6 +7,7 @@ The Herb Language Server provides intelligent language features for HTML+ERB fil
 ## Available Integrations
 
 - **[Cursor](/integrations/editors/cursor)** - Available through the Open VSX Registry
+- **[Helix](/integrations/editors/helix)** - Terminal-based modal editor with built-in LSP support
 - **[Neovim](/integrations/editors/neovim)** - LSP configuration with multiple setup options
 - **[Vim](/integrations/editors/vim)** - Traditional Vim integration
 - **[Visual Studio Code](/integrations/editors/vscode)** - Full-featured extension available on the Visual Studio Marketplace
