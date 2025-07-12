@@ -90,6 +90,7 @@ export function createThemeConfig() {
           items: [
             { text: "Overview", link: "/integrations/editors" },
             { text: "Cursor", link: "/integrations/editors/cursor" },
+            { text: "Helix", link: "/integrations/editors/helix" },
             { text: "Neovim", link: "/integrations/editors/neovim" },
             { text: "RubyMine", link: "/integrations/editors/rubymine" },
             { text: "Vim", link: "/integrations/editors/vim" },
