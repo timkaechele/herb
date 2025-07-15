@@ -19,6 +19,17 @@ describe("html-aria-attribute-must-be-valid", () => {
     expect(lintResult.offenses).toHaveLength(0)
   })
 
+  it("ignores non-aria attributes", () => {
+    const html = '<div class="foo"></div>'
+    const result = Herb.parse(html)
+    const linter = new Linter([HTMLAriaAttributeMustBeValid])
+    const lintResult = linter.lint(result.value)
+
+    expect(lintResult.errors).toBe(0)
+    expect(lintResult.warnings).toBe(0)
+    expect(lintResult.offenses).toHaveLength(0)
+  })
+
   it("fails when a div has an invalid aria attribute", () => {
     const html = '<div aria-bogus="foo"></div>'
     const result = Herb.parse(html)
@@ -29,18 +40,35 @@ describe("html-aria-attribute-must-be-valid", () => {
     expect(lintResult.warnings).toBe(0)
     expect(lintResult.offenses).toHaveLength(1)
     expect(lintResult.offenses[0].message).toBe(
-      'The ARIA attribute "aria-bogus" is not valid.'
+      'The attribute `aria-bogus` is not a valid ARIA attribute. ARIA attributes must match the WAI-ARIA specification.'
     )
   })
 
-  it("ignores non-aria attributes", () => {
-    const html = '<div class="foo"></div>'
+  it("fails for mistyped aria name", () => {
+    const html = '<input type="text" aria-lable="Search" />'
     const result = Herb.parse(html)
     const linter = new Linter([HTMLAriaAttributeMustBeValid])
     const lintResult = linter.lint(result.value)
 
-    expect(lintResult.errors).toBe(0)
+    expect(lintResult.errors).toBe(1)
     expect(lintResult.warnings).toBe(0)
-    expect(lintResult.offenses).toHaveLength(0)
+    expect(lintResult.offenses).toHaveLength(1)
+    expect(lintResult.offenses[0].message).toBe(
+      'The attribute `aria-lable` is not a valid ARIA attribute. ARIA attributes must match the WAI-ARIA specification.'
+    )
+  })
+
+  it("fails for aria-", () => {
+    const html = '<input type="text" aria-="Search" />'
+    const result = Herb.parse(html)
+    const linter = new Linter([HTMLAriaAttributeMustBeValid])
+    const lintResult = linter.lint(result.value)
+
+    expect(lintResult.errors).toBe(1)
+    expect(lintResult.warnings).toBe(0)
+    expect(lintResult.offenses).toHaveLength(1)
+    expect(lintResult.offenses[0].message).toBe(
+      'The attribute `aria-` is not a valid ARIA attribute. ARIA attributes must match the WAI-ARIA specification.'
+    )
   })
 })

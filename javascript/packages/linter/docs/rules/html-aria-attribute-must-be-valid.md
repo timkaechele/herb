@@ -1,25 +1,20 @@
-# Linter Rule: Aria Attribute must be valid
+# Linter Rule: Disallow invalid or unknown `aria-*` attributes.
 
-**Rule:** `aria-attribute-must-be-valid`
+**Rule:** `html-aria-attribute-must-be-valid`
 
 ## Description
 
-Disallow unknown or invalid `aria-*` attributes. Only attributes defined in the
-WAI-ARIA specification should be used. This rule helps catch typos (e.g.
-`aria-lable`), misuse, or outdated attribute names that won't be interpreted by
-assistive technologies.
+Disallow unknown or invalid `aria-*` attributes. Only attributes defined in the WAI-ARIA specification should be used. This rule helps catch typos (e.g. `aria-lable`), misuse, or outdated attribute names that won't be interpreted by assistive technologies.
 
 ## Rationale
 
-ARIA attributes are powerful accessibility tools, but **only if used
-correctly**. Mistyped or unsupported attributes:
+ARIA attributes are powerful accessibility tools, but **only if used correctly**. Mistyped or unsupported attributes:
 
 - Are silently ignored by browsers and screen readers
 - Fail to communicate intent
 - Give a false sense of accessibility
 
-Validating against a known list ensures you're using correct and effective ARIA
-patterns.
+Validating against a known list ensures you're using correct and effective ARIA patterns.
 
 ## Examples
 
@@ -27,19 +22,21 @@ patterns.
 
 ```html
 <div role="button" aria-pressed="false">Toggle</div>
-<span role="heading" aria-level="2">Title</span>
 <input type="text" aria-label="Search" />
+<span role="heading" aria-level="2">Title</span>
 ```
 
 ### 🚫 Bad
 
 ```html
+<!-- typo -->
 <div role="button" aria-presed="false">Toggle</div>
+
 <!-- typo -->
-<span role="heading" aria-size="large">Title</span>
-<!-- invalid -->
 <input type="text" aria-lable="Search" />
-<!-- typo -->
+
+<!-- invalid -->
+<span aria-size="large" role="heading" aria-level="2">Title</span>
 ```
 
 ## References

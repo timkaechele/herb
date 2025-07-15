@@ -22,7 +22,7 @@ class AriaAttributeMustBeValid extends AttributeVisitorMixin {
 
     if (!ARIA_ATTRIBUTES.has(attributeName)){
       this.offenses.push({
-        message: `The ARIA attribute "${attributeName}" is not valid.`,
+        message: `The attribute \`${attributeName}\` is not a valid ARIA attribute. ARIA attributes must match the WAI-ARIA specification.`,
         severity: "error",
         location: attributeNode.location,
         rule: this.ruleName,
