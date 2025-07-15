@@ -110,9 +110,9 @@ npx @herb-tools/language-server --stdio
 
 The language server can be configured using a `.herb-lsp/config.json` file in your project root. This file is automatically created when the language server starts if it doesn't exist.
 
-### Formatting Configuration
+### Formatter Configuration
 
-You can configure formatting behavior by adding a `formatting` section to your config:
+You can configure formatting behavior by adding a `formatter` section to your config:
 
 ```json
 {
@@ -120,10 +120,8 @@ You can configure formatting behavior by adding a `formatting` section to your c
   "createdAt": "2025-06-29T00:00:00.000Z",
   "updatedAt": "2025-06-29T00:00:00.000Z",
   "options": {
-    "formatting": {
+    "formatter": {
       "enabled": true,
-      "include": ["**/*.html.erb"],
-      "exclude": ["**/node_modules/**", "**/dist/**", "**/*.min.html.erb"],
       "indentWidth": 2,
       "maxLineLength": 80
     }
@@ -131,12 +129,10 @@ You can configure formatting behavior by adding a `formatting` section to your c
 }
 ```
 
-#### `formatting` Options
+#### `formatter` Options
 
 - `enabled` (`boolean`): Enable or disable formatting for this project. Defaults to `false`.
-- `include` (`string[]`): Glob patterns for files to include in formatting. If specified, only matching files will be formatted.
-- `exclude` (`string[]`): Glob patterns for files to exclude from formatting. Takes precedence over `include` patterns.
 - `indentWidth` (`number`): Number of spaces for each indentation level. Defaults to `2`.
 - `maxLineLength` (`number`): Maximum line length before wrapping. Defaults to `80`.
 
-**Note**: VS Code users can also control formatting globally through the `languageServerHerb.formatting.enabled` setting in VS Code preferences. Formatting is currently in **Beta** and disabled by default.
+**Note**: VS Code users can also control formatting globally through the `languageServerHerb.formatter.enabled` setting in VS Code preferences. Formatting is currently in **Beta** and disabled by default.
