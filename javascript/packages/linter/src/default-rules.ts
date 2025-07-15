@@ -6,6 +6,7 @@ import { ERBRequireWhitespaceRule } from "./rules/erb-require-whitespace-inside-
 import { HTMLAnchorRequireHrefRule } from "./rules/html-anchor-require-href.js"
 import { HTMLAriaAttributeMustBeValid } from "./rules/html-aria-attribute-must-be-valid.js"
 import { HTMLAriaRoleHeadingRequiresLevelRule } from "./rules/html-aria-role-heading-requires-level.js"
+import { HTMLAriaRoleMustBeValidRule } from "./rules/html-aria-role-must-be-valid.js"
 import { HTMLAttributeDoubleQuotesRule } from "./rules/html-attribute-double-quotes.js"
 import { HTMLAttributeValuesRequireQuotesRule } from "./rules/html-attribute-values-require-quotes.js"
 import { HTMLBooleanAttributesNoValueRule } from "./rules/html-boolean-attributes-no-value.js"
@@ -23,6 +24,7 @@ export const defaultRules: RuleClass[] = [
   HTMLAnchorRequireHrefRule,
   HTMLAriaAttributeMustBeValid,
   HTMLAriaRoleHeadingRequiresLevelRule,
+  HTMLAriaRoleMustBeValidRule,
   HTMLAttributeDoubleQuotesRule,
   HTMLAttributeValuesRequireQuotesRule,
   HTMLBooleanAttributesNoValueRule,
