@@ -13,6 +13,7 @@ import { HTMLBooleanAttributesNoValueRule } from "./rules/html-boolean-attribute
 import { HTMLImgRequireAltRule } from "./rules/html-img-require-alt.js"
 // import { HTMLNoBlockInsideInlineRule } from "./rules/html-no-block-inside-inline.js"
 import { HTMLNoDuplicateAttributesRule } from "./rules/html-no-duplicate-attributes.js"
+import { HTMLNoDuplicateIdsRule } from "./rules/html-no-duplicate-ids.js"
 import { HTMLNoEmptyHeadingsRule } from "./rules/html-no-empty-headings.js"
 import { HTMLNoNestedLinksRule } from "./rules/html-no-nested-links.js"
 import { HTMLTagNameLowercaseRule } from "./rules/html-tag-name-lowercase.js"
@@ -31,6 +32,7 @@ export const defaultRules: RuleClass[] = [
   HTMLImgRequireAltRule,
   // HTMLNoBlockInsideInlineRule,
   HTMLNoDuplicateAttributesRule,
+  HTMLNoDuplicateIdsRule,
   HTMLNoEmptyHeadingsRule,
   HTMLNoNestedLinksRule,
   HTMLTagNameLowercaseRule,

@@ -2,16 +2,15 @@ import {
   Visitor
 } from "@herb-tools/core"
 
-import type { 
-  ERBNode, 
+import type {
+  ERBNode,
   HTMLAttributeNameNode,
-  HTMLAttributeNode, 
-  HTMLAttributeValueNode, 
-  HTMLOpenTagNode, 
-  HTMLSelfCloseTagNode, 
-  LiteralNode, 
-  Location, 
-  Node 
+  HTMLAttributeNode,
+  HTMLAttributeValueNode,
+  HTMLOpenTagNode,
+  HTMLSelfCloseTagNode,
+  LiteralNode,
+  Location
 } from "@herb-tools/core"
 import type { LintOffense, LintSeverity, } from "../types.js"
 
@@ -83,18 +82,36 @@ export function getAttributeName(attributeNode: HTMLAttributeNode): string | nul
  * Gets the attribute value content from an HTMLAttributeValueNode
  */
 export function getAttributeValue(attributeNode: HTMLAttributeNode): string | null {
-  if (attributeNode.value?.type === "AST_HTML_ATTRIBUTE_VALUE_NODE") {
-    const valueNode = attributeNode.value as HTMLAttributeValueNode
+  const valueNode: HTMLAttributeValueNode | null = attributeNode.value as HTMLAttributeValueNode
 
-    if (valueNode.children && valueNode.children.length > 0) {
-      return valueNode.children
-        .filter(child => child.type === "AST_LITERAL_NODE")
-        .map(child => (child as LiteralNode).content)
-        .join("")
+  if (valueNode === null) return null
+
+  if (valueNode.type !== "AST_HTML_ATTRIBUTE_VALUE_NODE" || !valueNode.children?.length) {
+    return null
+  }
+
+  let result = ""
+
+  for (const child of valueNode.children) {
+    switch (child.type) {
+      case "AST_ERB_CONTENT_NODE": {
+        const erbNode = child as ERBNode
+
+        if (erbNode.content) {
+          result += `${erbNode.tag_opening?.value}${erbNode.content.value}${erbNode.tag_closing?.value}`
+        }
+
+        break
+      }
+
+      case "AST_LITERAL_NODE": {
+        result += (child as LiteralNode).content
+        break
+      }
     }
   }
 
-  return null
+  return result
 }
 
 /**
