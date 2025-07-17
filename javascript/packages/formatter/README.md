@@ -1,6 +1,9 @@
-# Herb Formatter <Badge type="info" text="coming soon" />
+# Herb Formatter <Badge type="warning" text="experimental preview" />
 
 **Package:** [`@herb-tools/formatter`](https://www.npmjs.com/package/@herb-tools/formatter)
+
+> [!WARNING] Experimental Preview
+> This formatter is currently in experimental preview. While it works for many common cases, it may potentially corrupt files in edge cases. Only use on files that can be restored via git or other version control systems.
 
 ---
 

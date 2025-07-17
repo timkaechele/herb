@@ -1,4 +1,4 @@
-# Herb Linter <Badge type="info" text="coming soon" />
+# Herb Linter
 
 **Package**: [`@herb-tools/linter`](https://www.npmjs.com/package/@herb-tools/linter)
 

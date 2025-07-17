@@ -33,11 +33,11 @@ Herb provides a complete ecosystem of HTML+ERB tooling, designed to simplify and
 - **Herb Language Server** ([available now](https://herb-tools.dev/projects/language-server)):
   Rich integration for editors like VS Code, Zed, Neovim, and more. It provides diagnostics and real-time feedback to keep your templates error-free.
 
-- **Herb Formatter** ([coming soon](https://herb-tools.dev/projects/formatter)):
-  Automatic, consistent formatting for HTML+ERB files, reducing manual styling and enforcing a standard across projects.
+- **Herb Formatter** ([experimental preview](https://herb-tools.dev/projects/formatter)):
+  Automatic, consistent formatting for HTML+ERB files, reducing manual styling and enforcing a standard across projects. Currently in experimental preview - use with caution on version-controlled files.
 
-- **Herb Linter** ([coming soon](https://herb-tools.dev/projects/linter)):  
-  Static analysis for your HTML+ERB templates to enforce best practices and quickly identify common mistakes.
+- **Herb Linter** ([available now](https://herb-tools.dev/projects/linter)):  
+  Static analysis for your HTML+ERB templates to enforce best practices and quickly identify common mistakes with 17 configurable rules.
 
 You can use Herb programmatically in **Ruby**, as well as in **JavaScript** via Node.js, WebAssembly, or directly in browsers.
 
