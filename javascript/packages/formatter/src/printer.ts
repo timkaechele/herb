@@ -68,6 +68,7 @@ export class Printer extends Visitor {
   private lines: string[] = []
   private indentLevel: number = 0
   private inlineMode: boolean = false
+  private isInComplexNesting: boolean = false
 
   constructor(source: string, options: Required<FormatOptions>) {
     super()
@@ -85,6 +86,7 @@ export class Printer extends Visitor {
 
     this.lines = []
     this.indentLevel = indentLevel
+    this.isInComplexNesting = false // Reset for each top-level element
 
     if (typeof (node as any).accept === 'function') {
       node.accept(this)
@@ -178,6 +180,31 @@ export class Printer extends Visitor {
         return
       }
 
+      if (children.length >= 1) {
+        if (this.isInComplexNesting) {
+          if (children.length === 1) {
+            const child = children[0]
+
+            if (child instanceof HTMLTextNode || (child as any).type === 'AST_HTML_TEXT_NODE') {
+              const textContent = (child as HTMLTextNode).content.trim()
+              const singleLine = `<${tagName}>${textContent}</${tagName}>`
+
+              if (!textContent.includes('\n') && (indent.length + singleLine.length) <= this.maxLineLength) {
+                this.push(indent + singleLine)
+                return
+              }
+            }
+          }
+        } else {
+          const inlineResult = this.tryRenderInline(children, tagName)
+
+          if (inlineResult && (indent.length + inlineResult.length) <= this.maxLineLength) {
+            this.push(indent + inlineResult)
+            return
+          }
+        }
+      }
+
       this.push(indent + `<${tagName}>`)
 
       this.withIndent(() => {
@@ -232,7 +259,6 @@ export class Printer extends Visitor {
     )
 
     const shouldKeepInline = (attributes.length <= 3 &&
-                            !hasEmptyValue &&
                             inline.length + indent.length <= this.maxLineLength) ||
                             (inlineNodes.length > 0 && !hasERBControlFlow)
 
@@ -372,7 +398,6 @@ export class Printer extends Visitor {
       (singleAttribute.value as any)?.children.length === 0
 
     const shouldKeepInline = attributes.length <= 3 &&
-                            !hasEmptyValue &&
                             inline.length + indent.length <= this.maxLineLength
 
     if (shouldKeepInline) {
@@ -811,5 +836,160 @@ export class Printer extends Visitor {
     }
 
     return name + equals + value
+  }
+
+  /**
+   * Try to render children inline if they are simple enough.
+   * Returns the inline string if possible, null otherwise.
+   */
+  private tryRenderInline(children: Node[], tagName: string, depth: number = 0): string | null {
+    if (children.length > 10) {
+      return null
+    }
+
+    const maxNestingDepth = this.getMaxNestingDepth(children, 0)
+
+    if (maxNestingDepth > 1) {
+      this.isInComplexNesting = true
+      return null
+    }
+
+    for (const child of children) {
+      if (child instanceof HTMLTextNode || (child as any).type === 'AST_HTML_TEXT_NODE') {
+        const textContent = (child as HTMLTextNode).content
+
+        if (textContent.includes('\n')) {
+          return null
+        }
+      } else if (child instanceof HTMLElementNode || (child as any).type === 'AST_HTML_ELEMENT_NODE') {
+        const element = child as HTMLElementNode
+        const openTag = element.open_tag as HTMLOpenTagNode
+
+        const attributes = openTag.children.filter((child): child is HTMLAttributeNode =>
+          child instanceof HTMLAttributeNode || (child as any).type === 'AST_HTML_ATTRIBUTE_NODE'
+        )
+
+        if (attributes.length > 0) {
+          return null
+        }
+
+      } else if (child instanceof ERBContentNode || (child as any).type === 'AST_ERB_CONTENT_NODE') {
+        // ERB content nodes are allowed in inline rendering
+      } else {
+        return null
+      }
+    }
+
+    const oldLines = this.lines
+    const oldInlineMode = this.inlineMode
+
+    try {
+      this.lines = []
+      this.inlineMode = true
+
+      let content = ''
+
+      for (const child of children) {
+        if (child instanceof HTMLTextNode || (child as any).type === 'AST_HTML_TEXT_NODE') {
+          content += (child as HTMLTextNode).content
+        } else if (child instanceof HTMLElementNode || (child as any).type === 'AST_HTML_ELEMENT_NODE') {
+          const element = child as HTMLElementNode
+          const openTag = element.open_tag as HTMLOpenTagNode
+          const childTagName = openTag?.tag_name?.value || ''
+
+          const attributes = openTag.children.filter((child): child is HTMLAttributeNode =>
+            child instanceof HTMLAttributeNode || (child as any).type === 'AST_HTML_ATTRIBUTE_NODE'
+          )
+
+          const attributesString = attributes.length > 0
+            ? ' ' + attributes.map(attr => this.renderAttribute(attr)).join(' ')
+            : ''
+
+          const elementContent = this.renderElementInline(element)
+
+          content += `<${childTagName}${attributesString}>${elementContent}</${childTagName}>`
+        } else if (child instanceof ERBContentNode || (child as any).type === 'AST_ERB_CONTENT_NODE') {
+          const erbNode = child as ERBContentNode
+          const open = erbNode.tag_opening?.value ?? ""
+          const erbContent = erbNode.content?.value ?? ""
+          const close = erbNode.tag_closing?.value ?? ""
+
+          content += `${open} ${erbContent.trim()} ${close}`
+        }
+      }
+
+      content = content.replace(/\s+/g, ' ').trim()
+
+      return `<${tagName}>${content}</${tagName}>`
+
+    } finally {
+      this.lines = oldLines
+      this.inlineMode = oldInlineMode
+    }
+  }
+
+  /**
+   * Calculate the maximum nesting depth in a subtree of nodes.
+   */
+  private getMaxNestingDepth(children: Node[], currentDepth: number): number {
+    let maxDepth = currentDepth
+
+    for (const child of children) {
+      if (child instanceof HTMLElementNode || (child as any).type === 'AST_HTML_ELEMENT_NODE') {
+        const element = child as HTMLElementNode
+        const elementChildren = element.body.filter(
+          child =>
+            !(child instanceof WhitespaceNode || (child as any).type === 'AST_WHITESPACE_NODE') &&
+            !((child instanceof HTMLTextNode || (child as any).type === 'AST_HTML_TEXT_NODE') && (child as any)?.content.trim() === ""),
+        )
+
+        const childDepth = this.getMaxNestingDepth(elementChildren, currentDepth + 1)
+        maxDepth = Math.max(maxDepth, childDepth)
+      }
+    }
+
+    return maxDepth
+  }
+
+  /**
+   * Render an HTML element's content inline (without the wrapping tags).
+   */
+  private renderElementInline(element: HTMLElementNode): string {
+    const children = element.body.filter(
+      child =>
+        !(child instanceof WhitespaceNode || (child as any).type === 'AST_WHITESPACE_NODE') &&
+        !((child instanceof HTMLTextNode || (child as any).type === 'AST_HTML_TEXT_NODE') && (child as any)?.content.trim() === ""),
+    )
+
+    let content = ''
+    for (const child of children) {
+      if (child instanceof HTMLTextNode || (child as any).type === 'AST_HTML_TEXT_NODE') {
+        content += (child as HTMLTextNode).content
+      } else if (child instanceof HTMLElementNode || (child as any).type === 'AST_HTML_ELEMENT_NODE') {
+        const childElement = child as HTMLElementNode
+        const openTag = childElement.open_tag as HTMLOpenTagNode
+        const childTagName = openTag?.tag_name?.value || ''
+
+        const attributes = openTag.children.filter((child): child is HTMLAttributeNode =>
+          child instanceof HTMLAttributeNode || (child as any).type === 'AST_HTML_ATTRIBUTE_NODE'
+        )
+
+        const attributesString = attributes.length > 0
+          ? ' ' + attributes.map(attr => this.renderAttribute(attr)).join(' ')
+          : ''
+
+        const childContent = this.renderElementInline(childElement)
+        content += `<${childTagName}${attributesString}>${childContent}</${childTagName}>`
+      } else if (child instanceof ERBContentNode || (child as any).type === 'AST_ERB_CONTENT_NODE') {
+        const erbNode = child as ERBContentNode
+        const open = erbNode.tag_opening?.value ?? ""
+        const erbContent = erbNode.content?.value ?? ""
+        const close = erbNode.tag_closing?.value ?? ""
+
+        content += `${open} ${erbContent.trim()} ${close}`
+      }
+    }
+
+    return content.replace(/\s+/g, ' ').trim()
   }
 }

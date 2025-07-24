@@ -17,12 +17,10 @@ describe("@herb-tools/formatter", () => {
   })
 
   test("formats simple HTML with ERB content", () => {
-    const source = '<div><%= "Hello" %></div>'
+    const source = '<div><%= "Hello" %> World</div>'
     const result = formatter.format(source)
     expect(result).toEqual(dedent`
-      <div>
-        <%= "Hello" %>
-      </div>
+      <div><%= "Hello" %> World</div>
     `)
   })
 
@@ -45,15 +43,29 @@ describe("@herb-tools/formatter", () => {
       <div id="output">
         <%= tag.div class: "div" do %>
           <% if true %>
-            <span>
-              OK
-            </span>
+            <span>OK</span>
           <% else %>
-            <span>
-              NO
-            </span>
+            <span>NO</span>
           <% end %>
         <% end %>
+      </div>
+    `)
+  })
+
+  test("preserves ERB within HTML attributes and content", () => {
+    const source = dedent`
+      <div>
+        <h1 class="<%= classes %>">
+          <%= title %>
+        </h1>
+      </div>
+    `
+    const result = formatter.format(source)
+    expect(result).toEqual(dedent`
+      <div>
+        <h1 class="<%= classes %>">
+          <%= title %>
+        </h1>
       </div>
     `)
   })
