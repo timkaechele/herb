@@ -245,7 +245,7 @@ module Parser
 
     test "script tag with complex JavaScript containing multiple HTML-like patterns" do
       skip
-      assert_parsed_snapshot(<<-HTML
+      assert_parsed_snapshot(<<-HTML)
         <script>
           function createElements() {
             const div = "<div class='container'>";
@@ -260,12 +260,11 @@ module Parser
           }
         </script>
       HTML
-      )
     end
 
     test "style tag with complex CSS containing HTML-like selectors" do
       skip
-      assert_parsed_snapshot(<<-HTML
+      assert_parsed_snapshot(<<-HTML)
         <style>
           /* CSS comment */
 
@@ -278,7 +277,6 @@ module Parser
           }
         </style>
       HTML
-      )
     end
   end
 end
