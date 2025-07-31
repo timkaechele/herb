@@ -5,9 +5,9 @@ import { describe, it, expect, beforeEach, beforeAll, vi } from 'vitest'
 import { Connection, TextDocuments, DocumentFormattingParams, DocumentRangeFormattingParams, Range, Position } from 'vscode-languageserver/node'
 import { TextDocument } from 'vscode-languageserver-textdocument'
 
-import { FormattingService } from './formatting_service'
-import { Project } from './project'
-import { Settings } from './settings'
+import { FormattingService } from '../src/formatting_service'
+import { Project } from '../src/project'
+import { Settings } from '../src/settings'
 
 import { Herb } from '@herb-tools/node-wasm'
 
