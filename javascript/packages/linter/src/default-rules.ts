@@ -2,6 +2,7 @@ import type { RuleClass } from "./types.js"
 
 import { ERBNoEmptyTagsRule } from "./rules/erb-no-empty-tags.js"
 import { ERBNoOutputControlFlowRule } from "./rules/erb-no-output-control-flow.js"
+import { ERBPreferImageTagHelperRule } from "./rules/erb-prefer-image-tag-helper.js"
 import { ERBRequireWhitespaceRule } from "./rules/erb-require-whitespace-inside-tags.js"
 import { HTMLAnchorRequireHrefRule } from "./rules/html-anchor-require-href.js"
 import { HTMLAriaAttributeMustBeValid } from "./rules/html-aria-attribute-must-be-valid.js"
@@ -22,6 +23,7 @@ import { SVGTagNameCapitalizationRule } from "./rules/svg-tag-name-capitalizatio
 export const defaultRules: RuleClass[] = [
   ERBNoEmptyTagsRule,
   ERBNoOutputControlFlowRule,
+  ERBPreferImageTagHelperRule,
   ERBRequireWhitespaceRule,
   HTMLAnchorRequireHrefRule,
   HTMLAriaAttributeMustBeValid,
