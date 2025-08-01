@@ -1,7 +1,8 @@
 import { BaseRuleVisitor } from "./rule-utils.js"
 
 import type { Node, ERBIfNode, ERBUnlessNode, ERBElseNode, ERBEndNode } from "@herb-tools/core"
-import type { Rule, LintOffense } from "../types.js"
+import { ParserRule } from "../types.js"
+import type { LintOffense } from "../types.js"
 
 class ERBNoOutputControlFlowRuleVisitor extends BaseRuleVisitor {
   visitERBIfNode(node: ERBIfNode): void {
@@ -49,8 +50,9 @@ class ERBNoOutputControlFlowRuleVisitor extends BaseRuleVisitor {
   }
 }
 
-export class ERBNoOutputControlFlowRule implements Rule {
+export class ERBNoOutputControlFlowRule extends ParserRule {
   name = "erb-no-output-control-flow"
+
   check(node: Node): LintOffense[] {
     const visitor = new ERBNoOutputControlFlowRuleVisitor(this.name)
 
