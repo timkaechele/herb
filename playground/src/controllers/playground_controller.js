@@ -56,8 +56,12 @@ export default class extends Controller {
     "htmlViewer",
     "lexViewer",
     "formatViewer",
-    "linterViewer",
-    "linterContent",
+    "formatSuccess",
+    "formatError",
+    "diagnosticsViewer",
+    "diagnosticsContent",
+    "noDiagnostics",
+    "diagnosticsList",
     "fullViewer",
     "viewerButton",
     "version",
@@ -74,6 +78,10 @@ export default class extends Controller {
     if (this.isDarkMode) {
       document.documentElement.classList.add('dark')
     }
+
+    document.querySelectorAll('.fa-circle-check').forEach(icon => {
+      icon.style.display = 'none'
+    })
 
     this.restoreInput()
     this.restoreActiveTab()
@@ -213,6 +221,130 @@ export default class extends Controller {
       button.querySelector(".fa-circle-xmark").classList.add("hidden")
       button.querySelector(".fa-circle-check").classList.add("hidden")
     }, 1000)
+  }
+
+  async copyEditorContent(event) {
+    const button = this.getClosestButton(event.target)
+    const content = this.editor ? this.editor.getValue() : this.inputTarget.value
+
+    try {
+      await navigator.clipboard.writeText(content)
+      this.showCopySuccessFixed(button)
+    } catch (error) {
+      console.error('Failed to copy editor content:', error)
+    }
+  }
+
+  async copyViewerContent(event) {
+    const button = this.getClosestButton(event.target)
+    const activeViewer = this.activeViewerButton.dataset.viewer
+    let content = ''
+
+    switch(activeViewer) {
+      case 'parse':
+        content = this.parseViewerTarget.textContent
+        break
+      case 'lex':
+        content = this.lexViewerTarget.textContent
+        break
+      case 'ruby':
+        content = this.rubyViewerTarget.textContent
+        break
+      case 'html':
+        content = this.htmlViewerTarget.textContent
+        break
+      case 'format':
+        if (!this.formatSuccessTarget.classList.contains('hidden')) {
+          content = this.formatSuccessTarget.textContent
+        } else if (!this.formatErrorTarget.classList.contains('hidden')) {
+          const blurredPre = this.formatErrorTarget.querySelector('pre.language-html')
+          content = blurredPre ? blurredPre.textContent : ''
+        }
+        break
+      case 'diagnostics':
+        content = this.getDiagnosticsAsText()
+        break
+    }
+
+    if (content) {
+      try {
+        await navigator.clipboard.writeText(content)
+        this.showCopySuccessFixed(button)
+      } catch (error) {
+        console.error('Failed to copy viewer content:', error)
+      }
+    }
+  }
+
+  showCopySuccessFixed(button) {
+    const allIcons = button.querySelectorAll('svg, i')
+
+    let copyIcon = null
+    let checkIcon = null
+
+    allIcons.forEach(icon => {
+      if (icon.classList.contains('fa-copy')) {
+        copyIcon = icon
+      } else if (icon.classList.contains('fa-circle-check')) {
+        checkIcon = icon
+      }
+    })
+
+    if (!copyIcon || !checkIcon) {
+      console.error('Icons not found', { copyIcon, checkIcon })
+      return
+    }
+
+    if (this.copyTimeout) {
+      clearTimeout(this.copyTimeout)
+    }
+
+    copyIcon.style.display = 'none'
+    checkIcon.style.display = 'inline-block'
+
+    this.copyTimeout = setTimeout(() => {
+      copyIcon.style.display = 'inline-block'
+      checkIcon.style.display = 'none'
+      this.copyTimeout = null
+    }, 1000)
+  }
+
+  showCopySuccess(button) {
+    const copyIcon = button.querySelector('.fa-copy, svg.fa-copy')
+    const checkIcon = button.querySelector('.fa-circle-check, svg.fa-circle-check')
+
+    if (!copyIcon || !checkIcon) return
+
+    if (this.copyTimeout) {
+      clearTimeout(this.copyTimeout)
+    }
+
+    checkIcon.classList.add('hidden')
+    checkIcon.classList.remove('hidden')
+    copyIcon.classList.add('hidden')
+
+    this.copyTimeout = setTimeout(() => {
+      copyIcon.classList.remove('hidden')
+      checkIcon.classList.add('hidden')
+      this.copyTimeout = null
+    }, 1000)
+  }
+
+  getDiagnosticsAsText() {
+    const diagnosticItems = this.diagnosticsContentTarget.querySelectorAll('.diagnostic-item')
+
+    if (diagnosticItems.length === 0) {
+      return 'No diagnostics to display'
+    }
+
+    let text = 'Diagnostics:\n\n'
+    diagnosticItems.forEach(item => {
+      const message = item.querySelector('.text-sm.font-medium').textContent.trim()
+      const location = item.querySelector('.text-xs.text-gray-400').textContent.trim()
+      text += `• ${message}\n  ${location}\n\n`
+    })
+
+    return text
   }
 
   restoreInput() {
@@ -448,8 +580,7 @@ export default class extends Controller {
       allDiagnostics.push(...lintDiagnostics)
     }
 
-    // Filter out parser-no-errors diagnostics for both editor and status display
-    const filteredDiagnosticsForEditor = allDiagnostics.filter(diagnostic => 
+    const filteredDiagnosticsForEditor = allDiagnostics.filter(diagnostic =>
       diagnostic.code !== 'parser-no-errors'
     )
 
@@ -549,10 +680,24 @@ export default class extends Controller {
     }
 
     if (this.hasFormatViewerTarget) {
-      this.formatViewerTarget.classList.add("language-html")
-      this.formatViewerTarget.textContent = result.formatted
+      const hasErrors = filteredDiagnosticsForEditor.some(diagnostic => diagnostic.severity === "error")
 
-      Prism.highlightElement(this.formatViewerTarget)
+      if (hasErrors) {
+        this.formatSuccessTarget.classList.add('hidden')
+        this.formatErrorTarget.classList.remove('hidden')
+
+        const pre = this.formatErrorTarget.querySelector('pre.language-html')
+        pre.textContent = result.formatted || 'No formatted output available'
+
+        Prism.highlightElement(pre)
+      } else {
+        this.formatErrorTarget.classList.add('hidden')
+        this.formatSuccessTarget.classList.remove('hidden')
+
+        this.formatSuccessTarget.textContent = result.formatted || 'No formatted output available'
+
+        Prism.highlightElement(this.formatSuccessTarget)
+      }
     }
 
     if (this.hasRubyViewerTarget) {
@@ -569,8 +714,8 @@ export default class extends Controller {
       Prism.highlightElement(this.lexViewerTarget)
     }
 
-    if (this.hasLinterViewerTarget && this.hasLinterContentTarget) {
-      this.updateLinterViewer(filteredDiagnosticsForEditor)
+    if (this.hasDiagnosticsViewerTarget && this.hasDiagnosticsContentTarget) {
+      this.updateDiagnosticsViewer(filteredDiagnosticsForEditor)
     }
   }
 
@@ -656,27 +801,26 @@ export default class extends Controller {
     window.history.replaceState({}, '', url)
   }
 
-  updateLinterViewer(diagnostics) {
-    // Filter out parser-no-errors diagnostics
-    const filteredDiagnostics = diagnostics.filter(diagnostic => 
+  updateDiagnosticsViewer(diagnostics) {
+    const filteredDiagnostics = diagnostics.filter(diagnostic =>
       diagnostic.code !== 'parser-no-errors'
     )
 
     if (filteredDiagnostics.length === 0) {
-      this.linterContentTarget.innerHTML = `
-        <div class="text-center text-gray-400 py-8">
-          No diagnostics to display
-        </div>
-      `
+      this.noDiagnosticsTarget.classList.remove('hidden')
+      this.diagnosticsListTarget.classList.add('hidden')
       return
     }
+
+    this.diagnosticsListTarget.classList.remove('hidden')
+    this.noDiagnosticsTarget.classList.add('hidden')
 
     const sortDiagnostics = (items) => {
       return items.sort((a, b) => {
         const lineA = a.line || a.startLineNumber || 1
         const lineB = b.line || b.startLineNumber || 1
         if (lineA !== lineB) return lineA - lineB
-        
+
         const colA = a.column || a.startColumn || 0
         const colB = b.column || b.startColumn || 0
         return colA - colB
@@ -710,7 +854,7 @@ export default class extends Controller {
         const endColumn = (diagnostic.endColumn || diagnostic.endColumn || diagnostic.column || 0) + 1
 
         groupHtml += `
-          <div 
+          <div
             class="p-3 border rounded-lg cursor-pointer bg-gray-700 hover:border-gray-400 border-gray-500 diagnostic-item transition-colors duration-150"
             data-diagnostic-index="${index}"
             data-start-line="${startLine}"
@@ -753,7 +897,7 @@ export default class extends Controller {
     )
 
     html += renderDiagnosticGroup(
-      'Warnings', 
+      'Warnings',
       diagnosticsByType.warning,
       'fas fa-triangle-exclamation text-yellow-400',
       'text-yellow-400'
@@ -762,14 +906,13 @@ export default class extends Controller {
     html += renderDiagnosticGroup(
       'Info',
       diagnosticsByType.info,
-      'fas fa-info-circle text-blue-400', 
+      'fas fa-info-circle text-blue-400',
       'text-blue-400'
     )
 
-    this.linterContentTarget.innerHTML = html
+    this.diagnosticsListTarget.innerHTML = html
 
-    // Add click handlers for each diagnostic item
-    this.linterContentTarget.querySelectorAll('.diagnostic-item').forEach(item => {
+    this.diagnosticsListTarget.querySelectorAll('.diagnostic-item').forEach(item => {
       item.addEventListener('click', () => {
         const startLine = parseInt(item.dataset.startLine)
         const startColumn = parseInt(item.dataset.startColumn)
@@ -789,7 +932,6 @@ export default class extends Controller {
         }
       })
 
-      // Add hover effect to highlight in editor
       item.addEventListener('mouseenter', () => {
         const startLine = parseInt(item.dataset.startLine)
         const startColumn = parseInt(item.dataset.startColumn)
