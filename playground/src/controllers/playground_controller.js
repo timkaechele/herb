@@ -64,6 +64,12 @@ export default class extends Controller {
     "shareTooltip",
     "githubButton",
     "githubTooltip",
+    "copyButton",
+    "copyTooltip",
+    "exampleButton",
+    "exampleTooltip",
+    "copyViewerButton",
+    "copyViewerTooltip",
     "diagnosticsViewer",
     "diagnosticsContent",
     "noDiagnostics",
@@ -136,8 +142,12 @@ export default class extends Controller {
     window.editor = this.editor
 
     this.setupThemeListener()
+    this.setupTooltip()
     this.setupShareTooltip()
     this.setupGitHubTooltip()
+    this.setupCopyTooltip()
+    this.setupExampleTooltip()
+    this.setupCopyViewerTooltip()
   }
 
   get isDarkMode() {
@@ -166,6 +176,12 @@ export default class extends Controller {
 
   disconnect() {
     window.removeEventListener("popstate", this.handlePopState)
+    this.removeTooltip()
+    this.removeShareTooltip()
+    this.removeGitHubTooltip()
+    this.removeCopyTooltip()
+    this.removeExampleTooltip()
+    this.removeCopyViewerTooltip()
   }
 
   handlePopState = async (event) => {
@@ -720,11 +736,12 @@ export default class extends Controller {
         this.formatButtonTarget.classList.add('opacity-50', 'cursor-not-allowed')
         this.formatButtonTarget.classList.remove('hover:bg-gray-200', 'dark:hover:bg-gray-700')
         this.setupTooltip()
+        this.updateFormatTooltipText('Cannot format code due to syntax errors. Fix errors in Diagnostics tab first.')
       } else {
         this.formatButtonTarget.disabled = false
         this.formatButtonTarget.classList.remove('opacity-50', 'cursor-not-allowed')
         this.formatButtonTarget.classList.add('hover:bg-gray-200', 'dark:hover:bg-gray-700')
-        this.removeTooltip()
+        this.updateFormatTooltipText('Format the editor content using the Herb Formatter')
       }
     }
 
@@ -1014,10 +1031,27 @@ export default class extends Controller {
     }
   }
 
+  updateFormatTooltipText(text) {
+    if (this.hasFormatTooltipTarget) {
+      const textNode = this.formatTooltipTarget.firstChild
+      if (textNode && textNode.nodeType === Node.TEXT_NODE) {
+        textNode.textContent = text
+      }
+    }
+  }
+
   setupShareTooltip() {
     if (this.hasShareButtonTarget && this.hasShareTooltipTarget) {
       this.shareButtonTarget.addEventListener('mouseenter', this.showShareTooltip)
       this.shareButtonTarget.addEventListener('mouseleave', this.hideShareTooltip)
+    }
+  }
+
+  removeShareTooltip() {
+    if (this.hasShareButtonTarget && this.hasShareTooltipTarget) {
+      this.shareButtonTarget.removeEventListener('mouseenter', this.showShareTooltip)
+      this.shareButtonTarget.removeEventListener('mouseleave', this.hideShareTooltip)
+      this.hideShareTooltip()
     }
   }
 
@@ -1040,6 +1074,14 @@ export default class extends Controller {
     }
   }
 
+  removeGitHubTooltip() {
+    if (this.hasGithubButtonTarget && this.hasGithubTooltipTarget) {
+      this.githubButtonTarget.removeEventListener('mouseenter', this.showGitHubTooltip)
+      this.githubButtonTarget.removeEventListener('mouseleave', this.hideGitHubTooltip)
+      this.hideGitHubTooltip()
+    }
+  }
+
   showGitHubTooltip = () => {
     if (this.hasGithubTooltipTarget) {
       this.githubTooltipTarget.classList.remove('hidden')
@@ -1051,6 +1093,88 @@ export default class extends Controller {
       this.githubTooltipTarget.classList.add('hidden')
     }
   }
+
+  setupCopyTooltip() {
+    if (this.hasCopyButtonTarget && this.hasCopyTooltipTarget) {
+      this.copyButtonTarget.addEventListener('mouseenter', this.showCopyTooltip)
+      this.copyButtonTarget.addEventListener('mouseleave', this.hideCopyTooltip)
+    }
+  }
+
+  removeCopyTooltip() {
+    if (this.hasCopyButtonTarget && this.hasCopyTooltipTarget) {
+      this.copyButtonTarget.removeEventListener('mouseenter', this.showCopyTooltip)
+      this.copyButtonTarget.removeEventListener('mouseleave', this.hideCopyTooltip)
+      this.hideCopyTooltip()
+    }
+  }
+
+  showCopyTooltip = () => {
+    if (this.hasCopyTooltipTarget) {
+      this.copyTooltipTarget.classList.remove('hidden')
+    }
+  }
+
+  hideCopyTooltip = () => {
+    if (this.hasCopyTooltipTarget) {
+      this.copyTooltipTarget.classList.add('hidden')
+    }
+  }
+
+  setupExampleTooltip() {
+    if (this.hasExampleButtonTarget && this.hasExampleTooltipTarget) {
+      this.exampleButtonTarget.addEventListener('mouseenter', this.showExampleTooltip)
+      this.exampleButtonTarget.addEventListener('mouseleave', this.hideExampleTooltip)
+    }
+  }
+
+  removeExampleTooltip() {
+    if (this.hasExampleButtonTarget && this.hasExampleTooltipTarget) {
+      this.exampleButtonTarget.removeEventListener('mouseenter', this.showExampleTooltip)
+      this.exampleButtonTarget.removeEventListener('mouseleave', this.hideExampleTooltip)
+      this.hideExampleTooltip()
+    }
+  }
+
+  showExampleTooltip = () => {
+    if (this.hasExampleTooltipTarget) {
+      this.exampleTooltipTarget.classList.remove('hidden')
+    }
+  }
+
+  hideExampleTooltip = () => {
+    if (this.hasExampleTooltipTarget) {
+      this.exampleTooltipTarget.classList.add('hidden')
+    }
+  }
+
+  setupCopyViewerTooltip() {
+    if (this.hasCopyViewerButtonTarget && this.hasCopyViewerTooltipTarget) {
+      this.copyViewerButtonTarget.addEventListener('mouseenter', this.showCopyViewerTooltip)
+      this.copyViewerButtonTarget.addEventListener('mouseleave', this.hideCopyViewerTooltip)
+    }
+  }
+
+  removeCopyViewerTooltip() {
+    if (this.hasCopyViewerButtonTarget && this.hasCopyViewerTooltipTarget) {
+      this.copyViewerButtonTarget.removeEventListener('mouseenter', this.showCopyViewerTooltip)
+      this.copyViewerButtonTarget.removeEventListener('mouseleave', this.hideCopyViewerTooltip)
+      this.hideCopyViewerTooltip()
+    }
+  }
+
+  showCopyViewerTooltip = () => {
+    if (this.hasCopyViewerTooltipTarget) {
+      this.copyViewerTooltipTarget.classList.remove('hidden')
+    }
+  }
+
+  hideCopyViewerTooltip = () => {
+    if (this.hasCopyViewerTooltipTarget) {
+      this.copyViewerTooltipTarget.classList.add('hidden')
+    }
+  }
+
 
   openGitHubIssue(event) {
     const currentUrl = window.parent.location.href

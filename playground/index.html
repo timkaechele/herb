@@ -87,14 +87,24 @@
               </div>
 
               <div class="flex flex-wrap gap-2 mt-2 lg:mt-0">
-                <button
-                  data-action="click->playground#copyEditorContent"
-                  class="text-gray-900 dark:text-gray-100 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-md px-3 py-1.5 text-sm font-medium"
-                >
-                  <i class="fas fa-copy"></i>
-                  <i class="fas fa-circle-check text-green-600 hidden ease-in duration-300"></i>
-                  <span class="ml-1">Copy</span>
-                </button>
+                <div class="relative">
+                  <button
+                    data-action="click->playground#copyEditorContent"
+                    data-playground-target="copyButton"
+                    class="text-gray-900 dark:text-gray-100 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-md px-3 py-1.5 text-sm font-medium"
+                  >
+                    <i class="fas fa-copy"></i>
+                    <i class="fas fa-circle-check text-green-600 hidden ease-in duration-300"></i>
+                    <span class="ml-1">Copy</span>
+                  </button>
+                  <div
+                    data-playground-target="copyTooltip"
+                    class="hidden absolute top-full left-1/2 transform -translate-x-1/2 mt-2 px-2 py-1 text-xs text-white bg-black rounded-md whitespace-nowrap z-50"
+                  >
+                    Copy editor content to clipboard
+                    <div class="absolute bottom-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-b-4 border-transparent border-b-black"></div>
+                  </div>
+                </div>
 
                 <div class="relative">
                   <button
@@ -118,10 +128,10 @@
                   </button>
                   <div
                     data-playground-target="shareTooltip"
-                    class="hidden absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 text-sm text-white bg-black rounded-md whitespace-nowrap z-50"
+                    class="hidden absolute top-full left-1/2 transform -translate-x-1/2 mt-2 px-2 py-1 text-xs text-white bg-black rounded-md whitespace-nowrap z-50"
                   >
                     Share your code, settings, and selected tab - ideal for bug reports
-                    <div class="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-black"></div>
+                    <div class="absolute bottom-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-b-4 border-transparent border-b-black"></div>
                   </div>
                 </div>
 
@@ -136,25 +146,35 @@
                   </button>
                   <div
                     data-playground-target="githubTooltip"
-                    class="hidden absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 text-sm text-white bg-black rounded-md whitespace-nowrap z-50"
+                    class="hidden absolute top-full left-1/2 transform -translate-x-1/2 mt-2 px-2 py-1 text-xs text-white bg-black rounded-md whitespace-nowrap z-50"
                   >
                     Open GitHub issue with current playground state
-                    <div class="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-black"></div>
+                    <div class="absolute bottom-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-b-4 border-transparent border-b-black"></div>
                   </div>
                 </div>
 
-                <button
-                  data-action="click->playground#insert click->playground#analyze"
-                  id="example"
-                  class="text-gray-900 dark:text-gray-100 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-md px-3 py-1.5 text-sm font-medium"
-                >
-                  <i class="fas fa-file w-4"></i>
-                  <i
-                    class="fas fa-circle-check w-4 text-green-600 hidden ease-in duration-300"
-                  ></i>
+                <div class="relative">
+                  <button
+                    data-action="click->playground#insert click->playground#analyze"
+                    data-playground-target="exampleButton"
+                    id="example"
+                    class="text-gray-900 dark:text-gray-100 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-md px-3 py-1.5 text-sm font-medium"
+                  >
+                    <i class="fas fa-file w-4"></i>
+                    <i
+                      class="fas fa-circle-check w-4 text-green-600 hidden ease-in duration-300"
+                    ></i>
 
-                  <span class="ml-1">Example</span>
-                </button>
+                    <span class="ml-1">Example</span>
+                  </button>
+                  <div
+                    data-playground-target="exampleTooltip"
+                    class="hidden absolute top-full left-1/2 transform -translate-x-1/2 mt-2 px-2 py-1 text-xs text-white bg-black rounded-md whitespace-nowrap z-50"
+                  >
+                    Load example code into the editor
+                    <div class="absolute bottom-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-b-4 border-transparent border-b-black"></div>
+                  </div>
+                </div>
 
                 <div class="relative">
                   <button
@@ -172,10 +192,10 @@
                   </button>
                   <div
                     data-playground-target="formatTooltip"
-                    class="hidden absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 text-sm text-white bg-black rounded-md whitespace-nowrap z-50"
+                    class="hidden absolute top-full left-1/2 transform -translate-x-1/2 mt-2 px-2 py-1 text-xs text-white bg-black rounded-md whitespace-nowrap z-50"
                   >
-                    Cannot format code due to syntax errors. Fix errors in Diagnostics tab first.
-                    <div class="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-black"></div>
+                    Format the editor content using the Herb Formatter
+                    <div class="absolute bottom-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-b-4 border-transparent border-b-black"></div>
                   </div>
                 </div>
               </div>
@@ -218,14 +238,23 @@
                 class="text-gray-900 dark:text-gray-100 rounded-md px-0 py-1.5 text-sm font-medium flex items-center gap-3"
               >
                 <span>Herb Result</span>
-                <button
-                  data-action="click->playground#copyViewerContent"
-                  class="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 text-sm"
-                  title="Copy current panel content"
-                >
-                  <i class="fas fa-copy"></i>
-                  <i class="fas fa-circle-check text-green-600 hidden ease-in duration-300"></i>
-                </button>
+                <div class="relative">
+                  <button
+                    data-action="click->playground#copyViewerContent"
+                    data-playground-target="copyViewerButton"
+                    class="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 text-sm"
+                  >
+                    <i class="fas fa-copy"></i>
+                    <i class="fas fa-circle-check text-green-600 hidden ease-in duration-300"></i>
+                  </button>
+                  <div
+                    data-playground-target="copyViewerTooltip"
+                    class="hidden absolute top-full left-1/2 transform -translate-x-1/2 mt-2 px-2 py-1 text-xs text-white bg-black rounded-md whitespace-nowrap z-50"
+                  >
+                    Copy current panel content
+                    <div class="absolute bottom-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-b-4 border-transparent border-b-black"></div>
+                  </div>
+                </div>
               </div>
 
               <div class="mt-1 md:mt-0 flex flex-wrap gap-2">
