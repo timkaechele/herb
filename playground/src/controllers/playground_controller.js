@@ -708,9 +708,9 @@ export default class extends Controller {
     }
 
     if (this.hasFormatViewerTarget) {
-      const hasErrors = filteredDiagnosticsForEditor.some(diagnostic => diagnostic.severity === "error")
+      const hasParserErrors = result.parseResult ? result.parseResult.recursiveErrors().length > 0 : false
 
-      if (hasErrors) {
+      if (hasParserErrors) {
         this.formatSuccessTarget.classList.add('hidden')
         this.formatErrorTarget.classList.remove('hidden')
 
@@ -729,14 +729,14 @@ export default class extends Controller {
     }
 
     if (this.hasFormatButtonTarget) {
-      const hasErrors = filteredDiagnosticsForEditor.some(diagnostic => diagnostic.severity === "error")
+      const hasParserErrors = result.parseResult ? result.parseResult.recursiveErrors().length > 0 : false
 
-      if (hasErrors) {
+      if (hasParserErrors) {
         this.formatButtonTarget.disabled = true
         this.formatButtonTarget.classList.add('opacity-50', 'cursor-not-allowed')
         this.formatButtonTarget.classList.remove('hover:bg-gray-200', 'dark:hover:bg-gray-700')
         this.setupTooltip()
-        this.updateFormatTooltipText('Cannot format code due to syntax errors. Fix errors in Diagnostics tab first.')
+        this.updateFormatTooltipText('Cannot format code due to parser errors. Fix parser errors in Diagnostics tab first.')
       } else {
         this.formatButtonTarget.disabled = false
         this.formatButtonTarget.classList.remove('opacity-50', 'cursor-not-allowed')
