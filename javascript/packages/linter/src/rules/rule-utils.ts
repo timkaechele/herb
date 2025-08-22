@@ -69,10 +69,12 @@ export abstract class BaseRuleVisitor extends Visitor {
 /**
  * Gets attributes from either an HTMLOpenTagNode or HTMLSelfCloseTagNode
  */
-export function getAttributes(node: HTMLOpenTagNode | HTMLSelfCloseTagNode): any[] {
-  return node.type === "AST_HTML_SELF_CLOSE_TAG_NODE"
+export function getAttributes(node: HTMLOpenTagNode | HTMLSelfCloseTagNode): HTMLAttributeNode[] {
+  const nodes = node.type === "AST_HTML_SELF_CLOSE_TAG_NODE"
     ? (node as HTMLSelfCloseTagNode).attributes
     : (node as HTMLOpenTagNode).children
+
+  return nodes.filter(node => node.type === "AST_HTML_ATTRIBUTE_NODE")
 }
 
 /**
@@ -262,7 +264,7 @@ export function getAttributeValueQuoteType(nodeOrAttribute: HTMLAttributeNode | 
 /**
  * Finds an attribute by name in a list of attributes
  */
-export function findAttributeByName(attributes: any[], attributeName: string): HTMLAttributeNode | null {
+export function findAttributeByName(attributes: Node[], attributeName: string): HTMLAttributeNode | null {
   for (const child of attributes) {
     if (child.type === "AST_HTML_ATTRIBUTE_NODE") {
       const attributeNode = child as HTMLAttributeNode
@@ -701,7 +703,7 @@ export abstract class BaseSourceRuleVisitor {
    */
   protected createOffense(message: string, location: Location, severity: LintSeverity = "error"): LintOffense {
     return {
-      rule: this.ruleName as any, // Type assertion for compatibility
+      rule: this.ruleName,
       code: this.ruleName,
       source: "Herb Linter",
       message,
