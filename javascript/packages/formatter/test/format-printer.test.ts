@@ -1,13 +1,13 @@
 import { describe, test, expect, beforeAll } from "vitest"
 import { Herb } from "@herb-tools/node-wasm"
-import { Printer } from "../src/printer.js"
+import { FormatPrinter } from "../src"
 
 import dedent from "dedent"
 
 import type { HTMLElementNode, HTMLOpenTagNode, HTMLAttributeNode, HTMLAttributeNameNode, HTMLAttributeValueNode, Token } from "@herb-tools/core"
 
-function printerFor(source: string): Printer {
-  return new Printer(source, {
+function printerFor(source: string): FormatPrinter {
+  return new FormatPrinter(source, {
     indentWidth: 2,
     maxLineLength: 80
   })

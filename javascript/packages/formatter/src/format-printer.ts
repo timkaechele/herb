@@ -1,4 +1,5 @@
-import { Visitor, getCombinedAttributeName, getCombinedStringFromNodes, isERBNode } from "@herb-tools/core"
+import { getCombinedAttributeName, getCombinedStringFromNodes, isERBNode } from "@herb-tools/core"
+import { Printer, IdentityPrinter } from "@herb-tools/printer"
 
 import {
   Node,
@@ -66,15 +67,27 @@ const FORMATTABLE_ATTRIBUTES: Record<string, string[]> = {
  * Printer traverses the Herb AST using the Visitor pattern
  * and emits a formatted string with proper indentation, line breaks, and attribute wrapping.
  */
-export class Printer extends Visitor {
+export class FormatPrinter extends Printer {
+  /**
+   * @deprecated integrate indentWidth into this.options and update FormatOptions to extend from @herb-tools/printer options
+   */
   private indentWidth: number
+
+  /**
+   * @deprecated integrate maxLineLength into this.options and update FormatOptions to extend from @herb-tools/printer options
+   */
   private maxLineLength: number
-  private source: string
+
+  /**
+   * @deprecated refactor to use @herb-tools/printer infrastructre (or rework printer use push and this.lines)
+   */
   private lines: string[] = []
   private indentLevel: number = 0
   private inlineMode: boolean = false
   private isInComplexNesting: boolean = false
   private currentTagName: string = ""
+
+  public source: string
 
   private static readonly INLINE_ELEMENTS = new Set([
     'a', 'abbr', 'acronym', 'b', 'bdo', 'big', 'br', 'cite', 'code',
@@ -91,15 +104,16 @@ export class Printer extends Visitor {
     this.maxLineLength = options.maxLineLength
   }
 
-  print(object: Node | Token, indentLevel: number = 0): string {
+  print(object: Node | Token): string {
     if (object instanceof Token || (object as any).type?.startsWith('TOKEN_')) {
       return (object as Token).value
     }
 
     const node: Node = object
 
+    // TODO: refactor to use @herb-tools/printer infrastructre (or rework printer use push and this.lines)
     this.lines = []
-    this.indentLevel = indentLevel
+    this.indentLevel = 0
     this.isInComplexNesting = false // Reset for each top-level element
 
     if (typeof (node as any).accept === 'function') {
@@ -111,6 +125,9 @@ export class Printer extends Visitor {
     return this.lines.join("\n")
   }
 
+  /**
+   * @deprecated refactor to use @herb-tools/printer infrastructre (or rework printer use push and this.lines)
+   */
   private push(line: string) {
     this.lines.push(line)
   }
@@ -383,7 +400,7 @@ export class Printer extends Visitor {
   /**
    * Print an ERB tag (<% %> or <%= %>) with single spaces around inner content.
    */
-  private printERBNode(node: ERBNode) {
+  printERBNode(node: ERBNode) {
     const indent = this.inlineMode ? "" : this.indent()
     const erbText = this.reconstructERBNode(node, true)
 
@@ -708,32 +725,8 @@ export class Printer extends Visitor {
 
   visitHTMLDoctypeNode(node: HTMLDoctypeNode) {
     const indent = this.indent()
-    const open = node.tag_opening?.value ?? ""
 
-    let innerDoctype = node.children.map(child => {
-      if (child instanceof HTMLTextNode || (child as any).type === 'AST_HTML_TEXT_NODE') {
-        return (child as HTMLTextNode).content
-      } else if (child instanceof LiteralNode || (child as any).type === 'AST_LITERAL_NODE') {
-        return (child as LiteralNode).content
-      } else if (child instanceof ERBContentNode || (child as any).type === 'AST_ERB_CONTENT_NODE') {
-        const erbNode = child as ERBContentNode
-        const erbOpen = erbNode.tag_opening?.value ?? ""
-        const erbContent = erbNode.content?.value ?? ""
-        const erbClose = erbNode.tag_closing?.value ?? ""
-
-        return erbOpen + (erbContent ? ` ${erbContent.trim()} ` : "") + erbClose
-      } else {
-        const prevLines = this.lines.length
-
-        this.visit(child)
-
-        return this.lines.slice(prevLines).join("")
-      }
-    }).join("")
-
-    const close = node.tag_closing?.value ?? ""
-
-    this.push(indent + open + innerDoctype + close)
+    this.push(indent + IdentityPrinter.print(node))
   }
 
   visitERBContentNode(node: ERBContentNode) {
@@ -932,7 +925,7 @@ export class Printer extends Visitor {
    * Check if an element should be treated as inline based on its tag name
    */
   private isInlineElement(tagName: string): boolean {
-    return Printer.INLINE_ELEMENTS.has(tagName.toLowerCase())
+    return FormatPrinter.INLINE_ELEMENTS.has(tagName.toLowerCase())
   }
 
   /**
