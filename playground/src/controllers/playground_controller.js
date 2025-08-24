@@ -234,6 +234,7 @@ export default class extends Controller {
 
     button.querySelector(".fa-file").classList.add("hidden")
     button.querySelector(".fa-circle-check").classList.remove("hidden")
+    this.showTemporaryMessage("Inserted example document to editor", "success")
 
     setTimeout(() => {
       button.querySelector(".fa-file").classList.remove("hidden")
@@ -248,14 +249,16 @@ export default class extends Controller {
       await navigator.clipboard.writeText(window.parent.location.href)
 
       button.querySelector(".fa-circle-check").classList.remove("hidden")
+      this.showShareSuccessMessage()
     } catch (error) {
       button.querySelector(".fa-circle-xmark").classList.remove("hidden")
+      this.showShareErrorMessage()
     }
 
-    button.querySelector(".fa-copy").classList.add("hidden")
+    button.querySelector(".fa-share").classList.add("hidden")
 
     setTimeout(() => {
-      button.querySelector(".fa-copy").classList.remove("hidden")
+      button.querySelector(".fa-share").classList.remove("hidden")
       button.querySelector(".fa-circle-xmark").classList.add("hidden")
       button.querySelector(".fa-circle-check").classList.add("hidden")
     }, 1000)
@@ -268,8 +271,10 @@ export default class extends Controller {
     try {
       await navigator.clipboard.writeText(content)
       this.showCopySuccessFixed(button)
+      this.showTemporaryMessage("Copied editor content to clipboard", "success")
     } catch (error) {
       console.error('Failed to copy editor content:', error)
+      this.showTemporaryMessage("Failed to copy editor content", "error")
     }
   }
 
@@ -311,8 +316,10 @@ export default class extends Controller {
       try {
         await navigator.clipboard.writeText(content)
         this.showCopySuccessFixed(button)
+        this.showTemporaryMessage("Copied viewer content to clipboard", "success")
       } catch (error) {
         console.error('Failed to copy viewer content:', error)
+        this.showTemporaryMessage("Failed to copy viewer content", "error")
       }
     }
   }
@@ -598,6 +605,7 @@ export default class extends Controller {
 
         button.querySelector(".fa-indent").classList.add("hidden")
         button.querySelector(".fa-circle-check").classList.remove("hidden")
+        this.showTemporaryMessage("Formatted editor content", "success")
 
         setTimeout(() => {
           button.querySelector(".fa-indent").classList.remove("hidden")
@@ -803,7 +811,7 @@ export default class extends Controller {
 
     if (this.hasPrinterViewerTarget) {
       const printedContent = result.printed || 'No printed output available'
-      
+
       if (typeof printedContent === 'string' && printedContent.startsWith('Error: Cannot print')) {
         this.printerOutputTarget.classList.remove("language-html")
         this.printerOutputTarget.textContent = printedContent
@@ -819,7 +827,7 @@ export default class extends Controller {
         const options = this.getParserOptions()
         const trackWhitespace = options.track_whitespace
         const isError = typeof printedContent === 'string' && printedContent.startsWith('Error: Cannot print')
-        
+
         if (isError) {
           this.printerVerificationTarget.textContent = '⚠ Printer Error'
           this.printerVerificationTarget.className = 'px-2 py-1 text-xs rounded font-medium bg-red-600 text-red-100'
@@ -1338,6 +1346,32 @@ export default class extends Controller {
     }
   }
 
+  showShareSuccessMessage() {
+    this.showTemporaryMessage("Copied Share URL to clipboard", "success")
+  }
+
+  showShareErrorMessage() {
+    this.showTemporaryMessage("Failed to copy Share URL", "error")
+  }
+
+  showTemporaryMessage(text, type = "info") {
+    const existingMessage = document.getElementById('temp-message')
+    if (existingMessage) {
+      existingMessage.remove()
+    }
+
+    const messageDiv = document.createElement('div')
+    messageDiv.id = 'temp-message'
+
+    const bgClass = type === "success" ? "bg-green-600" : type === "error" ? "bg-red-600" : "bg-blue-600"
+
+    messageDiv.className = `fixed top-4 left-1/2 transform -translate-x-1/2 ${bgClass} text-white px-4 py-2 rounded-md shadow-lg z-50 text-sm font-medium`
+    messageDiv.textContent = text
+
+    document.body.appendChild(messageDiv)
+    setTimeout(() => messageDiv.remove(), 4000)
+  }
+
   filterDiagnostics(event) {
     const filter = event.target.getAttribute('data-filter')
     this.currentDiagnosticsFilter = filter
@@ -1560,10 +1594,10 @@ export default class extends Controller {
   computeCharDiff(original, printed) {
     const originalChars = Array.from(original)
     const printedChars = Array.from(printed)
-    
+
     const dp = this.computeEditDistance(originalChars, printedChars)
     const diff = this.backtrackDiff(originalChars, printedChars, dp)
-    
+
     let result = ''
     for (const op of diff) {
       if (op.type === 'equal') {
@@ -1574,7 +1608,7 @@ export default class extends Controller {
         result += `<span class="bg-green-500 text-black">${this.escapeHtml(op.char)}</span>`
       }
     }
-    
+
     return result
   }
 
@@ -1582,10 +1616,10 @@ export default class extends Controller {
     const m = str1.length
     const n = str2.length
     const dp = Array(m + 1).fill().map(() => Array(n + 1).fill(0))
-    
+
     for (let i = 0; i <= m; i++) dp[i][0] = i
     for (let j = 0; j <= n; j++) dp[0][j] = j
-    
+
     for (let i = 1; i <= m; i++) {
       for (let j = 1; j <= n; j++) {
         if (str1[i - 1] === str2[j - 1]) {
@@ -1599,7 +1633,7 @@ export default class extends Controller {
         }
       }
     }
-    
+
     return dp
   }
 
@@ -1607,7 +1641,7 @@ export default class extends Controller {
     const diff = []
     let i = str1.length
     let j = str2.length
-    
+
     while (i > 0 || j > 0) {
       if (i > 0 && j > 0 && str1[i - 1] === str2[j - 1]) {
         diff.unshift({ type: 'equal', char: str1[i - 1] })
@@ -1627,7 +1661,7 @@ export default class extends Controller {
         j--
       }
     }
-    
+
     return diff
   }
 
