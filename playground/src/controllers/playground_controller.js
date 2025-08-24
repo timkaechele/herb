@@ -58,6 +58,7 @@ export default class extends Controller {
     "formatViewer",
     "formatSuccess",
     "formatError",
+    "formatVerification",
     "formatButton",
     "formatTooltip",
     "printerViewer",
@@ -160,6 +161,7 @@ export default class extends Controller {
     this.setupCopyTooltip()
     this.setupExampleTooltip()
     this.setupCopyViewerTooltip()
+    this.setupPrinterVerificationTooltip()
   }
 
   get isDarkMode() {
@@ -194,6 +196,7 @@ export default class extends Controller {
     this.removeCopyTooltip()
     this.removeExampleTooltip()
     this.removeCopyViewerTooltip()
+    this.removePrinterVerificationTooltip()
   }
 
   handlePopState = async (event) => {
@@ -506,6 +509,7 @@ export default class extends Controller {
     this.updateTabInURL('diagnostics')
   }
 
+
   toggleViewer() {
     if (this.currentViewer) {
       if (this.currentViewer.style.position === "absolute") {
@@ -757,9 +761,11 @@ export default class extends Controller {
       Prism.highlightElement(this.htmlViewerTarget)
     }
 
-    if (this.hasFormatViewerTarget) {
-      const hasParserErrors = result.parseResult ? result.parseResult.recursiveErrors().length > 0 : false
+    const hasParserErrors = result.parseResult ? result.parseResult.recursiveErrors().length > 0 : false
+    const currentSource = this.editor ? this.editor.getValue() : this.inputTarget.value
+    const isWellFormatted = currentSource === result.formatted
 
+    if (this.hasFormatViewerTarget) {
       if (hasParserErrors) {
         this.formatSuccessTarget.classList.add('hidden')
         this.formatErrorTarget.classList.remove('hidden')
@@ -768,6 +774,11 @@ export default class extends Controller {
         pre.textContent = result.formatted || 'No formatted output available'
 
         Prism.highlightElement(pre)
+
+        if (this.hasFormatVerificationTarget) {
+          this.formatVerificationTarget.textContent = '⚠ Formatting Error'
+          this.formatVerificationTarget.className = 'px-2 py-1 text-xs rounded font-medium bg-red-600 text-red-100'
+        }
       } else {
         this.formatErrorTarget.classList.add('hidden')
         this.formatSuccessTarget.classList.remove('hidden')
@@ -775,6 +786,16 @@ export default class extends Controller {
         this.formatSuccessTarget.textContent = result.formatted || 'No formatted output available'
 
         Prism.highlightElement(this.formatSuccessTarget)
+
+        if (this.hasFormatVerificationTarget) {
+          if (isWellFormatted) {
+            this.formatVerificationTarget.textContent = '✓ Document is Well-formatted'
+            this.formatVerificationTarget.className = 'px-2 py-1 text-xs rounded font-medium bg-green-600 text-green-100'
+          } else {
+            this.formatVerificationTarget.textContent = '⚠ Document needs formatting'
+            this.formatVerificationTarget.className = 'px-2 py-1 text-xs rounded font-medium bg-yellow-600 text-yellow-100'
+          }
+        }
       }
     }
 
@@ -829,23 +850,27 @@ export default class extends Controller {
         const isError = typeof printedContent === 'string' && printedContent.startsWith('Error: Cannot print')
 
         if (isError) {
-          this.printerVerificationTarget.textContent = '⚠ Printer Error'
+          this.printerVerificationTarget.textContent = '⚠ Round-trip Failed'
           this.printerVerificationTarget.className = 'px-2 py-1 text-xs rounded font-medium bg-red-600 text-red-100'
+          this.updatePrinterVerificationTooltip('Source → Parse → AST → Print → Source failed due to printer error - unable to verify document preservation. Try enabling "Ignore errors" to attempt printing anyway.')
           this.hidePrinterDiff()
           this.hidePrinterLegend()
         } else if (!trackWhitespace) {
-          this.printerVerificationTarget.textContent = '⚠ Enable "Track whitespace" for accurate verification'
+          this.printerVerificationTarget.textContent = '⚠ Enable "Track whitespace"'
           this.printerVerificationTarget.className = 'px-2 py-1 text-xs rounded font-medium bg-yellow-600 text-yellow-100'
+          this.updatePrinterVerificationTooltip('Enable "Track whitespace" to verify no document details are lost during parsing (Source → Parse → AST → Print → Source)')
           this.hidePrinterDiff()
           this.hidePrinterLegend()
         } else if (isMatch) {
-          this.printerVerificationTarget.textContent = '✓ Perfect Match'
+          this.printerVerificationTarget.textContent = '✓ Perfect Round-trip'
           this.printerVerificationTarget.className = 'px-2 py-1 text-xs rounded font-medium bg-green-600 text-green-100'
+          this.updatePrinterVerificationTooltip('✓ No document details lost during parsing - Source → Parse → AST → Print → Source preserved everything')
           this.hidePrinterDiff()
           this.hidePrinterLegend()
         } else {
-          this.printerVerificationTarget.textContent = '✗ Differences Detected'
+          this.printerVerificationTarget.textContent = '✗ Round-trip Differences'
           this.printerVerificationTarget.className = 'px-2 py-1 text-xs rounded font-medium bg-red-600 text-red-100'
+          this.updatePrinterVerificationTooltip('⚠ Document details lost during parsing - differences below show what was lost in Source → Parse → AST → Print → Source')
           this.showPrinterDiff(currentSource, result.printed)
           this.showPrinterLegend()
         }
@@ -1344,6 +1369,50 @@ export default class extends Controller {
     if (this.hasCopyViewerTooltipTarget) {
       this.copyViewerTooltipTarget.classList.add('hidden')
     }
+  }
+
+  setupPrinterVerificationTooltip() {
+    if (this.hasPrinterVerificationTarget) {
+      this.printerVerificationTarget.addEventListener('mouseenter', this.showPrinterVerificationTooltip)
+      this.printerVerificationTarget.addEventListener('mouseleave', this.hidePrinterVerificationTooltip)
+    }
+  }
+
+  removePrinterVerificationTooltip() {
+    if (this.hasPrinterVerificationTarget) {
+      this.printerVerificationTarget.removeEventListener('mouseenter', this.showPrinterVerificationTooltip)
+      this.printerVerificationTarget.removeEventListener('mouseleave', this.hidePrinterVerificationTooltip)
+      this.hidePrinterVerificationTooltip()
+    }
+  }
+
+  showPrinterVerificationTooltip = () => {
+    if (!this.printerVerificationTooltipText) return
+
+    const existing = document.getElementById('printer-verification-tooltip')
+    if (existing) existing.remove()
+
+    const rect = this.printerVerificationTarget.getBoundingClientRect()
+
+    const tooltip = document.createElement('div')
+    tooltip.id = 'printer-verification-tooltip'
+    tooltip.className = 'fixed px-2 py-1 text-xs text-white bg-black rounded-md whitespace-nowrap z-[9999] pointer-events-none'
+    tooltip.textContent = this.printerVerificationTooltipText
+
+    tooltip.style.left = `${rect.left + (rect.width / 2)}px`
+    tooltip.style.top = `${rect.top - 8}px`
+    tooltip.style.transform = 'translate(-50%, -100%)'
+
+    document.body.appendChild(tooltip)
+  }
+
+  hidePrinterVerificationTooltip = () => {
+    const tooltip = document.getElementById('printer-verification-tooltip')
+    if (tooltip) tooltip.remove()
+  }
+
+  updatePrinterVerificationTooltip(text) {
+    this.printerVerificationTooltipText = text
   }
 
   showShareSuccessMessage() {
