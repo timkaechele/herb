@@ -30,7 +30,7 @@
     "prebuild": "yarn run clean",
     "build": "yarn generate:node-tests && tsc -b && rollup -c rollup.config.mjs",
     "watch": "tsc -b -w",
-    "test": "vitest",
+    "test": "vitest run",
     "test:watch": "vitest --watch",
     "test:nodes": "vitest run test/nodes",
     "generate:node-tests": "node scripts/generate-node-tests.mjs",
