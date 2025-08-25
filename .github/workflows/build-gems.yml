@@ -1,23 +1,28 @@
-name: Release
+name: Build Gems
 
 on:
   workflow_dispatch:
   push:
+    branches: [main]
     tags: ["v*"]
     paths:
       - "src/**"
       - "lib/**"
+      - "ext/**"
       - "Gemfile"
       - "Gemfile.lock"
       - "Makefile"
+      - "Rakefile"
       - ".ruby-version"
   pull_request:
     paths:
       - "src/**"
       - "lib/**"
+      - "ext/**"
       - "Gemfile"
       - "Gemfile.lock"
       - "Makefile"
+      - "Rakefile"
       - ".ruby-version"
 
 concurrency:
@@ -29,10 +34,10 @@ permissions:
 
 jobs:
   build:
-    name: Build Native Gems with Rake-Compiler-Dock
+    name: Build ${{ matrix.target }} gem
     strategy:
+      fail-fast: false
       matrix:
-        os: [ubuntu-latest]
         target:
           - default
           - aarch64-linux-gnu
@@ -41,9 +46,13 @@ jobs:
           - aarch64-linux-musl
           - x86_64-darwin
           - arm64-darwin
+          - arm-linux-gnu
+          - arm-linux-musl
+          - x86-linux-gnu
+          - x86-linux-musl
 
-    runs-on: ${{ matrix.os }}
-    timeout-minutes: 10
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
 
     steps:
       - uses: actions/checkout@v4
@@ -71,10 +80,18 @@ jobs:
       - name: Compile Herb
         run: bundle exec rake make
 
-      - name: Precompile gem
+      - name: Build gem
         run: |
           if [ "${{ matrix.target }}" = "default" ]; then
             bundle exec rake build
           else
             bundle exec rake gem:${{ matrix.target }}
           fi
+
+      - name: Upload gem artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: gem-${{ matrix.target }}
+          path: pkg/*.gem
+          if-no-files-found: error
+          retention-days: 7
