@@ -743,6 +743,15 @@ exports[`CLI Output Formatting > formats success output correctly 1`] = `
   Offenses     0 offenses"
 `;
 
+exports[`CLI Output Formatting > handles boolean attributes 1`] = `
+"✓ test/fixtures/boolean-attribute.html.erb - No issues found
+
+
+ Summary:
+  Checked      1 file
+  Offenses     0 offenses"
+`;
+
 exports[`CLI Output Formatting > handles multiple errors correctly 1`] = `
 "[error] Opening tag name \`<SPAN>\` should be lowercase. Use \`<span>\` instead. (html-tag-name-lowercase)
 
