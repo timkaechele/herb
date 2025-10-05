@@ -124,7 +124,7 @@ export class CLI {
   }
 
   protected async beforeProcess(): Promise<void> {
-    await Herb.load()
+    // Hook for subclasses to add custom output before processing
   }
 
   protected async afterProcess(_results: any, _outputOptions: any): Promise<void> {
@@ -132,6 +132,8 @@ export class CLI {
   }
 
   async run() {
+    await Herb.load()
+
     const startTime = Date.now()
     const startDate = new Date()
 
