@@ -25,7 +25,6 @@ void buffer_append_char(buffer_T* buffer, char character);
 void buffer_append_repeated(buffer_T* buffer, char character, size_t length);
 void buffer_append_whitespace(buffer_T* buffer, size_t length);
 void buffer_prepend(buffer_T* buffer, const char* text);
-void buffer_concat(buffer_T* destination, buffer_T* source);
 
 char* buffer_value(const buffer_T* buffer);
 
