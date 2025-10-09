@@ -45,24 +45,6 @@ TEST(test_buffer_prepend)
   free(buffer.value);
 END
 
-// Test concatenating two buffers
-TEST(test_buffer_concat)
-  buffer_T buffer1;
-  buffer_init(&buffer1, 1024);
-  buffer_T buffer2;
-  buffer_init(&buffer2, 1024);
-
-  buffer_append(&buffer1, "Hello");
-  buffer_append(&buffer2, " World");
-
-  buffer_concat(&buffer1, &buffer2);
-  ck_assert_str_eq(buffer1.value, "Hello World");
-  ck_assert_int_eq(buffer1.length, 11);
-
-  free(buffer1.value);
-  free(buffer2.value);
-END
-
 // Test increating
 TEST(test_buffer_increase_capacity)
   buffer_T buffer;
@@ -257,7 +239,6 @@ TCase *buffer_tests(void) {
   tcase_add_test(buffer, test_buffer_init);
   tcase_add_test(buffer, test_buffer_append);
   tcase_add_test(buffer, test_buffer_prepend);
-  tcase_add_test(buffer, test_buffer_concat);
   tcase_add_test(buffer, test_buffer_increase_capacity);
   tcase_add_test(buffer, test_buffer_expand_capacity);
   tcase_add_test(buffer, test_buffer_expand_if_needed);

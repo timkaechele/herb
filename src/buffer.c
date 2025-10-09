@@ -212,16 +212,6 @@ void buffer_prepend(buffer_T* buffer, const char* text) {
   buffer->length += text_length;
 }
 
-void buffer_concat(buffer_T* destination, buffer_T* source) {
-  if (source->length == 0) { return; }
-  if (!buffer_expand_if_needed(destination, source->length)) { return; }
-
-  memcpy(destination->value + destination->length, source->value, source->length);
-
-  destination->length += source->length;
-  destination->value[destination->length] = '\0';
-}
-
 bool buffer_has_capacity(buffer_T* buffer, const size_t required_length) {
   return (buffer->length + required_length <= buffer->capacity);
 }
