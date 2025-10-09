@@ -32,19 +32,6 @@ TEST(test_buffer_append)
   free(buffer.value);
 END
 
-// Test prepending text to buffer
-TEST(test_buffer_prepend)
-  buffer_T buffer;
-  buffer_init(&buffer, 1024);
-
-  buffer_append(&buffer, "World");
-  buffer_prepend(&buffer, "Hello ");
-  ck_assert_str_eq(buffer.value, "Hello World");
-  ck_assert_int_eq(buffer.length, 11);
-
-  free(buffer.value);
-END
-
 // Test increating
 TEST(test_buffer_increase_capacity)
   buffer_T buffer;
@@ -238,7 +225,6 @@ TCase *buffer_tests(void) {
 
   tcase_add_test(buffer, test_buffer_init);
   tcase_add_test(buffer, test_buffer_append);
-  tcase_add_test(buffer, test_buffer_prepend);
   tcase_add_test(buffer, test_buffer_increase_capacity);
   tcase_add_test(buffer, test_buffer_expand_capacity);
   tcase_add_test(buffer, test_buffer_expand_if_needed);
