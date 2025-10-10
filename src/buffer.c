@@ -49,26 +49,6 @@ size_t buffer_sizeof(void) {
 }
 
 /**
- * Increases the capacity of the buffer if needed to accommodate additional content.
- * This function only handles memory allocation and does not modify the buffer content
- * or null termination.
- *
- * @param buffer The buffer to increase capacity for
- * @param additional_capacity The additional length needed beyond current buffer capacity
- * @return true if capacity was increased, false if reallocation failed
- */
-bool buffer_increase_capacity(buffer_T* buffer, const size_t additional_capacity) {
-  if (additional_capacity + 1 >= SIZE_MAX) {
-    fprintf(stderr, "Error: Buffer capacity would overflow system limits.\n");
-    exit(1);
-  }
-
-  const size_t new_capacity = buffer->capacity + additional_capacity;
-
-  return buffer_resize(buffer, new_capacity);
-}
-
-/**
  * Resizes the capacity of the buffer to the specified new capacity.
  *
  * @param buffer The buffer to resize

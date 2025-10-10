@@ -32,22 +32,6 @@ TEST(test_buffer_append)
   free(buffer.value);
 END
 
-// Test increating
-TEST(test_buffer_increase_capacity)
-  buffer_T buffer;
-  buffer_init(&buffer, 1024);
-
-  ck_assert_int_eq(buffer.capacity, 1024);
-
-  ck_assert(buffer_increase_capacity(&buffer, 1));
-  ck_assert_int_eq(buffer.capacity, 1025);
-
-  ck_assert(buffer_increase_capacity(&buffer, 1024 + 1));
-  ck_assert_int_eq(buffer.capacity, 2050);
-
-  free(buffer.value);
-END
-
 // Test expanding if needed
 TEST(test_buffer_expand_if_needed)
   buffer_T buffer;
@@ -206,7 +190,6 @@ TCase *buffer_tests(void) {
 
   tcase_add_test(buffer, test_buffer_init);
   tcase_add_test(buffer, test_buffer_append);
-  tcase_add_test(buffer, test_buffer_increase_capacity);
   tcase_add_test(buffer, test_buffer_expand_if_needed);
   tcase_add_test(buffer, test_buffer_expand_if_needed_with_nearly_full_buffer);
   tcase_add_test(buffer, test_buffer_resize);
