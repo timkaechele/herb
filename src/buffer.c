@@ -94,17 +94,6 @@ bool buffer_resize(buffer_T* buffer, const size_t new_capacity) {
   return true;
 }
 
-/**
- * Expands the capacity of the buffer by doubling its current capacity.
- * This function is a convenience function that calls buffer_increase_capacity
- * with a factor of 2.
- *
- * @param buffer The buffer to expand capacity for
- * @return true if capacity was increased, false if reallocation failed
- */
-bool buffer_expand_capacity(buffer_T* buffer) {
-  return buffer_resize(buffer, buffer->capacity * 2);
-}
 
 /**
  * Expands the capacity of the buffer if needed to accommodate additional content.
