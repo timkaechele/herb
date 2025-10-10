@@ -44,7 +44,7 @@ size_t buffer_sizeof(void) {
  * @param new_capacity The new capacity to resize the buffer to
  * @return true if capacity was resized, false if reallocation failed
  */
-bool buffer_resize(buffer_T* buffer, const size_t new_capacity) {
+static bool buffer_resize(buffer_T* buffer, const size_t new_capacity) {
   if (new_capacity + 1 >= SIZE_MAX) {
     fprintf(stderr, "Error: Buffer capacity would overflow system limits.\n");
     exit(1);

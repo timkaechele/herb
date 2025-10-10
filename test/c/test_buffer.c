@@ -69,25 +69,6 @@ TEST(test_buffer_expand_if_needed_with_nearly_full_buffer)
   free(buffer.value);
 END
 
-// Test resizing buffer
-TEST(test_buffer_resize)
-  buffer_T buffer;
-  buffer_init(&buffer, 1024);
-
-  ck_assert_int_eq(buffer.capacity, 1024);
-
-  ck_assert(buffer_resize(&buffer, 2048));
-  ck_assert_int_eq(buffer.capacity, 2048);
-
-  ck_assert(buffer_resize(&buffer, 4096));
-  ck_assert_int_eq(buffer.capacity, 4096);
-
-  ck_assert(buffer_resize(&buffer, 8192));
-  ck_assert_int_eq(buffer.capacity, 8192);
-
-  free(buffer.value);
-END
-
 // Test clearing buffer without freeing memory
 TEST(test_buffer_clear)
   buffer_T buffer;
@@ -192,7 +173,6 @@ TCase *buffer_tests(void) {
   tcase_add_test(buffer, test_buffer_append);
   tcase_add_test(buffer, test_buffer_expand_if_needed);
   tcase_add_test(buffer, test_buffer_expand_if_needed_with_nearly_full_buffer);
-  tcase_add_test(buffer, test_buffer_resize);
   tcase_add_test(buffer, test_buffer_clear);
   tcase_add_test(buffer, test_buffer_free);
   tcase_add_test(buffer, test_buffer_utf8_integrity);
