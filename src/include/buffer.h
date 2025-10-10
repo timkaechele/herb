@@ -15,7 +15,6 @@ buffer_T* buffer_new(size_t capacity);
 
 bool buffer_increase_capacity(buffer_T* buffer, size_t additional_capacity);
 bool buffer_has_capacity(buffer_T* buffer, size_t required_length);
-bool buffer_expand_capacity(buffer_T* buffer);
 bool buffer_expand_if_needed(buffer_T* buffer, size_t required_length);
 bool buffer_resize(buffer_T* buffer, size_t new_capacity);
 
