@@ -21,17 +21,6 @@ bool buffer_init(buffer_T* buffer, const size_t capacity) {
   return true;
 }
 
-buffer_T* buffer_new(const size_t capacity) {
-  buffer_T* buffer = malloc(sizeof(buffer_T));
-
-  if (!buffer_init(buffer, capacity)) {
-    free(buffer);
-    return NULL;
-  }
-
-  return buffer;
-}
-
 char* buffer_value(const buffer_T* buffer) {
   return buffer->value;
 }
