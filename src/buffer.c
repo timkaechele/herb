@@ -66,6 +66,8 @@ static bool buffer_resize(buffer_T* buffer, const size_t new_capacity) {
 static bool buffer_has_capacity(buffer_T* buffer, const size_t required_length) {
   return (buffer->length + required_length <= buffer->capacity);
 }
+
+static bool buffer_expand_if_needed(buffer_T* buffer, const size_t required_length) {
   if (buffer_has_capacity(buffer, required_length)) { return true; }
 
   bool should_double_capacity = required_length < buffer->capacity;
