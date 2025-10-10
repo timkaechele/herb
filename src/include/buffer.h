@@ -12,7 +12,6 @@ typedef struct BUFFER_STRUCT {
 
 bool buffer_init(buffer_T* buffer, size_t capacity);
 
-bool buffer_has_capacity(buffer_T* buffer, size_t required_length);
 bool buffer_expand_if_needed(buffer_T* buffer, size_t required_length);
 
 void buffer_append(buffer_T* buffer, const char* text);
