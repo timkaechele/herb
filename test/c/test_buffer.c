@@ -42,12 +42,12 @@ TEST(test_buffer_resize_behavior)
   buffer_append_char(&buffer, ' ');
   ck_assert_int_eq(buffer.capacity, 1024);
 
-  buffer_append_repeated(&buffer, ' ', 1023);
+  buffer_append_whitespace(&buffer, 1023);
   ck_assert_int_eq(buffer.capacity, 1024);
 
   ck_assert_int_eq(buffer.capacity, 1024);
 
-  buffer_append_repeated(&buffer, ' ', 1025);
+  buffer_append_whitespace(&buffer, 1025);
   ck_assert_int_eq(buffer.capacity, 3074);
 
   free(buffer.value);
@@ -59,9 +59,9 @@ TEST(test_buffer_resize_behavior_with_nearly_full_buffer)
 
   ck_assert_int_eq(buffer.capacity, 1024);
 
-  buffer_append_repeated(&buffer, ' ', 1023);
+  buffer_append_whitespace(&buffer, 1023);
   ck_assert_int_eq(buffer.capacity, 1024);
-  buffer_append_repeated(&buffer, ' ', 2);
+  buffer_append_whitespace(&buffer, 2);
 
   ck_assert_int_eq(buffer.capacity, 2048);
 

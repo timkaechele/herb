@@ -136,7 +136,7 @@ void buffer_append_char(buffer_T* buffer, const char character) {
   buffer_append(buffer, string);
 }
 
-void buffer_append_repeated(buffer_T* buffer, const char character, size_t length) {
+static void buffer_append_repeated(buffer_T* buffer, const char character, size_t length) {
   if (!buffer || length == 0) { return; }
   if (!buffer_expand_if_needed(buffer, length)) { return; }
 
