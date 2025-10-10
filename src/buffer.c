@@ -94,16 +94,6 @@ bool buffer_resize(buffer_T* buffer, const size_t new_capacity) {
   return true;
 }
 
-
-/**
- * Expands the capacity of the buffer if needed to accommodate additional content.
- * This function is a convenience function that calls buffer_has_capacity and
- * buffer_expand_capacity.
- *
- * @param buffer The buffer to expand capacity for
- * @param required_length The additional length needed beyond current buffer capacity
- * @return true if capacity was increased, false if reallocation failed
- */
 bool buffer_expand_if_needed(buffer_T* buffer, const size_t required_length) {
   if (buffer_has_capacity(buffer, required_length)) { return true; }
 
