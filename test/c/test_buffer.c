@@ -33,28 +33,27 @@ TEST(test_buffer_append)
 END
 
 // Test expanding if needed
-TEST(test_buffer_expand_if_needed)
+TEST(test_buffer_resize_behavior)
   buffer_T buffer;
   buffer_init(&buffer, 1024);
 
   ck_assert_int_eq(buffer.capacity, 1024);
 
-  ck_assert(buffer_expand_if_needed(&buffer, 1));
+  buffer_append_char(&buffer, ' ');
   ck_assert_int_eq(buffer.capacity, 1024);
 
-  ck_assert(buffer_expand_if_needed(&buffer, 1023));
+  buffer_append_repeated(&buffer, ' ', 1023);
   ck_assert_int_eq(buffer.capacity, 1024);
 
-  ck_assert(buffer_expand_if_needed(&buffer, 1024));
   ck_assert_int_eq(buffer.capacity, 1024);
 
-  ck_assert(buffer_expand_if_needed(&buffer, 1025));
-  ck_assert_int_eq(buffer.capacity, 3074); // initial capacity (1024) + (required (1025) * 2) = 3074
+  buffer_append_repeated(&buffer, ' ', 1025);
+  ck_assert_int_eq(buffer.capacity, 3074);
 
   free(buffer.value);
 END
 
-TEST(test_buffer_expand_if_needed_with_nearly_full_buffer)
+TEST(test_buffer_resize_behavior_with_nearly_full_buffer)
   buffer_T buffer;
   buffer_init(&buffer, 1024);
 
@@ -62,8 +61,8 @@ TEST(test_buffer_expand_if_needed_with_nearly_full_buffer)
 
   buffer_append_repeated(&buffer, ' ', 1023);
   ck_assert_int_eq(buffer.capacity, 1024);
+  buffer_append_repeated(&buffer, ' ', 2);
 
-  ck_assert(buffer_expand_if_needed(&buffer, 2));
   ck_assert_int_eq(buffer.capacity, 2048);
 
   free(buffer.value);
@@ -171,8 +170,8 @@ TCase *buffer_tests(void) {
 
   tcase_add_test(buffer, test_buffer_init);
   tcase_add_test(buffer, test_buffer_append);
-  tcase_add_test(buffer, test_buffer_expand_if_needed);
-  tcase_add_test(buffer, test_buffer_expand_if_needed_with_nearly_full_buffer);
+  tcase_add_test(buffer, test_buffer_resize_behavior);
+  tcase_add_test(buffer, test_buffer_resize_behavior_with_nearly_full_buffer);
   tcase_add_test(buffer, test_buffer_clear);
   tcase_add_test(buffer, test_buffer_free);
   tcase_add_test(buffer, test_buffer_utf8_integrity);
