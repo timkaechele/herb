@@ -43,7 +43,6 @@ bool is_void_element(const char* tag_name) {
 char* html_closing_tag_string(const char* tag_name) {
   if (tag_name == NULL) { return herb_strdup("</>"); }
 
-
   buffer_T buffer;
   buffer_init(&buffer, strlen(tag_name) + 3);
 
