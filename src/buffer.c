@@ -63,7 +63,9 @@ static bool buffer_resize(buffer_T* buffer, const size_t new_capacity) {
   return true;
 }
 
-bool buffer_expand_if_needed(buffer_T* buffer, const size_t required_length) {
+static bool buffer_has_capacity(buffer_T* buffer, const size_t required_length) {
+  return (buffer->length + required_length <= buffer->capacity);
+}
   if (buffer_has_capacity(buffer, required_length)) { return true; }
 
   bool should_double_capacity = required_length < buffer->capacity;
@@ -144,10 +146,6 @@ void buffer_append_repeated(buffer_T* buffer, const char character, size_t lengt
 
 void buffer_append_whitespace(buffer_T* buffer, const size_t length) {
   buffer_append_repeated(buffer, ' ', length);
-}
-
-bool buffer_has_capacity(buffer_T* buffer, const size_t required_length) {
-  return (buffer->length + required_length <= buffer->capacity);
 }
 
 void buffer_clear(buffer_T* buffer) {
