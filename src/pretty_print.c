@@ -54,7 +54,7 @@ void pretty_print_quoted_property(
 ) {
   char* quoted = quoted_string(value);
   pretty_print_property(name, quoted, indent, relative_indent, last_property, buffer);
-  free(quoted);
+
 }
 
 void pretty_print_boolean_property(
@@ -93,7 +93,7 @@ void pretty_print_size_t_property(
   char* string = size_t_to_string(value);
   buffer_append(buffer, string);
   buffer_append(buffer, "\n");
-  free(string);
+
 }
 
 void pretty_print_array(
@@ -212,7 +212,7 @@ void pretty_print_token_property(
   if (token != NULL && token->value != NULL) {
     char* quoted = quoted_string(token->value);
     buffer_append(buffer, quoted);
-    free(quoted);
+
 
     buffer_append(buffer, " ");
     pretty_print_location(token->location, buffer);
@@ -242,11 +242,6 @@ void pretty_print_string_property(
   }
 
   pretty_print_property(name, value, indent, relative_indent, last_property, buffer);
-
-  if (string != NULL) {
-    if (escaped != NULL) { free(escaped); }
-    if (quoted != NULL) { free(quoted); }
-  }
 }
 
 void pretty_print_analyzed_ruby(analyzed_ruby_T* analyzed, const char* source) {

@@ -1063,7 +1063,7 @@ void herb_analyze_parse_tree(AST_DOCUMENT_NODE_T* document, const char* source) 
   herb_analyze_parse_errors(document, source);
 
   array_free(&context->ruby_context_stack);
-  free(context);
+
 }
 
 void herb_analyze_parse_errors(AST_DOCUMENT_NODE_T* document, const char* source) {
@@ -1087,5 +1087,5 @@ void herb_analyze_parse_errors(AST_DOCUMENT_NODE_T* document, const char* source
   pm_node_destroy(&parser, root);
   pm_parser_free(&parser);
   pm_options_free(&options);
-  free(extracted_ruby);
+
 }

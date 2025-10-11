@@ -43,7 +43,7 @@ array_T* herb_lex_file(const char* path) {
   char* source = herb_read_file(path);
   array_T* tokens = herb_lex(source);
 
-  free(source);
+
 
   return tokens;
 }
@@ -56,7 +56,7 @@ void herb_lex_to_buffer(const char* source, buffer_T* output) {
 
     char* type = token_to_string(token);
     buffer_append(output, type);
-    free(type);
+
 
     buffer_append(output, "\n");
   }

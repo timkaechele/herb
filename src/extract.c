@@ -150,7 +150,7 @@ char* herb_extract_from_file(const char* path, const herb_extract_language_T lan
   char* source = herb_read_file(path);
   char* output = herb_extract(source, language);
 
-  free(source);
+
 
   return output;
 }

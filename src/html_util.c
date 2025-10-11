@@ -36,7 +36,7 @@ bool is_void_element(const char* tag_name) {
  * char* tag = html_closing_tag_string("div");
  * if (tag) {
  *   printf("%s\n", tag); // Prints: </div>
- *   free(tag);
+ *
  * }
  * @endcode
  */
@@ -66,7 +66,7 @@ char* html_closing_tag_string(const char* tag_name) {
  * char* tag = html_self_closing_tag_string("br");
  * if (tag) {
  *   printf("%s\n", tag); // Prints: <br />
- *   free(tag);
+ *
  * }
  * @endcode
  */

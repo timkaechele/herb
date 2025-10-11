@@ -113,7 +113,7 @@ char* token_to_string(const token_T* token) {
     token->location.end.column
   );
 
-  free(escaped);
+
 
   return string;
 }
@@ -137,7 +137,7 @@ token_T* token_copy(token_T* token) {
     new_token->value = herb_strdup(token->value);
 
     if (!new_token->value) {
-      free(new_token);
+
       return NULL;
     }
   } else {
@@ -153,8 +153,4 @@ token_T* token_copy(token_T* token) {
 
 void token_free(token_T* token) {
   if (!token) { return; }
-
-  if (token->value != NULL) { free(token->value); }
-
-  free(token);
 }

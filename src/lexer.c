@@ -117,7 +117,7 @@ static token_T* lexer_advance_with_next(lexer_T* lexer, size_t count, token_type
   collected[count] = '\0';
 
   token_T* token = token_init(collected, type, lexer);
-  free(collected);
+
 
   return token;
 }
@@ -137,7 +137,7 @@ static token_T* lexer_advance_utf8_character(lexer_T* lexer, const token_type_T 
 
   for (int i = 0; i < char_byte_length; i++) {
     if (lexer->current_position + i >= lexer->source_length) {
-      free(utf8_char);
+
       return lexer_advance_current(lexer, type);
     }
 
@@ -150,7 +150,7 @@ static token_T* lexer_advance_utf8_character(lexer_T* lexer, const token_type_T 
 
   token_T* token = token_init(utf8_char, type, lexer);
 
-  free(utf8_char);
+
 
   return token;
 }
@@ -177,7 +177,7 @@ static token_T* lexer_parse_whitespace(lexer_T* lexer) {
 
   token_T* token = token_init(buffer.value, TOKEN_WHITESPACE, lexer);
 
-  free(buffer.value);
+
 
   return token;
 }
@@ -196,7 +196,7 @@ static token_T* lexer_parse_identifier(lexer_T* lexer) {
 
   token_T* token = token_init(buffer.value, TOKEN_IDENTIFIER, lexer);
 
-  free(buffer.value);
+
 
   return token;
 }
@@ -242,7 +242,7 @@ static token_T* lexer_parse_erb_content(lexer_T* lexer) {
 
   token_T* token = token_init(buffer.value, TOKEN_ERB_CONTENT, lexer);
 
-  free(buffer.value);
+
 
   return token;
 }

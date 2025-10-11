@@ -94,7 +94,7 @@ static VALUE Herb_extract_ruby(VALUE self, VALUE source) {
   herb_extract_ruby_to_buffer(string, &output);
 
   VALUE result = rb_utf8_str_new_cstr(output.value);
-  free(output.value);
+  // free(output.value);
 
   return result;
 }
@@ -108,7 +108,7 @@ static VALUE Herb_extract_html(VALUE self, VALUE source) {
   herb_extract_html_to_buffer(string, &output);
 
   VALUE result = rb_utf8_str_new_cstr(output.value);
-  free(output.value);
+  // free(output.value);
 
   return result;
 }

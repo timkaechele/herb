@@ -87,7 +87,7 @@ VALUE read_file_to_ruby_string(const char* file_path) {
   char* source = herb_read_file(file_path);
   VALUE source_value = rb_utf8_str_new_cstr(source);
 
-  free(source);
+  // free(source);
 
   return source_value;
 }

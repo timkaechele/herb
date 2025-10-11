@@ -161,6 +161,6 @@ void buffer_clear(buffer_T* buffer) {
 void buffer_free(buffer_T** buffer) {
   if (!buffer || !*buffer) { return; }
 
-  free(*buffer);
+
   *buffer = NULL;
 }

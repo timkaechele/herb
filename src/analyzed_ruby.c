@@ -40,5 +40,5 @@ void free_analyzed_ruby(analyzed_ruby_T* analyzed) {
 
   pm_parser_free(&analyzed->parser);
 
-  free(analyzed);
+
 }

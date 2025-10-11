@@ -16,7 +16,7 @@ array_T* array_init(const size_t capacity) {
   array->items = malloc(capacity * sizeof(void*));
 
   if (!array->items) {
-    free(array);
+
     return NULL;
   }
 
@@ -129,8 +129,8 @@ size_t array_capacity(const array_T* array) {
 void array_free(array_T** array) {
   if (!array || !*array) { return; }
 
-  free((*array)->items);
-  free(*array);
+
+
 
   *array = NULL;
 }
