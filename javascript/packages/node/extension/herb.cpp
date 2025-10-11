@@ -156,7 +156,7 @@ napi_value Herb_extract_ruby(napi_env env, napi_callback_info info) {
   if (!string) { return nullptr; }
 
   buffer_T output;
-  if (!buffer_init(&output, strlen(string))) {
+  if (!buffer_init(hb_arena_global(), &output, strlen(string))) {
     free(string);
     napi_throw_error(env, nullptr, "Failed to initialize buffer");
     return nullptr;
@@ -186,7 +186,7 @@ napi_value Herb_extract_html(napi_env env, napi_callback_info info) {
   if (!string) { return nullptr; }
 
   buffer_T output;
-  if (!buffer_init(&output, strlen(string))) {
+  if (!buffer_init(hb_arena_global(), &output, strlen(string))) {
     free(string);
     napi_throw_error(env, nullptr, "Failed to initialize buffer");
     return nullptr;

@@ -50,7 +50,7 @@ static AST_CDATA_NODE_T* parser_parse_cdata(parser_T* parser) {
   array_T* errors = array_init(8);
   array_T* children = array_init(8);
   buffer_T content;
-  buffer_init(&content, 128);
+  buffer_init(hb_arena_global(), &content, 128);
 
   token_T* tag_opening = parser_consume_expected(parser, TOKEN_CDATA_START, errors);
   position_T start = parser->current_token->location.start;
@@ -95,7 +95,7 @@ static AST_HTML_COMMENT_NODE_T* parser_parse_html_comment(parser_T* parser) {
   position_T start = parser->current_token->location.start;
 
   buffer_T comment;
-  buffer_init(&comment, 512);
+  buffer_init(hb_arena_global(), &comment, 512);
 
   while (token_is_none_of(parser, TOKEN_HTML_COMMENT_END, TOKEN_EOF)) {
     if (token_is(parser, TOKEN_ERB_START)) {
@@ -138,7 +138,7 @@ static AST_HTML_DOCTYPE_NODE_T* parser_parse_html_doctype(parser_T* parser) {
   array_T* errors = array_init(8);
   array_T* children = array_init(8);
   buffer_T content;
-  buffer_init(&content, 64);
+  buffer_init(hb_arena_global(), &content, 64);
 
   token_T* tag_opening = parser_consume_expected(parser, TOKEN_HTML_DOCTYPE, errors);
 
@@ -183,7 +183,7 @@ static AST_XML_DECLARATION_NODE_T* parser_parse_xml_declaration(parser_T* parser
   array_T* errors = array_init(8);
   array_T* children = array_init(8);
   buffer_T content;
-  buffer_init(&content, 64);
+  buffer_init(hb_arena_global(), &content, 64);
 
   token_T* tag_opening = parser_consume_expected(parser, TOKEN_XML_DECLARATION, errors);
 
@@ -230,7 +230,7 @@ static AST_HTML_TEXT_NODE_T* parser_parse_text_content(parser_T* parser, array_T
   position_T start = parser->current_token->location.start;
 
   buffer_T content;
-  buffer_init(&content, 2048);
+  buffer_init(hb_arena_global(), &content, 2048);
 
   while (token_is_none_of(
     parser,
@@ -283,7 +283,7 @@ static AST_HTML_ATTRIBUTE_NAME_NODE_T* parser_parse_html_attribute_name(parser_T
   array_T* errors = array_init(8);
   array_T* children = array_init(8);
   buffer_T buffer;
-  buffer_init(&buffer, 128);
+  buffer_init(hb_arena_global(), &buffer, 128);
   position_T start = parser->current_token->location.start;
 
   while (token_is_none_of(
@@ -340,7 +340,7 @@ static AST_HTML_ATTRIBUTE_VALUE_NODE_T* parser_parse_quoted_html_attribute_value
   array_T* errors
 ) {
   buffer_T buffer;
-  buffer_init(&buffer, 512);
+  buffer_init(hb_arena_global(), &buffer, 512);
   token_T* opening_quote = parser_consume_expected(parser, TOKEN_QUOTE, errors);
   position_T start = parser->current_token->location.start;
 
@@ -567,7 +567,7 @@ static AST_HTML_ATTRIBUTE_NODE_T* parser_parse_html_attribute(parser_T* parser) 
 
     if (has_equals) {
       buffer_T equals_buffer;
-      buffer_init(&equals_buffer, 256);
+      buffer_init(hb_arena_global(), &equals_buffer, 256);
       position_T equals_start = { 0 };
       position_T equals_end = { 0 };
       uint32_t range_start = 0;
@@ -1020,7 +1020,7 @@ static AST_ERB_CONTENT_NODE_T* parser_parse_erb_tag(parser_T* parser) {
 
 static void parser_parse_foreign_content(parser_T* parser, array_T* children, array_T* errors) {
   buffer_T content;
-  buffer_init(&content, 1024);
+  buffer_init(hb_arena_global(), &content, 1024);
   position_T start = parser->current_token->location.start;
   const char* expected_closing_tag = parser_get_foreign_content_closing_tag(parser->foreign_content_type);
 

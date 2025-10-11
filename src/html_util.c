@@ -44,7 +44,7 @@ char* html_closing_tag_string(const char* tag_name) {
   if (tag_name == NULL) { return herb_strdup("</>"); }
 
   buffer_T buffer;
-  buffer_init(&buffer, strlen(tag_name) + 3);
+  buffer_init(hb_arena_global(), &buffer, strlen(tag_name) + 3);
 
   buffer_append_char(&buffer, '<');
   buffer_append_char(&buffer, '/');
@@ -74,7 +74,7 @@ char* html_self_closing_tag_string(const char* tag_name) {
   if (tag_name == NULL) { return herb_strdup("< />"); }
 
   buffer_T buffer;
-  buffer_init(&buffer, strlen(tag_name) + 4);
+  buffer_init(hb_arena_global(), &buffer, strlen(tag_name) + 4);
 
   buffer_append_char(&buffer, '<');
   buffer_append(&buffer, tag_name);

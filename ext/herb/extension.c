@@ -89,7 +89,7 @@ static VALUE Herb_extract_ruby(VALUE self, VALUE source) {
   char* string = (char*) check_string(source);
   buffer_T output;
 
-  if (!buffer_init(&output, strlen(string))) { return Qnil; }
+  if (!buffer_init(hb_arena_global(), &output, strlen(string))) { return Qnil; }
 
   herb_extract_ruby_to_buffer(string, &output);
 
@@ -103,7 +103,7 @@ static VALUE Herb_extract_html(VALUE self, VALUE source) {
   char* string = (char*) check_string(source);
   buffer_T output;
 
-  if (!buffer_init(&output, strlen(string))) { return Qnil; }
+  if (!buffer_init(hb_arena_global(), &output, strlen(string))) { return Qnil; }
 
   herb_extract_html_to_buffer(string, &output);
 

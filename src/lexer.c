@@ -167,7 +167,7 @@ static token_T* lexer_match_and_advance(lexer_T* lexer, const char* value, const
 
 static token_T* lexer_parse_whitespace(lexer_T* lexer) {
   buffer_T buffer;
-  buffer_init(&buffer, 128);
+  buffer_init(hb_arena_global(), &buffer, 128);
 
   while (isspace(lexer->current_character) && lexer->current_character != '\n' && lexer->current_character != '\r'
          && !lexer_eof(lexer)) {
@@ -184,7 +184,7 @@ static token_T* lexer_parse_whitespace(lexer_T* lexer) {
 
 static token_T* lexer_parse_identifier(lexer_T* lexer) {
   buffer_T buffer;
-  buffer_init(&buffer, 128);
+  buffer_init(hb_arena_global(), &buffer, 128);
 
   while ((isalnum(lexer->current_character) || lexer->current_character == '-' || lexer->current_character == '_'
           || lexer->current_character == ':')
@@ -218,7 +218,7 @@ static token_T* lexer_parse_erb_open(lexer_T* lexer) {
 
 static token_T* lexer_parse_erb_content(lexer_T* lexer) {
   buffer_T buffer;
-  buffer_init(&buffer, 1024);
+  buffer_init(hb_arena_global(), &buffer, 1024);
 
   while (!lexer_peek_erb_end(lexer, 0)) {
     if (lexer_eof(lexer)) {

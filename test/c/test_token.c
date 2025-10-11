@@ -9,7 +9,7 @@ END
 
 TEST(test_token_to_string)
   buffer_T output;
-  buffer_init(&output, 1024);
+  buffer_init(hb_arena_global(), &output, 1024);
   herb_lex_to_buffer("hello", &output);
 
   ck_assert_str_eq(

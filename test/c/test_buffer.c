@@ -5,7 +5,7 @@
 TEST(test_buffer_init)
   buffer_T buffer;
 
-  ck_assert(buffer_init(&buffer, 1024));
+  ck_assert(buffer_init(hb_arena_global(), &buffer, 1024));
   ck_assert_int_eq(buffer.capacity, 1024);
   ck_assert_int_eq(buffer.length, 0);
   ck_assert_ptr_nonnull(buffer.value);
@@ -17,7 +17,7 @@ END
 // Test appending text to buffer
 TEST(test_buffer_append)
   buffer_T buffer;
-  buffer_init(&buffer, 1024);
+  buffer_init(hb_arena_global(), &buffer, 1024);
 
   ck_assert_str_eq(buffer.value, "");
 
@@ -35,7 +35,7 @@ END
 // Test expanding if needed
 TEST(test_buffer_resize_behavior)
   buffer_T buffer;
-  buffer_init(&buffer, 1024);
+  buffer_init(hb_arena_global(), &buffer, 1024);
 
   ck_assert_int_eq(buffer.capacity, 1024);
 
@@ -55,7 +55,7 @@ END
 
 TEST(test_buffer_resize_behavior_with_nearly_full_buffer)
   buffer_T buffer;
-  buffer_init(&buffer, 1024);
+  buffer_init(hb_arena_global(), &buffer, 1024);
 
   ck_assert_int_eq(buffer.capacity, 1024);
 
@@ -71,7 +71,7 @@ END
 // Test clearing buffer without freeing memory
 TEST(test_buffer_clear)
   buffer_T buffer;
-  buffer_init(&buffer, 1024);
+  buffer_init(hb_arena_global(), &buffer, 1024);
 
   ck_assert_int_eq(buffer.capacity, 1024);
 
@@ -92,7 +92,7 @@ END
 // Test freeing buffer
 TEST(test_buffer_free)
   buffer_T buffer;
-  buffer_init(&buffer, 1024);
+  buffer_init(hb_arena_global(), &buffer, 1024);
 
   buffer_append(&buffer, "Test");
   ck_assert_int_eq(buffer.length, 4);
@@ -110,7 +110,7 @@ END
 // Test buffer UTF-8 integrity
 TEST(test_buffer_utf8_integrity)
   buffer_T buffer;
-  buffer_init(&buffer, 1024);
+  buffer_init(hb_arena_global(), &buffer, 1024);
 
   // UTF-8 String
   const char *utf8_text = "こんにちは";
@@ -127,7 +127,7 @@ END
 // Test: Buffer Appending UTF-8 Characters
 TEST(test_buffer_append_utf8)
   buffer_T buffer;
-  buffer_init(&buffer, 1024);
+  buffer_init(hb_arena_global(), &buffer, 1024);
 
   // Append UTF-8 string
   buffer_append(&buffer, "こんにちは"); // "Hello" in Japanese
@@ -141,7 +141,7 @@ END
 // Test buffer length correctness
 TEST(test_buffer_length_correctness)
   buffer_T buffer;
-  buffer_init(&buffer, 1024);
+  buffer_init(hb_arena_global(), &buffer, 1024);
 
   buffer_append(&buffer, "Short");
   size_t length = buffer_length(&buffer);
@@ -157,7 +157,7 @@ END
 // Test: Buffer Null-Termination
 TEST(test_buffer_null_termination)
   buffer_T buffer;
-  buffer_init(&buffer, 1024);
+  buffer_init(hb_arena_global(), &buffer, 1024);
 
   buffer_append(&buffer, "Test");
   ck_assert(buffer_value(&buffer)[buffer_length(&buffer)] == '\0'); // Ensure null termination

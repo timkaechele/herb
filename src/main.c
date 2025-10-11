@@ -54,7 +54,7 @@ int main(const int argc, char* argv[]) {
 
   buffer_T output;
 
-  if (!buffer_init(&output, 4096)) { return 1; }
+  if (!buffer_init(hb_arena_global(), &output, 4096)) { return 1; }
 
   char* source = herb_read_file(argv[2]);
 

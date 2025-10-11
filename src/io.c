@@ -18,7 +18,7 @@ char* herb_read_file(const char* filename) {
   }
 
   buffer_T buffer;
-  buffer_init(&buffer, 4096);
+  buffer_init(hb_arena_global(), &buffer, 4096);
 
   char chunk[FILE_READ_CHUNK];
   size_t bytes_read;

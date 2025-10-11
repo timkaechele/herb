@@ -44,7 +44,7 @@ module Herb
 
       def self.with
         FFI::MemoryPointer.new(SIZEOF) do |pointer|
-          raise "couldn't allocate Buffer" unless LibHerb.buffer_init(pointer)
+          raise "couldn't allocate Buffer" unless LibHerb.buffer_init(hb_arena_global(), pointer)
 
           return yield new(pointer)
         ensure

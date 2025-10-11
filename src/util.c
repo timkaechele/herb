@@ -13,7 +13,7 @@ int is_newline(const int character) {
 char* escape_newlines(const char* input) {
   buffer_T buffer;
 
-  buffer_init(&buffer, strlen(input));
+  buffer_init(hb_arena_global(), &buffer, strlen(input));
 
   for (size_t i = 0; i < strlen(input); ++i) {
     switch (input[i]) {
@@ -39,7 +39,7 @@ char* wrap_string(const char* input, const char character) {
 
   buffer_T buffer;
 
-  buffer_init(&buffer, strlen(input) + 2);
+  buffer_init(hb_arena_global(), &buffer, strlen(input) + 2);
 
   buffer_append_char(&buffer, character);
   buffer_append(&buffer, input);
