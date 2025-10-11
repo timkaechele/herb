@@ -3,14 +3,16 @@
 
 #include <stdbool.h>
 #include <stdlib.h>
+#include "hb_arena.h"
 
 typedef struct BUFFER_STRUCT {
+  hb_arena_allocator_T *allocator;
   char* value;
   size_t length;
   size_t capacity;
 } buffer_T;
 
-bool buffer_init(buffer_T* buffer, size_t capacity);
+bool buffer_init(hb_arena_allocator_T* allocator, buffer_T* buffer, size_t capacity);
 
 void buffer_append(buffer_T* buffer, const char* text);
 void buffer_append_with_length(buffer_T* buffer, const char* text, size_t length);

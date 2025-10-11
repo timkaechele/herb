@@ -3,13 +3,15 @@
 #include <string.h>
 
 #include "include/buffer.h"
+#include "include/hb_arena.h"
 #include "include/macros.h"
 #include "include/util.h"
 
-bool buffer_init(buffer_T* buffer, const size_t capacity) {
+bool buffer_init(hb_arena_allocator_T* allocator, buffer_T* buffer, const size_t capacity) {
+  buffer->allocator = allocator;
   buffer->capacity = capacity;
   buffer->length = 0;
-  buffer->value = malloc(sizeof(char) * (buffer->capacity + 1));
+  buffer->value = hb_arena_alloc(allocator, sizeof(char) * (buffer->capacity + 1));
 
   if (!buffer->value) {
     fprintf(stderr, "Error: Failed to initialize buffer with capacity of %zu.\n", buffer->capacity);
@@ -50,7 +52,8 @@ static bool buffer_resize(buffer_T* buffer, const size_t new_capacity) {
     exit(1);
   }
 
-  char* new_value = realloc(buffer->value, new_capacity + 1);
+  char* new_value = hb_arena_alloc(buffer->allocator, new_capacity + 1);
+  memcpy(new_value, buffer->value, buffer->capacity + 1);
 
   if (unlikely(new_value == NULL)) {
     fprintf(stderr, "Error: Failed to resize buffer to %zu.\n", new_capacity);
@@ -157,8 +160,6 @@ void buffer_clear(buffer_T* buffer) {
 
 void buffer_free(buffer_T** buffer) {
   if (!buffer || !*buffer) { return; }
-
-  if ((*buffer)->value != NULL) { free((*buffer)->value); }
 
   free(*buffer);
   *buffer = NULL;
