@@ -6,67 +6,8 @@
 #include "../include/util.h"
 #include "../include/util/hb_buffer.h"
 
-bool hb_buffer_init(hb_buffer_T* buffer, const size_t capacity) {
-  buffer->capacity = capacity;
-  buffer->length = 0;
-  buffer->value = malloc(sizeof(char) * (buffer->capacity + 1));
-
-  if (!buffer->value) {
-    fprintf(stderr, "Error: Failed to initialize buffer with capacity of %zu.\n", buffer->capacity);
-
-    return false;
-  }
-
-  buffer->value[0] = '\0';
-
-  return true;
-}
-
-hb_buffer_T* hb_buffer_new(const size_t capacity) {
-  hb_buffer_T* buffer = malloc(sizeof(hb_buffer_T));
-
-  if (!hb_buffer_init(buffer, capacity)) {
-    free(buffer);
-    return NULL;
-  }
-
-  return buffer;
-}
-
-char* hb_buffer_value(const hb_buffer_T* buffer) {
-  return buffer->value;
-}
-
-size_t hb_buffer_length(const hb_buffer_T* buffer) {
-  return buffer->length;
-}
-
-size_t hb_buffer_capacity(const hb_buffer_T* buffer) {
-  return buffer->capacity;
-}
-
-size_t hb_buffer_sizeof(void) {
-  return sizeof(hb_buffer_T);
-}
-
-/**
- * Increases the capacity of the buffer if needed to accommodate additional content.
- * This function only handles memory allocation and does not modify the buffer content
- * or null termination.
- *
- * @param buffer The buffer to increase capacity for
- * @param additional_capacity The additional length needed beyond current buffer capacity
- * @return true if capacity was increased, false if reallocation failed
- */
-bool hb_buffer_increase_capacity(hb_buffer_T* buffer, const size_t additional_capacity) {
-  if (additional_capacity + 1 >= SIZE_MAX) {
-    fprintf(stderr, "Error: Buffer capacity would overflow system limits.\n");
-    exit(1);
-  }
-
-  const size_t new_capacity = buffer->capacity + additional_capacity;
-
-  return hb_buffer_resize(buffer, new_capacity);
+static bool hb_buffer_has_capacity(hb_buffer_T* buffer, const size_t required_length) {
+  return (buffer->length + required_length <= buffer->capacity);
 }
 
 /**
@@ -76,7 +17,7 @@ bool hb_buffer_increase_capacity(hb_buffer_T* buffer, const size_t additional_ca
  * @param new_capacity The new capacity to resize the buffer to
  * @return true if capacity was resized, false if reallocation failed
  */
-bool hb_buffer_resize(hb_buffer_T* buffer, const size_t new_capacity) {
+static bool hb_buffer_resize(hb_buffer_T* buffer, const size_t new_capacity) {
   if (new_capacity + 1 >= SIZE_MAX) {
     fprintf(stderr, "Error: Buffer capacity would overflow system limits.\n");
     exit(1);
@@ -96,18 +37,6 @@ bool hb_buffer_resize(hb_buffer_T* buffer, const size_t new_capacity) {
 }
 
 /**
- * Expands the capacity of the buffer by doubling its current capacity.
- * This function is a convenience function that calls hb_buffer_increase_capacity
- * with a factor of 2.
- *
- * @param buffer The buffer to expand capacity for
- * @return true if capacity was increased, false if reallocation failed
- */
-bool hb_buffer_expand_capacity(hb_buffer_T* buffer) {
-  return hb_buffer_resize(buffer, buffer->capacity * 2);
-}
-
-/**
  * Expands the capacity of the buffer if needed to accommodate additional content.
  * This function is a convenience function that calls hb_buffer_has_capacity and
  * hb_buffer_expand_capacity.
@@ -116,7 +45,7 @@ bool hb_buffer_expand_capacity(hb_buffer_T* buffer) {
  * @param required_length The additional length needed beyond current buffer capacity
  * @return true if capacity was increased, false if reallocation failed
  */
-bool hb_buffer_expand_if_needed(hb_buffer_T* buffer, const size_t required_length) {
+static bool hb_buffer_expand_if_needed(hb_buffer_T* buffer, const size_t required_length) {
   if (hb_buffer_has_capacity(buffer, required_length)) { return true; }
 
   bool should_double_capacity = required_length < buffer->capacity;
@@ -129,6 +58,38 @@ bool hb_buffer_expand_if_needed(hb_buffer_T* buffer, const size_t required_lengt
   }
 
   return hb_buffer_resize(buffer, new_capacity);
+}
+
+bool hb_buffer_init(hb_buffer_T* buffer, const size_t capacity) {
+  buffer->capacity = capacity;
+  buffer->length = 0;
+  buffer->value = malloc(sizeof(char) * (buffer->capacity + 1));
+
+  if (!buffer->value) {
+    fprintf(stderr, "Error: Failed to initialize buffer with capacity of %zu.\n", buffer->capacity);
+
+    return false;
+  }
+
+  buffer->value[0] = '\0';
+
+  return true;
+}
+
+char* hb_buffer_value(const hb_buffer_T* buffer) {
+  return buffer->value;
+}
+
+size_t hb_buffer_length(const hb_buffer_T* buffer) {
+  return buffer->length;
+}
+
+size_t hb_buffer_capacity(const hb_buffer_T* buffer) {
+  return buffer->capacity;
+}
+
+size_t hb_buffer_sizeof(void) {
+  return sizeof(hb_buffer_T);
 }
 
 /**
@@ -185,7 +146,7 @@ void hb_buffer_append_char(hb_buffer_T* buffer, const char character) {
   hb_buffer_append(buffer, string);
 }
 
-void hb_buffer_append_repeated(hb_buffer_T* buffer, const char character, size_t length) {
+static void hb_buffer_append_repeated(hb_buffer_T* buffer, const char character, size_t length) {
   if (!buffer || length == 0) { return; }
   if (!hb_buffer_expand_if_needed(buffer, length)) { return; }
 
@@ -221,10 +182,6 @@ void hb_buffer_concat(hb_buffer_T* destination, hb_buffer_T* source) {
 
   destination->length += source->length;
   destination->value[destination->length] = '\0';
-}
-
-bool hb_buffer_has_capacity(hb_buffer_T* buffer, const size_t required_length) {
-  return (buffer->length + required_length <= buffer->capacity);
 }
 
 void hb_buffer_clear(hb_buffer_T* buffer) {
