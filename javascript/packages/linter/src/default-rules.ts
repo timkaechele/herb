@@ -32,6 +32,7 @@ import { HTMLNoAriaHiddenOnFocusableRule } from "./rules/html-no-aria-hidden-on-
 // import { HTMLNoBlockInsideInlineRule } from "./rules/html-no-block-inside-inline.js"
 import { HTMLNoDuplicateAttributesRule } from "./rules/html-no-duplicate-attributes.js"
 import { HTMLNoDuplicateIdsRule } from "./rules/html-no-duplicate-ids.js"
+import { HTMLNoDuplicateMetaNamesRule } from "./rules/html-no-duplicate-meta-names.js"
 import { HTMLNoEmptyAttributesRule } from "./rules/html-no-empty-attributes.js"
 import { HTMLNoEmptyHeadingsRule } from "./rules/html-no-empty-headings.js"
 import { HTMLNoNestedLinksRule } from "./rules/html-no-nested-links.js"
@@ -79,6 +80,7 @@ export const defaultRules: RuleClass[] = [
   // HTMLNoBlockInsideInlineRule,
   HTMLNoDuplicateAttributesRule,
   HTMLNoDuplicateIdsRule,
+  HTMLNoDuplicateMetaNamesRule,
   HTMLNoEmptyAttributesRule,
   HTMLNoEmptyHeadingsRule,
   HTMLNoNestedLinksRule,

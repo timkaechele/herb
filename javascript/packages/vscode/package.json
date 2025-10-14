@@ -92,6 +92,7 @@
               "html-no-block-inside-inline",
               "html-no-duplicate-attributes",
               "html-no-duplicate-ids",
+              "html-no-duplicate-meta-names",
               "html-no-empty-attributes",
               "html-no-empty-headings",
               "html-no-nested-links",
