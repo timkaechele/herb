@@ -23,6 +23,7 @@ import { HTMLAttributeValuesRequireQuotesRule } from "./rules/html-attribute-val
 import { HTMLAvoidBothDisabledAndAriaDisabledRule } from "./rules/html-avoid-both-disabled-and-aria-disabled.js"
 import { HTMLBodyOnlyElementsRule } from "./rules/html-body-only-elements.js"
 import { HTMLBooleanAttributesNoValueRule } from "./rules/html-boolean-attributes-no-value.js"
+import { HTMLHeadOnlyElementsRule } from "./rules/html-head-only-elements.js"
 import { HTMLIframeHasTitleRule } from "./rules/html-iframe-has-title.js"
 import { HTMLImgRequireAltRule } from "./rules/html-img-require-alt.js"
 import { HTMLInputRequireAutocompleteRule } from "./rules/html-input-require-autocomplete.js"
@@ -69,6 +70,7 @@ export const defaultRules: RuleClass[] = [
   HTMLAvoidBothDisabledAndAriaDisabledRule,
   HTMLBodyOnlyElementsRule,
   HTMLBooleanAttributesNoValueRule,
+  HTMLHeadOnlyElementsRule,
   HTMLIframeHasTitleRule,
   HTMLImgRequireAltRule,
   HTMLInputRequireAutocompleteRule,

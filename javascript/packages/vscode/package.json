@@ -83,6 +83,7 @@
               "html-avoid-both-disabled-and-aria-disabled",
               "html-body-only-elements",
               "html-boolean-attributes-no-value",
+              "html-head-only-elements",
               "html-iframe-has-title",
               "html-img-require-alt",
               "html-input-require-autocomplete",
