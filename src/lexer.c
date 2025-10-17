@@ -6,6 +6,7 @@
 #include "include/util/hb_string.h"
 
 #include <ctype.h>
+#include <stdint.h>
 #include <string.h>
 
 #define LEXER_STALL_LIMIT 5
@@ -108,18 +109,19 @@ static token_T* lexer_advance_with(lexer_T* lexer, hb_string_T value, const toke
 }
 
 static token_T* lexer_advance_with_next(lexer_T* lexer, size_t count, token_type_T type) {
-  char* collected = malloc(count + 1);
-  if (!collected) { return NULL; }
+  uint32_t start_position = lexer->current_position;
 
   for (size_t i = 0; i < count; i++) {
-    collected[i] = lexer->current_character;
     lexer_advance(lexer);
   }
 
-  collected[count] = '\0';
+  uint32_t end_position = lexer->current_position;
 
-  token_T* token = token_init(collected, type, lexer);
-  free(collected);
+  token_T* token = token_init(
+    (hb_string_T) { .data = lexer->source.data + start_position, .length = end_position - start_position },
+    type,
+    lexer
+  );
 
   return token;
 }
