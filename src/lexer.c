@@ -55,7 +55,7 @@ void lexer_init(lexer_T* lexer, const char* source) {
 }
 
 token_T* lexer_error(lexer_T* lexer, const char* message) {
-  char error_message[128];
+  char *error_message = hb_arena_alloc(lexer->allocator, sizeof(char) * 128);
 
   snprintf(
     error_message,
@@ -67,7 +67,7 @@ token_T* lexer_error(lexer_T* lexer, const char* message) {
     lexer->current_column
   );
 
-  return token_init(error_message, TOKEN_ERROR, lexer);
+  return token_init(hb_string_from_c_string(error_message), TOKEN_ERROR, lexer);
 }
 
 static void lexer_advance(lexer_T* lexer) {
