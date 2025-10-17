@@ -4,6 +4,7 @@
 #include "include/range.h"
 #include "include/token_struct.h"
 #include "include/util.h"
+#include "include/util/hb_string.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -13,7 +14,7 @@ size_t token_sizeof(void) {
   return sizeof(struct TOKEN_STRUCT);
 }
 
-token_T* token_init(const char* value, const token_type_T type, lexer_T* lexer) {
+token_T* token_init(hb_string_T value, const token_type_T type, lexer_T* lexer) {
   token_T* token = calloc(1, token_sizeof());
 
   if (type == TOKEN_NEWLINE) {
@@ -21,11 +22,7 @@ token_T* token_init(const char* value, const token_type_T type, lexer_T* lexer) 
     lexer->current_column = 0;
   }
 
-  if (value) {
-    token->value = herb_strdup(value);
-  } else {
-    token->value = NULL;
-  }
+  token->value = value;
 
   token->type = type;
   token->range = (range_T) { .from = lexer->previous_position, .to = lexer->current_position };
