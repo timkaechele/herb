@@ -171,20 +171,19 @@ static token_T* lexer_parse_whitespace(lexer_T* lexer) {
 }
 
 static token_T* lexer_parse_identifier(lexer_T* lexer) {
-  hb_buffer_T buffer;
-  hb_buffer_init(&buffer, 128);
+  uint32_t start_position = lexer->current_position;
 
   while ((isalnum(lexer->current_character) || lexer->current_character == '-' || lexer->current_character == '_'
           || lexer->current_character == ':')
          && !lexer_peek_for_html_comment_end(lexer, 0) && !lexer_eof(lexer)) {
-
-    hb_buffer_append_char(&buffer, lexer->current_character);
     lexer_advance(lexer);
   }
+  uint32_t end_position = lexer->current_position;
 
-  token_T* token = token_init(buffer.value, TOKEN_IDENTIFIER, lexer);
+  hb_string_T value = hb_string_slice(lexer->source, start_position);
+  value.length = end_position - start_position;
 
-  free(buffer.value);
+  token_T* token = token_init(value, TOKEN_IDENTIFIER, lexer);
 
   return token;
 }
@@ -207,19 +206,16 @@ static token_T* lexer_parse_erb_open(lexer_T* lexer) {
 }
 
 static token_T* lexer_parse_erb_content(lexer_T* lexer) {
-  hb_buffer_T buffer;
-  hb_buffer_init(&buffer, 1024);
 
   while (!lexer_peek_erb_end(lexer, 0)) {
     if (lexer_eof(lexer)) {
-      token_T* token = token_init(buffer.value, TOKEN_ERROR, lexer); // Handle unexpected EOF
+      uint32_t end_position = lexer->current_position;
 
-      free(buffer.value);
+      hb_string_T value = hb_string_slice(lexer->source, start_position);
+      value.length = end_position - start_position;
 
-      return token;
+      return token_init(value, TOKEN_ERROR, lexer); // Handle unexpected EOF
     }
-
-    hb_buffer_append_char(&buffer, lexer->current_character);
 
     if (is_newline(lexer->current_character)) {
       lexer->current_line++;
@@ -234,11 +230,11 @@ static token_T* lexer_parse_erb_content(lexer_T* lexer) {
 
   lexer->state = STATE_ERB_CLOSE;
 
-  token_T* token = token_init(buffer.value, TOKEN_ERB_CONTENT, lexer);
+  uint32_t end_position = lexer->current_position;
+  hb_string_T value = hb_string_slice(lexer->source, start_position);
+  value.length = end_position - start_position;
 
-  free(buffer.value);
-
-  return token;
+  return token_init(value, TOKEN_ERB_CONTENT, lexer);
 }
 
 static token_T* lexer_parse_erb_close(lexer_T* lexer) {
