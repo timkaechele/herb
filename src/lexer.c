@@ -1,4 +1,5 @@
 #include "include/lexer_peek_helpers.h"
+#include "include/macros.h"
 #include "include/token.h"
 #include "include/utf8.h"
 #include "include/util.h"
@@ -80,7 +81,7 @@ static void lexer_advance(lexer_T* lexer) {
   }
 }
 
-static void lexer_advance_utf8_bytes(lexer_T* lexer, int byte_count) {
+static void lexer_advance_utf8_bytes(lexer_T* lexer, uint32_t byte_count) {
   if (byte_count <= 0) { return; }
 
   if (lexer_has_more_characters(lexer) && !lexer_eof(lexer)) {
@@ -132,32 +133,16 @@ static token_T* lexer_advance_current(lexer_T* lexer, const token_type_T type) {
 }
 
 static token_T* lexer_advance_utf8_character(lexer_T* lexer, const token_type_T type) {
-  int char_byte_length = utf8_sequence_length(lexer->source.data, lexer->current_position, lexer->source.length);
-
+  uint32_t char_byte_length = utf8_sequence_length(hb_string_slice(lexer->source, lexer->current_position));
   if (char_byte_length <= 1) { return lexer_advance_current(lexer, type); }
 
-  char* utf8_char = malloc(char_byte_length + 1);
-
-  if (!utf8_char) { return lexer_advance_current(lexer, type); }
-
-  for (int i = 0; i < char_byte_length; i++) {
-    if (lexer->current_position + i >= lexer->source.length) {
-      free(utf8_char);
-      return lexer_advance_current(lexer, type);
-    }
-
-    utf8_char[i] = lexer->source.data[lexer->current_position + i];
-  }
-
-  utf8_char[char_byte_length] = '\0';
-
+  size_t start_position = lexer->current_position;
   lexer_advance_utf8_bytes(lexer, char_byte_length);
 
-  token_T* token = token_init(utf8_char, type, lexer);
+  hb_string_T utf8_char = hb_string_slice(lexer->source, lexer->current_position);
+  utf8_char.length = MIN(char_byte_length, utf8_char.length);
 
-  free(utf8_char);
-
-  return token;
+  return token_init(utf8_char, type, lexer);
 }
 
 static token_T* lexer_match_and_advance(lexer_T* lexer, hb_string_T value, const token_type_T type) {
