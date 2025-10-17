@@ -2,6 +2,7 @@
 #include "include/ast_node.h"
 #include "include/ast_nodes.h"
 #include "include/errors.h"
+#include "include/hb_arena.h"
 #include "include/html_util.h"
 #include "include/lexer.h"
 #include "include/lexer_peek_helpers.h"
@@ -606,7 +607,7 @@ static AST_HTML_ATTRIBUTE_NODE_T* parser_parse_html_attribute(parser_T* parser) 
         token_free(whitespace);
       }
 
-      token_T* equals_with_whitespace = calloc(1, sizeof(token_T));
+      token_T* equals_with_whitespace = hb_arena_alloc(parser->allocator, sizeof(token_T));
       equals_with_whitespace->type = TOKEN_EQUALS;
       equals_with_whitespace->value = herb_strdup(equals_buffer.value);
       equals_with_whitespace->location = (location_T) { .start = equals_start, .end = equals_end };
