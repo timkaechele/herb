@@ -274,7 +274,7 @@ static token_T* lexer_parse_erb_close(lexer_T* lexer) {
 // ===== Tokenizing Function
 
 token_T* lexer_next_token(lexer_T* lexer) {
-  if (lexer_eof(lexer)) { return token_init("", TOKEN_EOF, lexer); }
+  if (lexer_eof(lexer)) { token_init(hb_string_from_c_string(""), TOKEN_EOF, lexer); }
   if (lexer_stalled(lexer)) { return lexer_error(lexer, "Lexer stalled after 5 iterations"); }
 
   if (lexer->state == STATE_ERB_CONTENT) { return lexer_parse_erb_content(lexer); }
