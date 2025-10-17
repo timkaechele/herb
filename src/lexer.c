@@ -155,18 +155,17 @@ static token_T* lexer_match_and_advance(lexer_T* lexer, hb_string_T value, const
 // ===== Specialized Parsers
 
 static token_T* lexer_parse_whitespace(lexer_T* lexer) {
-  hb_buffer_T buffer;
-  hb_buffer_init(&buffer, 128);
-
+  uint32_t start_position = lexer->current_position;
   while (isspace(lexer->current_character) && lexer->current_character != '\n' && lexer->current_character != '\r'
          && !lexer_eof(lexer)) {
-    hb_buffer_append_char(&buffer, lexer->current_character);
     lexer_advance(lexer);
   }
+  uint32_t end_position = lexer->current_position;
 
-  token_T* token = token_init(buffer.value, TOKEN_WHITESPACE, lexer);
+  hb_string_T value = hb_string_slice(lexer->source, start_position);
+  value.length = end_position - start_position;
 
-  free(buffer.value);
+  token_T* token = token_init(value, TOKEN_WHITESPACE, lexer);
 
   return token;
 }
