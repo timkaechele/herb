@@ -62,7 +62,7 @@ static AST_CDATA_NODE_T* parser_parse_cdata(parser_T* parser) {
     }
 
     token_T* token = parser_advance(parser);
-    hb_buffer_append(&content, token->value);
+    hb_buffer_append_string(&content, token->value);
     token_free(token);
   }
 
@@ -107,7 +107,7 @@ static AST_HTML_COMMENT_NODE_T* parser_parse_html_comment(parser_T* parser) {
     }
 
     token_T* token = parser_advance(parser);
-    hb_buffer_append(&comment, token->value);
+    hb_buffer_append_string(&comment, token->value);
     token_free(token);
   }
 
@@ -152,7 +152,7 @@ static AST_HTML_DOCTYPE_NODE_T* parser_parse_html_doctype(parser_T* parser) {
     }
 
     token_T* token = parser_consume_expected(parser, parser->current_token->type, errors);
-    hb_buffer_append(&content, token->value);
+    hb_buffer_append_string(&content, token->value);
     token_free(token);
   }
 
@@ -199,7 +199,7 @@ static AST_XML_DECLARATION_NODE_T* parser_parse_xml_declaration(parser_T* parser
     }
 
     token_T* token = parser_advance(parser);
-    hb_buffer_append(&content, token->value);
+    hb_buffer_append_string(&content, token->value);
     token_free(token);
   }
 
@@ -257,7 +257,7 @@ static AST_HTML_TEXT_NODE_T* parser_parse_text_content(parser_T* parser, hb_arra
     }
 
     token_T* token = parser_advance(parser);
-    hb_buffer_append(&content, token->value);
+    hb_buffer_append_string(&content, token->value);
     token_free(token);
   }
 
@@ -304,7 +304,7 @@ static AST_HTML_ATTRIBUTE_NAME_NODE_T* parser_parse_html_attribute_name(parser_T
     }
 
     token_T* token = parser_advance(parser);
-    hb_buffer_append(&buffer, token->value);
+    hb_buffer_append_string(&buffer, token->value);
     token_free(token);
   }
 
@@ -364,8 +364,8 @@ static AST_HTML_ATTRIBUTE_VALUE_NODE_T* parser_parse_quoted_html_attribute_value
 
       if (next_token && next_token->type == TOKEN_QUOTE && opening_quote != NULL
           && strcmp(next_token->value, opening_quote->value) == 0) {
-        hb_buffer_append(&buffer, parser->current_token->value);
-        hb_buffer_append(&buffer, next_token->value);
+        hb_buffer_append_string(&buffer, parser->current_token->value);
+        hb_buffer_append_string(&buffer, next_token->value);
 
         token_free(parser->current_token);
         token_free(next_token);
@@ -379,7 +379,7 @@ static AST_HTML_ATTRIBUTE_VALUE_NODE_T* parser_parse_quoted_html_attribute_value
       }
     }
 
-    hb_buffer_append(&buffer, parser->current_token->value);
+    hb_buffer_append_string(&buffer, parser->current_token->value);
     token_free(parser->current_token);
 
     parser->current_token = lexer_next_token(parser->lexer);
@@ -407,7 +407,7 @@ static AST_HTML_ATTRIBUTE_VALUE_NODE_T* parser_parse_quoted_html_attribute_value
       token_free(parser->current_token);
       parser->current_token = potential_closing;
 
-      hb_buffer_append(&buffer, parser->current_token->value);
+      hb_buffer_append_string(&buffer, parser->current_token->value);
       token_free(parser->current_token);
       parser->current_token = lexer_next_token(parser->lexer);
 
@@ -426,7 +426,7 @@ static AST_HTML_ATTRIBUTE_VALUE_NODE_T* parser_parse_quoted_html_attribute_value
           continue;
         }
 
-        hb_buffer_append(&buffer, parser->current_token->value);
+        hb_buffer_append_string(&buffer, parser->current_token->value);
         token_free(parser->current_token);
 
         parser->current_token = lexer_next_token(parser->lexer);
@@ -581,7 +581,7 @@ static AST_HTML_ATTRIBUTE_NODE_T* parser_parse_html_attribute(parser_T* parser) 
           range_start = whitespace->range.from;
         }
 
-        hb_buffer_append(&equals_buffer, whitespace->value);
+        hb_buffer_append_string(&equals_buffer, whitespace->value);
         token_free(whitespace);
       }
 
@@ -593,14 +593,14 @@ static AST_HTML_ATTRIBUTE_NODE_T* parser_parse_html_attribute(parser_T* parser) 
         range_start = equals->range.from;
       }
 
-      hb_buffer_append(&equals_buffer, equals->value);
+      hb_buffer_append_string(&equals_buffer, equals->value);
       equals_end = equals->location.end;
       range_end = equals->range.to;
       token_free(equals);
 
       while (token_is_any_of(parser, TOKEN_WHITESPACE, TOKEN_NEWLINE)) {
         token_T* whitespace = parser_advance(parser);
-        hb_buffer_append(&equals_buffer, whitespace->value);
+        hb_buffer_append_string(&equals_buffer, whitespace->value);
         equals_end = whitespace->location.end;
         range_end = whitespace->range.to;
         token_free(whitespace);
@@ -1067,7 +1067,7 @@ static void parser_parse_foreign_content(parser_T* parser, hb_array_T* children,
     }
 
     token_T* token = parser_advance(parser);
-    hb_buffer_append(&content, token->value);
+    hb_buffer_append_string(&content, token->value);
     token_free(token);
   }
 
