@@ -44,7 +44,7 @@ AST_DOCUMENT_NODE_T* herb_parse(const char* source, parser_options_T* options) {
 
   if (options != NULL) { parser_options = *options; }
 
-  herb_parser_init(&parser, &lexer, parser_options);
+  herb_parser_init(&allocator, &parser, &lexer, parser_options);
 
   AST_DOCUMENT_NODE_T* document = herb_parser_parse(&parser);
 
