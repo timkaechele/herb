@@ -7,6 +7,7 @@
 #include "include/token_struct.h"
 #include "include/util.h"
 #include "include/util/hb_buffer.h"
+#include "include/util/hb_string.h"
 
 #include <stdbool.h>
 #include <stdio.h>
@@ -211,7 +212,7 @@ void pretty_print_token_property(
 ) {
   pretty_print_label(name, indent, relative_indent, last_property, buffer);
 
-  if (token != NULL && token->value != NULL) {
+  if (token != NULL && !hb_string_is_empty(token->value)) {
     char* quoted = quoted_string(token->value);
     hb_buffer_append(buffer, quoted);
     free(quoted);
