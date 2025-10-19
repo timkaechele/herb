@@ -60,11 +60,12 @@ void lexer_init(lexer_T* lexer, hb_arena_T* allocator, const char* source) {
 }
 
 token_T* lexer_error(lexer_T* lexer, const char* message) {
-  char* error_message = hb_arena_alloc(lexer->allocator, sizeof(char) * 128);
+  size_t error_message_length = 128;
+  char* error_message = hb_arena_alloc(lexer->allocator, sizeof(char) * error_message_length);
 
   snprintf(
     error_message,
-    sizeof(error_message),
+    error_message_length,
     "[Lexer] Error: %s (character '%c', line %u, col %u)\n",
     message,
     lexer->current_character,
