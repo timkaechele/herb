@@ -857,7 +857,8 @@ static AST_HTML_CLOSE_TAG_NODE_T* parser_parse_html_close_tag(parser_T* parser) 
 
   token_T* tag_closing = parser_consume_expected(parser, TOKEN_HTML_TAG_END, errors);
 
-  if (tag_name != NULL && is_void_element(tag_name->value) && parser_in_svg_context(parser) == false) {
+  if (tag_name != NULL && is_void_element(hb_string_from_c_string(tag_name->value))
+      && parser_in_svg_context(parser) == false) {
     char* expected = html_self_closing_tag_string(tag_name->value);
     char* got = html_closing_tag_string(tag_name->value);
 
@@ -931,7 +932,7 @@ static AST_HTML_ELEMENT_NODE_T* parser_parse_html_regular_element(
 
   AST_HTML_CLOSE_TAG_NODE_T* close_tag = parser_parse_html_close_tag(parser);
 
-  if (parser_in_svg_context(parser) == false && is_void_element(close_tag->tag_name->value)) {
+  if (parser_in_svg_context(parser) == false && is_void_element(hb_string_from_c_string(close_tag->tag_name->value))) {
     hb_array_push(body, close_tag);
     parser_parse_in_data_state(parser, body, errors);
     close_tag = parser_parse_html_close_tag(parser);
@@ -966,7 +967,8 @@ static AST_HTML_ELEMENT_NODE_T* parser_parse_html_element(parser_T* parser) {
   if (open_tag->is_void) { return parser_parse_html_self_closing_element(parser, open_tag); }
 
   // <tag>, in void element list, and not in inside an <svg> element
-  if (!open_tag->is_void && is_void_element(open_tag->tag_name->value) && !parser_in_svg_context(parser)) {
+  if (!open_tag->is_void && is_void_element(hb_string_from_c_string(open_tag->tag_name->value))
+      && !parser_in_svg_context(parser)) {
     return parser_parse_html_self_closing_element(parser, open_tag);
   }
 
@@ -1170,7 +1172,7 @@ static void parser_parse_stray_closing_tags(parser_T* parser, hb_array_T* childr
 
     AST_HTML_CLOSE_TAG_NODE_T* close_tag = parser_parse_html_close_tag(parser);
 
-    if (!is_void_element(close_tag->tag_name->value)) {
+    if (!is_void_element(hb_string_from_c_string(close_tag->tag_name->value))) {
       append_missing_opening_tag_error(
         close_tag->tag_name,
         close_tag->base.location.start,
