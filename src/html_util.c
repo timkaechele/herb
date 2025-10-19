@@ -8,7 +8,6 @@
 #include <stddef.h>
 #include <stdlib.h>
 #include <string.h>
-#include <strings.h>
 
 // https://developer.mozilla.org/en-US/docs/Glossary/Void_element
 bool is_void_element(hb_string_T tag_name) {
