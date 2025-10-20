@@ -1022,9 +1022,9 @@ static void parser_parse_foreign_content(parser_T* parser, hb_array_T* children,
   hb_buffer_T content;
   hb_buffer_init(&content, 1024);
   position_T start = parser->current_token->location.start;
-  const char* expected_closing_tag = parser_get_foreign_content_closing_tag(parser->foreign_content_type);
+  hb_string_T expected_closing_tag = parser_get_foreign_content_closing_tag(parser->foreign_content_type);
 
-  if (expected_closing_tag == NULL) {
+  if (hb_string_is_empty(expected_closing_tag)) {
     parser_exit_foreign_content(parser);
     free(content.value);
 
@@ -1050,7 +1050,8 @@ static void parser_parse_foreign_content(parser_T* parser, hb_array_T* children,
       bool is_potential_match = false;
 
       if (next_token && next_token->type == TOKEN_IDENTIFIER && next_token->value) {
-        is_potential_match = parser_is_expected_closing_tag_name(next_token->value, parser->foreign_content_type);
+        is_potential_match =
+          parser_is_expected_closing_tag_name(hb_string_from_c_string(next_token->value), parser->foreign_content_type);
       }
 
       lexer_restore_state(parser->lexer, saved_state);
