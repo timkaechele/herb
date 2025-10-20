@@ -11,6 +11,7 @@
 #include "include/util.h"
 #include "include/util/hb_array.h"
 #include "include/util/hb_buffer.h"
+#include "include/util/hb_string.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -859,20 +860,20 @@ static AST_HTML_CLOSE_TAG_NODE_T* parser_parse_html_close_tag(parser_T* parser) 
 
   if (tag_name != NULL && is_void_element(hb_string_from_c_string(tag_name->value))
       && parser_in_svg_context(parser) == false) {
-    char* expected = html_self_closing_tag_string(tag_name->value);
-    char* got = html_closing_tag_string(tag_name->value);
+    hb_string_T expected = html_self_closing_tag_string(hb_string_from_c_string(tag_name->value));
+    hb_string_T got = html_closing_tag_string(hb_string_from_c_string(tag_name->value));
 
     append_void_element_closing_tag_error(
       tag_name,
-      expected,
-      got,
+      expected.data,
+      got.data,
       tag_opening->location.start,
       tag_closing->location.end,
       errors
     );
 
-    free(expected);
-    free(got);
+    free(expected.data);
+    free(got.data);
   }
 
   AST_HTML_CLOSE_TAG_NODE_T* close_tag = ast_html_close_tag_node_init(

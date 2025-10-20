@@ -37,25 +37,22 @@ bool is_void_element(hb_string_T tag_name) {
  *
  * Example:
  * @code
- * char* tag = html_closing_tag_string("div");
- * if (tag) {
- *   printf("%s\n", tag); // Prints: </div>
- *   free(tag);
- * }
+ * hb_string_T tag = html_closing_tag_string(hb_string_from_c_string("div"));
+ *
+ * printf("%.*s\n", tag.length, tag.data); // Prints: </div>
+ * free(tag.data);
  * @endcode
  */
-char* html_closing_tag_string(const char* tag_name) {
-  if (tag_name == NULL) { return herb_strdup("</>"); }
-
+hb_string_T html_closing_tag_string(hb_string_T tag_name) {
   hb_buffer_T buffer;
-  hb_buffer_init(&buffer, strlen(tag_name) + 3);
+  hb_buffer_init(&buffer, tag_name.length + 3);
 
   hb_buffer_append_char(&buffer, '<');
   hb_buffer_append_char(&buffer, '/');
-  hb_buffer_append(&buffer, tag_name);
+  hb_buffer_append_string(&buffer, tag_name);
   hb_buffer_append_char(&buffer, '>');
 
-  return buffer.value;
+  return hb_string_from_c_string(buffer.value);
 }
 
 /**
@@ -67,24 +64,20 @@ char* html_closing_tag_string(const char* tag_name) {
  *
  * Example:
  * @code
- * char* tag = html_self_closing_tag_string("br");
- * if (tag) {
- *   printf("%s\n", tag); // Prints: <br />
- *   free(tag);
- * }
+ * hb_string_T tag = html_self_closing_tag_string(hb_string_from_c_string("br"));
+ * printf("%.*s\n", tag.length, tag.data); // Prints: <br />
+ * free(tag);
  * @endcode
  */
-char* html_self_closing_tag_string(const char* tag_name) {
-  if (tag_name == NULL) { return herb_strdup("< />"); }
-
+hb_string_T html_self_closing_tag_string(hb_string_T tag_name) {
   hb_buffer_T buffer;
-  hb_buffer_init(&buffer, strlen(tag_name) + 4);
+  hb_buffer_init(&buffer, tag_name.length + 4);
 
   hb_buffer_append_char(&buffer, '<');
-  hb_buffer_append(&buffer, tag_name);
+  hb_buffer_append_string(&buffer, tag_name);
   hb_buffer_append_char(&buffer, ' ');
   hb_buffer_append_char(&buffer, '/');
   hb_buffer_append_char(&buffer, '>');
 
-  return buffer.value;
+  return hb_string_from_c_string(buffer.value);
 }
