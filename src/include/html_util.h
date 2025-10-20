@@ -6,7 +6,7 @@
 
 bool is_void_element(hb_string_T tag_name);
 
-char* html_closing_tag_string(const char* tag_name);
-char* html_self_closing_tag_string(const char* tag_name);
+hb_string_T html_closing_tag_string(hb_string_T tag_name);
+hb_string_T html_self_closing_tag_string(hb_string_T tag_name);
 
 #endif
