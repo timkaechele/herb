@@ -36,15 +36,12 @@ static inline void* hb_arena_page_alloc(hb_arena_page_T* page, size_t size) {
   return result;
 }
 
-static bool hb_arena_append_page(hb_arena_T* allocator, size_t minimum_size) {
-  assert(minimum_size > 0);
-
-  size_t page_size = MAX(allocator->default_page_size, minimum_size);
-
+static bool hb_arena_append_page(hb_arena_T* allocator, size_t page_size) {
   assert(page_size <= SIZE_MAX - sizeof(hb_arena_page_T));
-  size_t total_size = page_size + sizeof(hb_arena_page_T);
+  size_t page_size_with_meta_data = page_size + sizeof(hb_arena_page_T);
 
-  hb_arena_page_T* page = mmap(NULL, total_size, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+  hb_arena_page_T* page =
+    mmap(NULL, page_size_with_meta_data, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
 
   if (page == MAP_FAILED) { return false; }
 
