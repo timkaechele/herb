@@ -58,7 +58,9 @@ static bool hb_arena_append_page(hb_arena_T* allocator, size_t minimum_size) {
 
   if (page == MAP_FAILED) { return false; }
 
-  *page = (hb_arena_page_T) { .next = NULL, .capacity = page_size, .position = 0 };
+  page->next = NULL;
+  page->capacity = page_size;
+  page->position = 0;
 
   if (allocator->head == NULL) {
     allocator->head = page;
