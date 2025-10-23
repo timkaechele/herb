@@ -3,6 +3,7 @@
 #endif
 
 #include "../include/util/hb_arena.h"
+#include "../include/macros.h"
 
 #include <assert.h>
 #include <stdbool.h>
