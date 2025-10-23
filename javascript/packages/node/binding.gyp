@@ -38,6 +38,7 @@
         "./extension/libherb/util/hb_array.c",
         "./extension/libherb/util/hb_buffer.c",
         "./extension/libherb/util/hb_string.c",
+        "./extension/libherb/util/hb_system.c",
         "./extension/libherb/visitor.c",
 
         # Prism main source files
