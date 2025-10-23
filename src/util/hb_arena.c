@@ -3,16 +3,39 @@
 #endif
 
 #include "../include/util/hb_arena.h"
-#include "../include/macros.h"
 
 #include <assert.h>
 #include <stdbool.h>
 #include <stdint.h>
 #include <string.h>
+
+#ifdef HB_USE_MALLOC
+#include <stdlib.h>
+#else
 #include <sys/mman.h>
+#endif
 
 #define hb_arena_for_each_page(allocator, page)                                                                        \
   for (hb_arena_page_T* page = (allocator)->head; page != NULL; page = page->next)
+
+static void* hb_system_allocate_memory(size_t size) {
+#ifdef HB_USE_MALLOC
+  return malloc(size);
+#else
+  void* memory = mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+  if (memory == MAP_FAILED) { return NULL; }
+
+  return memory;
+#endif
+}
+
+static void hb_system_free_memory(void* ptr, size_t size) {
+#ifdef HB_USE_MALLOC
+  free(ptr);
+#else
+  munmap(ptr, size);
+#endif
+}
 
 static inline size_t hb_arena_align_size(size_t size, size_t alignment) {
   assert(size <= SIZE_MAX - (alignment - 1));
@@ -42,10 +65,8 @@ static bool hb_arena_append_page(hb_arena_T* allocator, size_t page_size) {
   assert(page_size <= SIZE_MAX - sizeof(hb_arena_page_T));
   size_t page_size_with_meta_data = page_size + sizeof(hb_arena_page_T);
 
-  hb_arena_page_T* page =
-    mmap(NULL, page_size_with_meta_data, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
-
-  if (page == MAP_FAILED) { return false; }
+  hb_arena_page_T* page = hb_system_allocate_memory(page_size_with_meta_data);
+  if (page == NULL) { return false; }
 
   page->next = NULL;
   page->capacity = page_size;
@@ -158,7 +179,7 @@ static size_t hb_arena_page_free(hb_arena_page_T* starting_page) {
     freed_capacity += current_page->capacity;
 
     size_t total_size = sizeof(hb_arena_page_T) + current_page->capacity;
-    munmap(current_page, total_size);
+    hb_system_free_memory(current_page, total_size);
 
     current_page = next_page;
   }
