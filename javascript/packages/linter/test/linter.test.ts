@@ -1,3 +1,4 @@
+import dedent from "dedent"
 import { describe, test, expect, beforeAll } from "vitest"
 
 import { Herb } from "@herb-tools/node-wasm"
@@ -5,6 +6,8 @@ import { Location } from "@herb-tools/core"
 import { Linter } from "../src/linter.js"
 
 import { HTMLTagNameLowercaseRule } from "../src/rules/html-tag-name-lowercase.js"
+import { HTMLAttributeDoubleQuotesRule } from "../src/rules/html-attribute-double-quotes.js"
+import { HTMLAttributeValuesRequireQuotesRule } from "../src/rules/html-attribute-values-require-quotes.js"
 import { ParserRule, SourceRule } from "../src/types.js"
 
 import type { LintOffense, LintContext } from "../src/types.js"
@@ -196,12 +199,77 @@ describe("@herb-tools/linter", () => {
     })
 
     test("can disable a rule with a comment", () => {
-      const html = '<DIV>test</DIV> <%# herb:disable html-tag-name-lowercase %>'
+      const html = dedent`
+        <DIV>test</DIV> <%# herb:disable html-tag-name-lowercase %>
+      `
+
       const linter = new Linter(Herb, [HTMLTagNameLowercaseRule])
       const lintResult = linter.lint(html)
 
       expect(lintResult.offenses).toHaveLength(0)
       expect(lintResult.ignored).toBe(2)
+    })
+
+    test("can disable multiple rules with a comment", () => {
+      const html = dedent`
+        <DIV id='1' class=<%= "hello" %>>test</DIV><%# herb:disable html-tag-name-lowercase, html-attribute-double-quotes %>
+      `
+
+      const linter = new Linter(
+        Herb,
+        [
+          HTMLTagNameLowercaseRule,
+          HTMLAttributeDoubleQuotesRule,
+          HTMLAttributeValuesRequireQuotesRule,
+        ],
+      )
+
+      const lintResult = linter.lint(html)
+
+      expect(lintResult.offenses).toHaveLength(1)
+      expect(lintResult.ignored).toBe(3)
+    })
+
+    test("can disable multiple rules with a comment and whitespace between comma and rules", () => {
+      const html = dedent`
+        <DIV id='1' class=<%= "hello" %>>test</DIV><%# herb:disable html-tag-name-lowercase,  html-attribute-double-quotes %>
+        <DIV id='1' class=<%= "hello" %>>test</DIV><%# herb:disable html-tag-name-lowercase  ,html-attribute-double-quotes %>
+        <DIV id='1' class=<%= "hello" %>>test</DIV><%# herb:disable  html-tag-name-lowercase  ,  html-attribute-double-quotes %>
+      `
+
+      const linter = new Linter(
+        Herb,
+        [
+          HTMLTagNameLowercaseRule,
+          HTMLAttributeDoubleQuotesRule,
+          HTMLAttributeValuesRequireQuotesRule,
+        ],
+      )
+
+      const lintResult = linter.lint(html)
+
+      expect(lintResult.offenses).toHaveLength(3)
+      expect(lintResult.ignored).toBe(9)
+    })
+
+    test("can disable all rules with a comment", () => {
+      const html = dedent`
+        <DIV id='1' class=<%= "hello" %>>test</DIV> <%# herb:disable all %>
+      `
+
+      const linter = new Linter(
+        Herb,
+        [
+          HTMLTagNameLowercaseRule,
+          HTMLAttributeDoubleQuotesRule,
+          HTMLAttributeValuesRequireQuotesRule
+        ],
+      )
+
+      const lintResult = linter.lint(html)
+
+      expect(lintResult.offenses).toHaveLength(0)
+      expect(lintResult.ignored).toBe(4)
     })
   })
 })
