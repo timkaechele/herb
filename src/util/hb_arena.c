@@ -1,4 +1,5 @@
 #include "../include/util/hb_arena.h"
+#include "../include/util/hb_arena_instrumentation.h"
 #include "../include/macros.h"
 #include "../include/util/hb_system.h"
 
@@ -80,6 +81,8 @@ bool hb_arena_init(hb_arena_T* allocator, size_t initial_size) {
   allocator->default_page_size = initial_size;
   allocator->allocation_count = 0;
 
+  hb_arena_instrumentation_log_init(allocator);
+
   return hb_arena_append_page(allocator, initial_size);
 }
 
@@ -92,13 +95,18 @@ void* hb_arena_alloc(hb_arena_T* allocator, size_t size) {
   allocator->allocation_count++;
 
   if (hb_arena_page_has_capacity(allocator->tail, required_size)) {
-    return hb_arena_page_alloc_from(allocator->tail, required_size);
+    void *allocation = hb_arena_page_alloc_from(allocator->tail, required_size);
+    hb_arena_instrumentation_log_alloc(allocator, size);
+    return allocation;
   }
 
   for (hb_arena_page_T* page = allocator->tail->next; page != NULL; page = page->next) {
     if (hb_arena_page_has_capacity(page, required_size)) {
       allocator->tail = page;
-      return hb_arena_page_alloc_from(allocator->tail, required_size);
+
+      void* allocation =  hb_arena_page_alloc_from(allocator->tail, required_size);
+      hb_arena_instrumentation_log_alloc(allocator, size);
+      return allocation;
     }
   }
 
@@ -106,7 +114,11 @@ void* hb_arena_alloc(hb_arena_T* allocator, size_t size) {
 
   if (!allocated) { return NULL; }
 
-  return hb_arena_page_alloc_from(allocator->tail, required_size);
+  void* allocation = hb_arena_page_alloc_from(allocator->tail, required_size);
+
+  hb_arena_instrumentation_log_alloc(allocator, size);
+
+  return allocation;
 }
 
 size_t hb_arena_position(hb_arena_T* allocator) {
@@ -136,12 +148,13 @@ void hb_arena_reset(hb_arena_T* allocator) {
 
   allocator->tail = allocator->head;
   allocator->allocation_count = 0;
+
+  hb_arena_instrumentation_log_reset(allocator, 0);
 }
 
 void hb_arena_reset_to(hb_arena_T* allocator, size_t target_position) {
   if (target_position == 0) {
     hb_arena_reset(allocator);
-
     return;
   }
 
@@ -160,6 +173,8 @@ void hb_arena_reset_to(hb_arena_T* allocator, size_t target_position) {
     accumulated += page->capacity;
     page->position = page->capacity;
   }
+
+  hb_arena_instrumentation_log_reset(allocator, target_position);
 }
 
 void hb_arena_free(hb_arena_T* allocator) {
