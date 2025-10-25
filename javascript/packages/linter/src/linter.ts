@@ -134,13 +134,28 @@ export class Linter {
     ruleOffenses: LintOffense[],
     ruleName: string,
     ignoredOffensesByLine?: Map<number, Set<string>>,
-    herbDisableCache?: Map<number, string[]>
-  ): { kept: LintOffense[], ignored: LintOffense[] } {
+    herbDisableCache?: Map<number, string[]>,
+    ignoreDisableComments?: boolean
+  ): { kept: LintOffense[], ignored: LintOffense[], wouldBeIgnored: LintOffense[] } {
     const kept: LintOffense[] = []
     const ignored: LintOffense[] = []
+    const wouldBeIgnored: LintOffense[] = []
 
     if (this.nonExcludableRules.includes(ruleName)) {
-      return { kept: ruleOffenses, ignored: [] }
+      return { kept: ruleOffenses, ignored: [], wouldBeIgnored: [] }
+    }
+
+    if (ignoreDisableComments) {
+      for (const offense of ruleOffenses) {
+        const line = offense.location.start.line
+        const disabledRules = herbDisableCache?.get(line) || []
+
+        if (disabledRules.includes(ruleName) || disabledRules.includes("all")) {
+          wouldBeIgnored.push(offense)
+        }
+      }
+
+      return { kept: ruleOffenses, ignored: [], wouldBeIgnored }
     }
 
     for (const offense of ruleOffenses) {
@@ -165,7 +180,7 @@ export class Linter {
       kept.push(offense)
     }
 
-    return { kept, ignored }
+    return { kept, ignored, wouldBeIgnored: [] }
   }
 
 
@@ -178,6 +193,7 @@ export class Linter {
     this.offenses = []
 
     let ignoredCount = 0
+    let wouldBeIgnoredCount = 0
 
     const parseResult = this.herb.parse(source, { track_whitespace: true })
     const lexResult = this.herb.lex(source)
@@ -211,9 +227,16 @@ export class Linter {
       const rule = new RuleClass()
       const ruleOffenses = this.executeRule(rule, parseResult, lexResult, source, hasParserErrors, context)
 
-      const { kept, ignored } = this.filterOffenses(ruleOffenses, rule.name, ignoredOffensesByLine, herbDisableCache)
+      const { kept, ignored, wouldBeIgnored } = this.filterOffenses(
+        ruleOffenses,
+        rule.name,
+        ignoredOffensesByLine,
+        herbDisableCache,
+        context?.ignoreDisableComments
+      )
 
       ignoredCount += ignored.length
+      wouldBeIgnoredCount += wouldBeIgnored.length
       this.offenses.push(...kept)
     }
 
@@ -233,12 +256,18 @@ export class Linter {
     const errors = this.offenses.filter(offense => offense.severity === "error").length
     const warnings = this.offenses.filter(offense => offense.severity === "warning").length
 
-    return {
+    const result: LintResult = {
       offenses: this.offenses,
       errors,
       warnings,
       ignored: ignoredCount
     }
+
+    if (wouldBeIgnoredCount > 0) {
+      result.wouldBeIgnored = wouldBeIgnoredCount
+    }
+
+    return result
   }
 
   /**

@@ -63,6 +63,7 @@ export interface LintResult<TAutofixContext extends BaseAutofixContext = BaseAut
   errors: number
   warnings: number
   ignored: number
+  wouldBeIgnored?: number
 }
 
 /**
@@ -144,6 +145,7 @@ export interface LintContext {
   fileName: string | undefined
   validRuleNames: string[] | undefined
   ignoredOffensesByLine: Map<number, Set<string>> | undefined
+  ignoreDisableComments: boolean | undefined
 }
 
 /**
@@ -152,7 +154,8 @@ export interface LintContext {
 export const DEFAULT_LINT_CONTEXT: LintContext = {
   fileName: undefined,
   validRuleNames: undefined,
-  ignoredOffensesByLine: undefined
+  ignoredOffensesByLine: undefined,
+  ignoreDisableComments: undefined
 } as const
 
 export abstract class SourceRule<TAutofixContext extends BaseAutofixContext = BaseAutofixContext> {

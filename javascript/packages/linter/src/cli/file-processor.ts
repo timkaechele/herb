@@ -19,12 +19,14 @@ export interface ProcessingContext {
   projectPath?: string
   pattern?: string
   fix?: boolean
+  ignoreDisableComments?: boolean
 }
 
 export interface ProcessingResult {
   totalErrors: number
   totalWarnings: number
   totalIgnored: number
+  totalWouldBeIgnored?: number
   filesWithOffenses: number
   filesFixed: number
   ruleCount: number
@@ -54,6 +56,7 @@ export class FileProcessor {
     let totalErrors = 0
     let totalWarnings = 0
     let totalIgnored = 0
+    let totalWouldBeIgnored = 0
     let filesWithOffenses = 0
     let filesFixed = 0
     let ruleCount = 0
@@ -88,14 +91,20 @@ export class FileProcessor {
         this.linter = new Linter(Herb)
       }
 
-      const lintResult = this.linter.lint(content, { fileName: filename })
+      const lintResult = this.linter.lint(content, {
+        fileName: filename,
+        ignoreDisableComments: context?.ignoreDisableComments
+      })
 
       if (ruleCount === 0) {
         ruleCount = this.linter.getRuleCount()
       }
 
       if (context?.fix && lintResult.offenses.length > 0) {
-        const autofixResult = this.linter.autofix(content, { fileName: filename })
+        const autofixResult = this.linter.autofix(content, {
+          fileName: filename,
+          ignoreDisableComments: context?.ignoreDisableComments
+        })
 
         if (autofixResult.fixed.length > 0) {
           writeFileSync(filePath, autofixResult.source, "utf-8")
@@ -152,8 +161,27 @@ export class FileProcessor {
         filesWithOffenses++
       }
       totalIgnored += lintResult.ignored
+      if (lintResult.wouldBeIgnored) {
+        totalWouldBeIgnored += lintResult.wouldBeIgnored
+      }
     }
 
-    return { totalErrors, totalWarnings, totalIgnored, filesWithOffenses, filesFixed, ruleCount, allOffenses, ruleOffenses, context }
+    const result: ProcessingResult = {
+      totalErrors,
+      totalWarnings,
+      totalIgnored,
+      filesWithOffenses,
+      filesFixed,
+      ruleCount,
+      allOffenses,
+      ruleOffenses,
+      context
+    }
+
+    if (totalWouldBeIgnored > 0) {
+      result.totalWouldBeIgnored = totalWouldBeIgnored
+    }
+
+    return result
   }
 }
