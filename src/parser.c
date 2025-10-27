@@ -609,7 +609,7 @@ static AST_HTML_ATTRIBUTE_NODE_T* parser_parse_html_attribute(parser_T* parser) 
       token_T* equals_with_whitespace = calloc(1, sizeof(token_T));
       equals_with_whitespace->type = TOKEN_EQUALS;
       // TODO(Tim): This is a leak
-      equals_with_whitespace->value = hb_string_from_c_string(equals_buffer.value);
+      equals_with_whitespace->value = hb_string(equals_buffer.value);
       equals_with_whitespace->location = (location_T) { .start = equals_start, .end = equals_end };
       equals_with_whitespace->range = (range_T) { .from = range_start, .to = range_end };
 
@@ -719,7 +719,7 @@ static bool parser_lookahead_erb_is_attribute(lexer_T* lexer) {
 
 static void parser_handle_erb_in_open_tag(parser_T* parser, hb_array_T* children) {
   bool is_output_tag = !hb_string_is_empty(parser->current_token->value)
-    && hb_string_starts_with(parser->current_token->value, hb_string_from_c_string("<%="));
+    && hb_string_starts_with(parser->current_token->value, hb_string("<%="));
 
   if (!is_output_tag) {
     hb_array_append(children, parser_parse_erb_tag(parser));
