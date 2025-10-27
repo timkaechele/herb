@@ -21,9 +21,9 @@ void herb_extract_ruby_to_buffer_with_semicolons(const char* source, hb_buffer_T
       }
 
       case TOKEN_ERB_START: {
-        if (hb_string_equals(token->value, hb_string_from_c_string("<%#"))
-            || hb_string_equals(token->value, hb_string_from_c_string("<%%"))
-            || hb_string_equals(token->value, hb_string_from_c_string("<%%="))) {
+        if (hb_string_equals(token->value, hb_string("<%#"))
+            || hb_string_equals(token->value, hb_string("<%%"))
+            || hb_string_equals(token->value, hb_string("<%%="))) {
           skip_erb_content = true;
         }
 
@@ -73,9 +73,9 @@ void herb_extract_ruby_to_buffer(const char* source, hb_buffer_T* output) {
       }
 
       case TOKEN_ERB_START: {
-        if (hb_string_equals(token->value, hb_string_from_c_string("<%#"))
-            || hb_string_equals(token->value, hb_string_from_c_string("<%%"))
-            || hb_string_equals(token->value, hb_string_from_c_string("<%%="))) {
+        if (hb_string_equals(token->value, hb_string("<%#"))
+            || hb_string_equals(token->value, hb_string("<%%"))
+            || hb_string_equals(token->value, hb_string("<%%="))) {
           skip_erb_content = true;
         }
 
