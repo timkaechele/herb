@@ -7,7 +7,7 @@
 
 int is_newline(int character);
 
-char* escape_newlines(const char* input);
+hb_string_T escape_newlines(hb_string_T input);
 hb_string_T quoted_string(hb_string_T input);
 char* herb_strdup(const char* s);
 

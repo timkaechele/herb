@@ -235,19 +235,19 @@ void pretty_print_string_property(
   hb_buffer_T* buffer
 ) {
   const char* value = "∅";
-  char* escaped = NULL;
+  hb_string_T escaped = { .data = NULL, .length = 0 };
   hb_string_T quoted;
 
   if (string != NULL) {
-    escaped = escape_newlines(string);
-    quoted = quoted_string(hb_string(escaped));
+    escaped = escape_newlines(hb_string(string));
+    quoted = quoted_string(escaped);
     value = quoted.data;
   }
 
   pretty_print_property(name, value, indent, relative_indent, last_property, buffer);
 
   if (string != NULL) {
-    if (escaped != NULL) { free(escaped); }
+    if (!hb_string_is_empty(escaped)) { free(escaped.data); }
     if (!hb_string_is_empty(quoted)) { free(quoted.data); }
   }
 }
