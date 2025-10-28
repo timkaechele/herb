@@ -94,8 +94,8 @@ void parser_exit_foreign_content(parser_T* parser) {
 
 void parser_append_unexpected_error(
   parser_T* parser,
-  const char* description,
-  const char* expected,
+  hb_string_T description,
+  hb_string_T expected,
   hb_array_T* errors
 ) {
   token_T* token = parser_advance(parser);
@@ -128,10 +128,9 @@ void parser_append_literal_node_from_buffer(
   hb_array_T* children,
   position_T start
 ) {
-  if (hb_buffer_length(buffer) == 0) { return; }
-
+  if (buffer->length == 0) { return; }
   AST_LITERAL_NODE_T* literal =
-    ast_literal_node_init(hb_buffer_value(buffer), start, parser->current_token->location.start, NULL);
+    ast_literal_node_init(hb_string(buffer->value), start, parser->current_token->location.start, NULL);
 
   if (children != NULL) { hb_array_append(children, literal); }
   hb_buffer_clear(buffer);
