@@ -42,10 +42,7 @@ void error_init(ERROR_T* error, const error_type_T type, position_T start, posit
   if (message) {
     <%- error.message_arguments.each_with_index do |argument, i| -%>
     <%- if error.message_template.scan(/%[sdulfz]/)[i] == "%s" -%>
-    char truncated_argument_<%= i %>[ERROR_MESSAGES_TRUNCATED_LENGTH + 1];
-    strncpy(truncated_argument_<%= i %>, <%= argument %>, ERROR_MESSAGES_TRUNCATED_LENGTH);
-    truncated_argument_<%= i %>[ERROR_MESSAGES_TRUNCATED_LENGTH] = '\0';
-
+    hb_string_T truncated_argument_<%= i %> = hb_string_truncate(<%= argument %>, ERROR_MESSAGES_TRUNCATED_LENGTH);
     <%- end -%>
     <%- end -%>
     snprintf(
