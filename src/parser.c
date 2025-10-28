@@ -243,8 +243,8 @@ static AST_HTML_TEXT_NODE_T* parser_parse_text_content(parser_T* parser, hb_arra
 
       token_T* token = parser_consume_expected(parser, TOKEN_ERROR, document_errors);
       append_unexpected_error(
-        "Token Error",
-        "not TOKEN_ERROR",
+        hb_string("Token Error"),
+        hb_string("not TOKEN_ERROR"),
         token->value,
         token->location.start,
         token->location.end,
@@ -267,9 +267,9 @@ static AST_HTML_TEXT_NODE_T* parser_parse_text_content(parser_T* parser, hb_arra
 
   if (hb_buffer_length(&content) > 0) {
     text_node =
-      ast_html_text_node_init(hb_buffer_value(&content), start, parser->current_token->location.start, errors);
+      ast_html_text_node_init(hb_string(content.value), start, parser->current_token->location.start, errors);
   } else {
-    text_node = ast_html_text_node_init("", start, parser->current_token->location.start, errors);
+    text_node = ast_html_text_node_init(hb_string(""), start, parser->current_token->location.start, errors);
   }
 
   free(content.value);
@@ -394,8 +394,8 @@ static AST_HTML_ATTRIBUTE_VALUE_NODE_T* parser_parse_quoted_html_attribute_value
 
     if (token_is(parser, TOKEN_IDENTIFIER) || token_is(parser, TOKEN_CHARACTER)) {
       append_unexpected_error(
-        "Unescaped quote character in attribute value",
-        "escaped quote (\\') or different quote style (\")",
+        hb_string("Unescaped quote character in attribute value"),
+        hb_string("escaped quote (\\') or different quote style (\")"),
         opening_quote->value,
         potential_closing->location.start,
         potential_closing->location.end,
@@ -518,9 +518,9 @@ static AST_HTML_ATTRIBUTE_VALUE_NODE_T* parser_parse_html_attribute_value(parser
     position_T end = token->location.end;
 
     append_unexpected_error(
-      "Invalid quote character for HTML attribute",
-      "single quote (') or double quote (\")",
-      "backtick (`)",
+      hb_string("Invalid quote character for HTML attribute"),
+      hb_string("single quote (') or double quote (\")"),
+      hb_string("backtick (`)"),
       start,
       end,
       errors
@@ -535,8 +535,8 @@ static AST_HTML_ATTRIBUTE_VALUE_NODE_T* parser_parse_html_attribute_value(parser
   }
 
   append_unexpected_error(
-    "Unexpected Token",
-    "TOKEN_IDENTIFIER, TOKEN_QUOTE, TOKEN_ERB_START",
+    hb_string("Unexpected Token"),
+    hb_string("TOKEN_IDENTIFIER, TOKEN_QUOTE, TOKEN_ERB_START"),
     token_type_to_string(parser->current_token->type),
     parser->current_token->location.start,
     parser->current_token->location.end,
@@ -799,8 +799,8 @@ static AST_HTML_OPEN_TAG_NODE_T* parser_parse_html_open_tag(parser_T* parser) {
 
     parser_append_unexpected_error(
       parser,
-      "Unexpected Token",
-      "TOKEN_IDENTIFIER, TOKEN_AT, TOKEN_ERB_START,TOKEN_WHITESPACE, or TOKEN_NEWLINE",
+      hb_string("Unexpected Token"),
+      hb_string("TOKEN_IDENTIFIER, TOKEN_AT, TOKEN_ERB_START,TOKEN_WHITESPACE, or TOKEN_NEWLINE"),
       errors
     );
   }
@@ -863,8 +863,8 @@ static AST_HTML_CLOSE_TAG_NODE_T* parser_parse_html_close_tag(parser_T* parser) 
 
     append_void_element_closing_tag_error(
       tag_name,
-      expected.data,
-      got.data,
+      expected,
+      got,
       tag_opening->location.start,
       tag_closing->location.end,
       errors
@@ -974,7 +974,7 @@ static AST_HTML_ELEMENT_NODE_T* parser_parse_html_element(parser_T* parser) {
 
   hb_array_T* errors = hb_array_init(8);
 
-  parser_append_unexpected_error(parser, "Unknown HTML open tag type", "HTMLOpenTag or HTMLSelfCloseTag", errors);
+  parser_append_unexpected_error(parser, hb_string("Unknown HTML open tag type"), hb_string("HTMLOpenTag or HTMLSelfCloseTag"), errors);
 
   return ast_html_element_node_init(
     open_tag,
@@ -1134,9 +1134,9 @@ static void parser_parse_in_data_state(parser_T* parser, hb_array_T* children, h
 
     parser_append_unexpected_error(
       parser,
-      "Unexpected token",
-      "TOKEN_ERB_START, TOKEN_HTML_DOCTYPE, TOKEN_HTML_COMMENT_START, TOKEN_IDENTIFIER, TOKEN_WHITESPACE, "
-      "TOKEN_NBSP, TOKEN_AT, TOKEN_BACKSLASH, or TOKEN_NEWLINE",
+      hb_string("Unexpected token"),
+      hb_string("TOKEN_ERB_START, TOKEN_HTML_DOCTYPE, TOKEN_HTML_COMMENT_START, TOKEN_IDENTIFIER, TOKEN_WHITESPACE, "
+      "TOKEN_NBSP, TOKEN_AT, TOKEN_BACKSLASH, or TOKEN_NEWLINE"),
       errors
     );
   }
