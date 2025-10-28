@@ -134,7 +134,6 @@ static void error_free_<%= error.human %>(<%= error.struct_type %>* <%= error.hu
   <%- when Herb::Template::SizeTField -%>
   // size_t is part of struct
   <%- when Herb::Template::StringField -%>
-  if (<%= error.human %>-><%= field.name %> != NULL) { free((char*) <%= error.human %>-><%= field.name %>); }
   <%- else -%>
   <%= field.inspect %>
   <%- end -%>
