@@ -58,7 +58,7 @@ void lexer_init(lexer_T* lexer, const char* source) {
 
 token_T* lexer_error(lexer_T* lexer, const char* message) {
   size_t error_message_length = 128;
-  char* error_message = hb_arena_alloc(lexer->allocator, sizeof(char) * error_message_length);
+  char* error_message = malloc(sizeof(char) * error_message_length); // hb_arena_alloc(lexer->allocator, sizeof(char) * error_message_length);
 
   snprintf(
     error_message,
