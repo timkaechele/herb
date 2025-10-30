@@ -119,8 +119,11 @@ static token_T* lexer_advance_with_next(lexer_T* lexer, size_t count, token_type
 
   uint32_t end_position = lexer->current_position;
 
+  hb_string_T value = hb_string_slice(lexer->source, start_position);
+  value = hb_string_truncate(value, end_position - start_position);
+
   token_T* token = token_init(
-    (hb_string_T) { .data = lexer->source.data + start_position, .length = end_position - start_position },
+    value,
     type,
     lexer
   );
@@ -140,8 +143,8 @@ static token_T* lexer_advance_utf8_character(lexer_T* lexer, const token_type_T 
   size_t start_position = lexer->current_position;
   lexer_advance_utf8_bytes(lexer, char_byte_length);
 
-  hb_string_T utf8_char = hb_string_slice(lexer->source, lexer->current_position);
-  utf8_char.length = MIN(char_byte_length, utf8_char.length);
+  hb_string_T utf8_char = hb_string_slice(lexer->source, start_position);
+  utf8_char = hb_string_truncate(utf8_char, char_byte_length);
 
   return token_init(utf8_char, type, lexer);
 }
@@ -164,7 +167,7 @@ static token_T* lexer_parse_whitespace(lexer_T* lexer) {
   uint32_t end_position = lexer->current_position;
 
   hb_string_T value = hb_string_slice(lexer->source, start_position);
-  value.length = end_position - start_position;
+  value = hb_string_truncate(value, end_position - start_position);
 
   token_T* token = token_init(value, TOKEN_WHITESPACE, lexer);
 
@@ -182,6 +185,7 @@ static token_T* lexer_parse_identifier(lexer_T* lexer) {
   uint32_t end_position = lexer->current_position;
 
   hb_string_T value = hb_string_slice(lexer->source, start_position);
+  value = hb_string_truncate(value, end_position - start_position);
   value.length = end_position - start_position;
 
   token_T* token = token_init(value, TOKEN_IDENTIFIER, lexer);
@@ -233,7 +237,7 @@ static token_T* lexer_parse_erb_content(lexer_T* lexer) {
 
   uint32_t end_position = lexer->current_position;
   hb_string_T value = hb_string_slice(lexer->source, start_position);
-  value.length = end_position - start_position;
+  value = hb_string_truncate(value, end_position - start_position);
 
   return token_init(value, TOKEN_ERB_CONTENT, lexer);
 }
