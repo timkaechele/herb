@@ -33,7 +33,7 @@ XHTML and HTML styles.
 <custom-element></custom-element>
 
 <img src="/logo.png" alt="Logo">
-<input type="text">
+<input type="text" autocomplete="off">
 <br>
 <hr>
 ```
@@ -51,7 +51,7 @@ XHTML and HTML styles.
 
 <img src="/logo.png" alt="Logo" />
 
-<input type="text" />
+<input type="text" autocomplete="off" />
 
 <br />
 
