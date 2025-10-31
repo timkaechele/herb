@@ -42,6 +42,11 @@ ruby:
       - 'lib/**/*.rb'
       - 'ext/**/*.rb'
 
+c-extension:
+  - changed-files:
+    - any-glob-to-any-file:
+      - 'ext/**/*'
+
 sorbet:
   - changed-files:
     - any-glob-to-any-file:
@@ -183,11 +188,11 @@ playground:
     - any-glob-to-any-file:
       - 'playground/**/*'
 
-gem:
+rubygem:
   - changed-files:
     - any-glob-to-any-file:
       - 'herb.gemspec'
-      - 'lib/**/*.rb'
+      - 'lib/**/*'
 
 documentation:
   - changed-files:
