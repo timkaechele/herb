@@ -1,31 +1,24 @@
 {
-  "name": "@herb-tools/tailwind-class-sorter",
+  "name": "@herb-tools/rewriter",
   "$schema": "../../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "javascript/packages/tailwind-class-sorter/src",
+  "sourceRoot": "javascript/packages/rewriter/src",
   "projectType": "library",
   "targets": {
     "build": {
       "executor": "nx:run-script",
       "options": {
         "script": "build"
-      }
+      },
+      "dependsOn": [
+        "@herb-tools/core:build",
+        "@herb-tools/printer:build",
+        "@herb-tools/tailwind-class-sorter:build"
+      ]
     },
     "test": {
       "executor": "nx:run-script",
       "options": {
         "script": "test"
-      }
-    },
-    "dev": {
-      "executor": "nx:run-script",
-      "options": {
-        "script": "dev"
-      }
-    },
-    "format": {
-      "executor": "nx:run-script",
-      "options": {
-        "script": "format"
       }
     },
     "clean": {
