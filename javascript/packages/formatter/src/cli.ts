@@ -1,14 +1,14 @@
 import dedent from "dedent"
 import { readFileSync, writeFileSync, statSync } from "fs"
 import { glob } from "glob"
-import { join, resolve, relative } from "path"
+import { resolve, relative } from "path"
 
 import { Herb } from "@herb-tools/node-wasm"
 import { Config, addHerbExtensionRecommendation, getExtensionsJsonRelativePath } from "@herb-tools/config"
 
 import { Formatter } from "./formatter.js"
+import { ASTRewriter, StringRewriter, CustomRewriterLoader, builtinRewriters, isASTRewriterClass, isStringRewriterClass } from "@herb-tools/rewriter/loader"
 import { parseArgs } from "util"
-import { resolveFormatOptions } from "./options.js"
 
 import { name, version, dependencies } from "../package.json"
 
@@ -165,7 +165,6 @@ export class CLI {
 
       const config = await Config.loadForCLI(configFile || startPath, version)
       const formatterConfig = config.formatter || {}
-      const filesConfig = config.getFilesConfigForTool('formatter')
 
       if (formatterConfig.enabled === false && !isForceMode) {
         console.log("Formatter is disabled in .herb.yml configuration.")
@@ -183,12 +182,113 @@ export class CLI {
       console.error("⚠️  Experimental Preview: The formatter is in early development. Please report any unexpected behavior or bugs to https://github.com/marcoroth/herb/issues/new?template=formatting-issue.md")
       console.error()
 
-      const formatOptions = resolveFormatOptions({
-        indentWidth,
-        maxLineLength
-      })
+      if (indentWidth !== undefined) {
+        formatterConfig.indentWidth = indentWidth
+      }
 
-      const formatter = new Formatter(Herb, formatOptions)
+      if (maxLineLength !== undefined) {
+        formatterConfig.maxLineLength = maxLineLength
+      }
+
+      let preRewriters: ASTRewriter[] = []
+      let postRewriters: StringRewriter[] = []
+      const rewriterNames = { pre: formatterConfig.rewriter?.pre || [], post: formatterConfig.rewriter?.post || [] }
+
+      if (formatterConfig.rewriter && (rewriterNames.pre.length > 0 || rewriterNames.post.length > 0)) {
+        const baseDir = config.projectPath || process.cwd()
+        const warnings: string[] = []
+        const allRewriterClasses: any[] = []
+
+        allRewriterClasses.push(...builtinRewriters)
+
+        const loader = new CustomRewriterLoader({ baseDir })
+        const { rewriters: customRewriters, duplicateWarnings } = await loader.loadRewritersWithInfo()
+
+        allRewriterClasses.push(...customRewriters)
+        warnings.push(...duplicateWarnings)
+
+        const rewriterMap = new Map<string, any>()
+        for (const RewriterClass of allRewriterClasses) {
+          const instance = new RewriterClass()
+
+          if (rewriterMap.has(instance.name)) {
+            warnings.push(`Rewriter "${instance.name}" is defined multiple times. Using the last definition.`)
+          }
+
+          rewriterMap.set(instance.name, RewriterClass)
+        }
+
+        for (const name of rewriterNames.pre) {
+          const RewriterClass = rewriterMap.get(name)
+
+          if (!RewriterClass) {
+            warnings.push(`Pre-format rewriter "${name}" not found. Skipping.`)
+            continue
+          }
+
+          if (!isASTRewriterClass(RewriterClass)) {
+            warnings.push(`Rewriter "${name}" is not a pre-format rewriter. Skipping.`)
+
+            continue
+          }
+
+          const instance = new RewriterClass()
+          try {
+            await instance.initialize({ baseDir })
+            preRewriters.push(instance)
+          } catch (error) {
+            warnings.push(`Failed to initialize pre-format rewriter "${name}": ${error}`)
+          }
+        }
+
+        for (const name of rewriterNames.post) {
+          const RewriterClass = rewriterMap.get(name)
+
+          if (!RewriterClass) {
+            warnings.push(`Post-format rewriter "${name}" not found. Skipping.`)
+
+            continue
+          }
+
+          if (!isStringRewriterClass(RewriterClass)) {
+            warnings.push(`Rewriter "${name}" is not a post-format rewriter. Skipping.`)
+
+            continue
+          }
+
+          const instance = new RewriterClass()
+
+          try {
+            await instance.initialize({ baseDir })
+
+            postRewriters.push(instance)
+          } catch (error) {
+            warnings.push(`Failed to initialize post-format rewriter "${name}": ${error}`)
+          }
+        }
+
+        if (preRewriters.length > 0 || postRewriters.length > 0) {
+          const parts: string[] = []
+
+          if (preRewriters.length > 0) {
+            parts.push(`${preRewriters.length} pre-format ${pluralize(preRewriters.length, 'rewriter')}: ${rewriterNames.pre.join(', ')}`)
+          }
+
+          if (postRewriters.length > 0) {
+            parts.push(`${postRewriters.length} post-format ${pluralize(postRewriters.length, 'rewriter')}: ${rewriterNames.post.join(', ')}`)
+          }
+
+          console.error(`Using ${parts.join(', ')}`)
+          console.error()
+        }
+
+        if (warnings.length > 0) {
+          warnings.forEach(warning => console.error(`⚠️  ${warning}`))
+          console.error()
+        }
+      }
+
+      const formatter = Formatter.from(Herb, config, { preRewriters, postRewriters })
 
       if (!file && !process.stdin.isTTY) {
         if (isCheckMode) {
