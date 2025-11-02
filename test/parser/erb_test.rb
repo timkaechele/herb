@@ -205,5 +205,13 @@ module Parser
         <% end =%>
       HTML
     end
+
+    test "unterminated erb missing closing %>" do
+      assert_parsed_snapshot(%(<% if true))
+    end
+
+    test "unterminated erb missing closing >" do
+      assert_parsed_snapshot(%(<% if true %))
+    end
   end
 end
