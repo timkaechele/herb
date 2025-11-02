@@ -30,7 +30,7 @@ Clone the repository and build the Java bindings:
 
 :::code-group
 ```shell
-git clone https://github.com/your-org/herb.git
+git clone https://github.com/marcoroth/herb
 cd herb/java
 make templates
 make jni
