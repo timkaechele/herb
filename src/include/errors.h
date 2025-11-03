@@ -73,15 +73,15 @@ hb_string_T error_human_type(error_T* error);
 
 void error_free(error_T* error);
 
-void error_pretty_print(error_T* error, size_t indent, size_t relative_indent, hb_buffer_T* buffer);
+// void error_pretty_print(error_T* error, size_t indent, size_t relative_indent, hb_buffer_T* buffer);
 
-void error_pretty_print_array(
-  hb_string_T name,
-  hb_array_T* array,
-  size_t indent,
-  size_t relative_indent,
-  bool last_property,
-  hb_buffer_T* buffer
-);
+// void error_pretty_print_array(
+//   hb_string_T name,
+//   hb_array_T* array,
+//   size_t indent,
+//   size_t relative_indent,
+//   bool last_property,
+//   hb_buffer_T* buffer
+// );
 
 #endif
