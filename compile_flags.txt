@@ -1,0 +1,7 @@
+-Wall
+-Wextra
+-Werror
+-pedantic
+-std=c99
+-std=gnu99
+-Ivendor/prism/include
