@@ -26,7 +26,6 @@ typedef enum {
 typedef struct ERROR_STRUCT {
   error_type_T type;
   location_T location;
-  hb_string_T message;
   union {
     struct {
       hb_string_T description;
