@@ -48,7 +48,7 @@ hb_array_T* ast_node_errors(const AST_NODE_T* node) {
   return node->errors;
 }
 
-void ast_node_append_error(const AST_NODE_T* node, ERROR_T* error) {
+void ast_node_append_error(const AST_NODE_T* node, error_T* error) {
   hb_array_append(node->errors, error);
 }
 

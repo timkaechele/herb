@@ -1179,7 +1179,7 @@ void herb_analyze_parse_errors(AST_DOCUMENT_NODE_T* document, const char* source
   for (const pm_diagnostic_t* error = (const pm_diagnostic_t*) parser.error_list.head; error != NULL;
        error = (const pm_diagnostic_t*) error->node.next) {
 
-    RUBY_PARSE_ERROR_T* parse_error = ruby_parse_error_from_prism_error(error, (AST_NODE_T*) document, source, &parser);
+    error_T* parse_error = ruby_parse_error_from_prism_error(error, (AST_NODE_T*) document, source, &parser);
     hb_array_append(document->base.errors, parse_error);
   }
 

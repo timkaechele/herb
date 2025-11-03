@@ -31,7 +31,7 @@ position_T position_from_source_with_offset(const char* source, size_t offset) {
   return position;
 }
 
-RUBY_PARSE_ERROR_T* ruby_parse_error_from_prism_error(
+error_T* ruby_parse_error_from_prism_error(
   const pm_diagnostic_t* error,
   const AST_NODE_T* node,
   const char* source,

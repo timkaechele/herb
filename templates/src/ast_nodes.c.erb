@@ -74,7 +74,7 @@ void ast_free_base_node(AST_NODE_T* node) {
 
   if (node->errors) {
     for (size_t i = 0; i < hb_array_size(node->errors); i++) {
-      ERROR_T* child = hb_array_get(node->errors, i);
+      error_T* child = hb_array_get(node->errors, i);
       if (child != NULL) { error_free(child); }
     }
 
