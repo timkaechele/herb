@@ -8,6 +8,7 @@
 #include "include/token.h"
 #include "include/util.h"
 #include "include/util/hb_array.h"
+#include "include/util/hb_string.h"
 
 #include <stdio.h>
 #include <stdbool.h>
@@ -430,7 +431,7 @@ hb_string_T error_type_to_string(error_T* error) {
   return hb_string("Unknown error_type_T");
 }
 
-const char* error_human_type(error_T* error) {
+hb_string_T error_human_type(error_T* error) {
   switch (error->type) {
     case UNEXPECTED_ERROR: return hb_string("UnexpectedError");
     case UNEXPECTED_TOKEN_ERROR: return hb_string("UnexpectedTokenError");
