@@ -10,6 +10,7 @@ Herb provides official Java bindings through JNI (Java Native Interface) to the 
 > Herb also has bindings for:
 > - [Ruby](/bindings/ruby/)
 > - [JavaScript/Node.js](/bindings/javascript/)
+> - [Rust](/bindings/rust/)
 
 ## Installation
 

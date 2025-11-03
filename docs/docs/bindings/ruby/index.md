@@ -10,6 +10,7 @@ Herb is bundled and packaged up as a precompiled RubyGem and available to be ins
 > Herb also has bindings for:
 > - [JavaScript/Node.js](/bindings/javascript/)
 > - [Java](/bindings/java/)
+> - [Rust](/bindings/rust/)
 
 ## Installation
 

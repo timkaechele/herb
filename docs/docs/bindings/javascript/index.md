@@ -8,6 +8,7 @@ Herb supports both **browser** and **Node.js** environments with separate packag
 > Herb also has bindings for:
 > - [Ruby](/bindings/ruby/)
 > - [Java](/bindings/java/)
+> - [Rust](/bindings/rust/)
 
 ## Installation
 

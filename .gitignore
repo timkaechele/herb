@@ -108,6 +108,9 @@ javascript/packages/node/extension/nodes.h
 lib/herb/ast/nodes.rb
 lib/herb/errors.rb
 lib/herb/visitor.rb
+rust/src/ast/nodes.rs
+rust/src/errors.rs
+rust/src/nodes.rs
 sig/serialized_ast_errors.rbs
 sig/serialized_ast_nodes.rbs
 src/ast_nodes.c
@@ -125,6 +128,10 @@ wasm/nodes.h
 # Java Build Artifacts
 java/target/
 java/.java_compiled
+
+# Rust Build Artifacts
+rust/target/
+rust/Cargo.lock
 
 # NX Monorepo
 .nx/

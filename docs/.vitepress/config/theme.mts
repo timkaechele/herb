@@ -98,6 +98,14 @@ const defaultSidebar = [
           { text: "Reference", link: "/bindings/java/reference" },
         ],
       },
+      {
+        text: "Rust",
+        collapsed: false,
+        items: [
+          { text: "Installation", link: "/bindings/rust/" },
+          { text: "Reference", link: "/bindings/rust/reference" },
+        ],
+      },
       { text: "WebAssembly", link: "/projects/webassembly" },
     ],
   },
