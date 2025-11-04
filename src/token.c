@@ -119,10 +119,6 @@ char* token_to_string(const token_T* token) {
   return string;
 }
 
-int token_type(const token_T* token) {
-  return token->type;
-}
-
 token_T* token_copy(token_T* token) {
   if (!token) { return NULL; }
 
