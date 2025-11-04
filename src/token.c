@@ -9,12 +9,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-size_t token_sizeof(void) {
-  return sizeof(struct TOKEN_STRUCT);
-}
-
 token_T* token_init(const char* value, const token_type_T type, lexer_T* lexer) {
-  token_T* token = calloc(1, token_sizeof());
+  token_T* token = calloc(1, sizeof(token_T));
 
   if (type == TOKEN_NEWLINE) {
     lexer->current_line++;
@@ -122,7 +118,7 @@ char* token_to_string(const token_T* token) {
 token_T* token_copy(token_T* token) {
   if (!token) { return NULL; }
 
-  token_T* new_token = calloc(1, token_sizeof());
+  token_T* new_token = calloc(1, sizeof(token_T));
 
   if (!new_token) { return NULL; }
 
