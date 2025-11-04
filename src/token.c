@@ -119,10 +119,6 @@ char* token_to_string(const token_T* token) {
   return string;
 }
 
-char* token_value(const token_T* token) {
-  return token->value;
-}
-
 int token_type(const token_T* token) {
   return token->type;
 }
