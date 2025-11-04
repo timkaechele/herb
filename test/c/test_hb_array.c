@@ -1,105 +1,152 @@
 #include "include/test.h"
 #include "../../src/include/util/hb_array.h"
 
-// Test array initialization
 TEST(test_hb_array_init)
-  hb_array_T* array = hb_array_init(10);
+  hb_array_T array;
 
-  ck_assert_ptr_nonnull(array);
-  ck_assert_int_eq(array->size, 0);
-  ck_assert_int_eq(array->capacity, 10);
-  ck_assert_ptr_nonnull(array->items);
+  hb_array_init(&array, sizeof(uint64_t), 1024);
 
-  hb_array_free(&array);
+  ck_assert_int_eq(array.item_size, sizeof(uint64_t));
+  ck_assert_int_eq(array.capacity, 1024);
+  ck_assert_int_eq(array.size, 0);
+  ck_assert_ptr_nonnull(array.items);
+
+  hb_array_deinit(&array);
 END
 
-// Test array appending
+TEST(test_hb_array_pointer_init)
+  hb_array_T array;
+
+  hb_array_pointer_init(&array, 1024);
+
+  ck_assert_int_eq(array.item_size, sizeof(void *));
+  ck_assert_int_eq(array.capacity, 1024);
+  ck_assert_int_eq(array.size, 0);
+  ck_assert_ptr_nonnull(array.items);
+
+  hb_array_deinit(&array);
+END
+
 TEST(test_hb_array_append)
-  hb_array_T* array = hb_array_init(2);
+  hb_array_T array;
 
-  size_t item1 = 42, item2 = 99, item3 = 100;
-  hb_array_append(array, &item1);
-  hb_array_append(array, &item2);
+  hb_array_init(&array, sizeof(uint64_t), 2);
 
-  ck_assert_int_eq(array->size, 2);
-  ck_assert_int_eq(array->capacity, 2);
-  ck_assert_ptr_eq(array->items[0], &item1);
-  ck_assert_ptr_eq(array->items[1], &item2);
+  uint64_t number = 1;
+  hb_array_append(&array, &number);
+  ck_assert_int_eq(array.capacity, 2);
 
-  // Trigger reallocation
-  hb_array_append(array, &item3);
-  ck_assert_int_eq(array->size, 3);
-  ck_assert_int_eq(array->capacity, 4);
+  number = 2;
+  hb_array_append(&array, &number);
+  ck_assert_int_eq(array.capacity, 2);
 
-  hb_array_free(&array);
+  number = 3;
+  hb_array_append(&array, &number);
+  ck_assert_int_eq(array.capacity, 4);
+
+  ck_assert_int_eq(*(uint64_t *)hb_array_get(&array, 0), 1);
+  ck_assert_int_eq(*(uint64_t *)hb_array_get(&array, 1), 2);
+  ck_assert_int_eq(*(uint64_t *)hb_array_get(&array, 2), 3);
+
+  ck_assert_int_eq(array.size, 3);
+
+  hb_array_deinit(&array);
 END
 
-// Test getting elements
-TEST(test_hb_array_get)
-  hb_array_T* array = hb_array_init(3);
+TEST(test_hb_array_first_last)
+  hb_array_T array;
 
-  size_t item1 = 42, item2 = 99;
-  hb_array_append(array, &item1);
-  hb_array_append(array, &item2);
+  hb_array_init(&array, sizeof(uint64_t), 2);
 
-  ck_assert_ptr_eq(hb_array_get(array, 0), &item1);
-  ck_assert_ptr_eq(hb_array_get(array, 1), &item2);
-  ck_assert_ptr_null(hb_array_get(array, 2)); // Out of bounds check
+  ck_assert_ptr_null(hb_array_first(&array));
+  ck_assert_ptr_null(hb_array_last(&array));
 
-  hb_array_free(&array);
+  uint64_t number = 1;
+  hb_array_append(&array, &number);
+
+  ck_assert_int_eq(*(uint64_t *)hb_array_first(&array), 1);
+  ck_assert_int_eq(*(uint64_t *)hb_array_last(&array), 1);
+
+  number = 2;
+  hb_array_append(&array, &number);
+
+  ck_assert_int_eq(*(uint64_t *)hb_array_first(&array), 1);
+  ck_assert_int_eq(*(uint64_t *)hb_array_last(&array), 2);
+
+  hb_array_deinit(&array);
 END
 
-// Test setting elements
-TEST(test_hb_array_set)
-  hb_array_T* array = hb_array_init(3);
+TEST(test_hb_array_stack_behavior)
+  hb_array_T array;
 
-  size_t item1 = 42, item2 = 99;
-  hb_array_append(array, &item1);
-  hb_array_append(array, &item2);
+  hb_array_init(&array, sizeof(uint64_t), 2);
 
-  size_t new_item = 77;
-  hb_array_set(array, 1, &new_item);
+  for(uint64_t i = 0; i < 4; i++) {
+    hb_array_push(&array, &i);
+  }
 
-  ck_assert_ptr_eq(hb_array_get(array, 1), &new_item);
+  uint64_t number;
 
-  hb_array_free(&array);
+  ck_assert(hb_array_pop(&array, &number));
+  ck_assert_int_eq(number, 3);
+  ck_assert_int_eq(array.size, 3);
+
+  ck_assert(hb_array_pop(&array, &number));
+  ck_assert_int_eq(number, 2);
+  ck_assert_int_eq(array.size, 2);
+
+  ck_assert(hb_array_pop(&array, &number));
+  ck_assert_int_eq(number, 1);
+  ck_assert_int_eq(array.size, 1);
+
+  ck_assert(hb_array_pop(&array, &number));
+  ck_assert_int_eq(number, 0);
+  ck_assert_int_eq(array.size, 0);
+
+  ck_assert(!hb_array_pop(&array, &number));
+
+  hb_array_deinit(&array);
 END
 
-// Test removing elements
 TEST(test_hb_array_remove)
-  hb_array_T* array = hb_array_init(3);
+  hb_array_T array;
 
-  size_t item1 = 42, item2 = 99, item3 = 100;
-  hb_array_append(array, &item1);
-  hb_array_append(array, &item2);
-  hb_array_append(array, &item3);
+  hb_array_init(&array, sizeof(uint64_t), 2);
 
-  hb_array_remove(array, 1); // Remove item2
-  ck_assert_int_eq(array->size, 2);
-  ck_assert_ptr_eq(hb_array_get(array, 0), &item1);
-  ck_assert_ptr_eq(hb_array_get(array, 1), &item3); // Shifted left
+  for(uint64_t i = 0; i < 4; i++) {
+    hb_array_push(&array, &i);
+  }
 
-  hb_array_free(&array);
+  hb_array_remove(&array, 0);
+  ck_assert_int_eq(array.size, 3);
+  ck_assert_int_eq(*(uint64_t *)hb_array_get(&array, 0), 1);
+  ck_assert_int_eq(*(uint64_t *)hb_array_get(&array, 1), 2);
+  ck_assert_int_eq(*(uint64_t *)hb_array_get(&array, 2), 3);
+
+  hb_array_remove(&array, 1);
+  ck_assert_int_eq(array.size, 2);
+  ck_assert_int_eq(*(uint64_t *)hb_array_get(&array, 0), 1);
+  ck_assert_int_eq(*(uint64_t *)hb_array_get(&array, 1), 3);
+
+  hb_array_remove(&array, 1);
+  ck_assert_int_eq(array.size, 1);
+  ck_assert_int_eq(*(uint64_t *)hb_array_get(&array, 0), 1);
+
+  hb_array_remove(&array, 0);
+  ck_assert_int_eq(array.size, 0);
+
+  hb_array_deinit(&array);
 END
 
-// Test freeing the array
-TEST(test_hb_array_free)
-  hb_array_T* array = hb_array_init(5);
-  hb_array_free(&array);
-
-  ck_assert_ptr_null(array);
-END
-
-// Register test cases
 TCase *hb_array_tests(void) {
-  TCase *array = tcase_create("Herb Array");
+  TCase *buffer = tcase_create("Herb (New) Array");
 
-  tcase_add_test(array, test_hb_array_init);
-  tcase_add_test(array, test_hb_array_append);
-  tcase_add_test(array, test_hb_array_get);
-  tcase_add_test(array, test_hb_array_set);
-  tcase_add_test(array, test_hb_array_remove);
-  tcase_add_test(array, test_hb_array_free);
+  tcase_add_test(buffer, test_hb_array_init);
+  tcase_add_test(buffer, test_hb_array_pointer_init);
+  tcase_add_test(buffer, test_hb_array_append);
+  tcase_add_test(buffer, test_hb_array_first_last);
+  tcase_add_test(buffer, test_hb_array_stack_behavior);
+  tcase_add_test(buffer, test_hb_array_remove);
 
-  return array;
+  return buffer;
 }
