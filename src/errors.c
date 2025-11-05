@@ -17,6 +17,12 @@
 
 #define ERROR_MESSAGES_TRUNCATED_LENGTH 128
 
+hb_string_T error_message(error_T* error) {
+  printf("%d\n", error->location.end.column);
+
+  return hb_string("Hellow orldl");
+}
+
 hb_string_T error_type_to_string(error_T* error) {
   switch (error->type) {
     case UNEXPECTED_ERROR: return hb_string("UNEXPECTED_ERROR");
