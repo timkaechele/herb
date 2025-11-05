@@ -16,11 +16,204 @@
 #include <string.h>
 
 #define ERROR_MESSAGES_TRUNCATED_LENGTH 128
+#define MAX_ERROR_MESSAGE_LENGTH 1024
 
 hb_string_T error_message(error_T* error) {
-  printf("%d\n", error->location.end.column);
+  char *buffer = malloc(sizeof(char) * MAX_ERROR_MESSAGE_LENGTH);
+  char* template_string = "";
+  switch (error->type) {
+    case UNEXPECTED_ERROR: {
+      template_string = "%.*s. Expected: `%.*s`, found: `%.*s`.";
 
-  return hb_string("Hellow orldl");
+      hb_string_T truncated_description = hb_string_truncate(error->data.unexpected_error.description, ERROR_MESSAGES_TRUNCATED_LENGTH);
+      hb_string_T truncated_expected = hb_string_truncate(error->data.unexpected_error.expected, ERROR_MESSAGES_TRUNCATED_LENGTH);
+      hb_string_T truncated_found = hb_string_truncate(error->data.unexpected_error.found, ERROR_MESSAGES_TRUNCATED_LENGTH);
+
+      snprintf(
+        buffer,
+        MAX_ERROR_MESSAGE_LENGTH,
+        template_string,
+
+        truncated_description.length,
+        truncated_description.data,
+
+        truncated_expected.length,
+        truncated_expected.data,
+
+        truncated_found.length,
+        truncated_found.data
+      );
+    }
+    break;
+    case UNEXPECTED_TOKEN_ERROR: {
+      template_string = "Found `%.*s` when expecting `%.*s` at (%u:%u).";
+
+      hb_string_T found_type = hb_string(token_type_to_string(error->data.unexpected_token_error.found.type));
+      hb_string_T expected_type = hb_string(token_type_to_string(error->data.unexpected_token_error.found.type));
+
+      snprintf(
+        buffer,
+        MAX_ERROR_MESSAGE_LENGTH,
+        template_string,
+        found_type.length,
+        found_type.data,
+        expected_type.length,
+        expected_type.data,
+        error->location.start.line,
+        error->location.start.column
+      );
+    }
+    break;
+    case MISSING_OPENING_TAG_ERROR: {
+      template_string = "Found closing tag `</%.*s>` at (%u:%u) without a matching opening tag.";
+
+      hb_string_T truncated_closing_tag_value = hb_string_truncate(hb_string(error->data.missing_opening_tag_error.closing_tag.value), ERROR_MESSAGES_TRUNCATED_LENGTH);
+
+      snprintf(
+        buffer,
+        MAX_ERROR_MESSAGE_LENGTH,
+        template_string,
+
+        truncated_closing_tag_value.length,
+        truncated_closing_tag_value.data,
+
+        error->location.start.line,
+        error->location.start.column
+      );
+    }
+
+    case MISSING_CLOSING_TAG_ERROR: {
+      template_string = "Opening tag `<%.*s>` at (%u:%u) doesn't have a matching closing tag `</%.*s>`.";
+
+      hb_string_T truncated_opening_tag_value = hb_string_truncate(hb_string(error->data.missing_closing_tag_error.opening_tag.value), ERROR_MESSAGES_TRUNCATED_LENGTH);
+
+      snprintf(
+        buffer,
+        MAX_ERROR_MESSAGE_LENGTH,
+        template_string,
+
+        truncated_opening_tag_value.length,
+        truncated_opening_tag_value.data,
+
+        error->data.missing_closing_tag_error.opening_tag.location.start.line,
+        error->data.missing_closing_tag_error.opening_tag.location.start.column,
+
+        truncated_opening_tag_value.length,
+        truncated_opening_tag_value.data
+      );
+    }
+    break;
+    case TAG_NAMES_MISMATCH_ERROR: {
+      template_string = "Opening tag `<%.*s>` at (%u:%u) closed with `</%.*s>` at (%u:%u).";
+
+      hb_string_T truncated_opening_tag_value = hb_string_truncate(hb_string(error->data.tag_names_mismatch_error.opening_tag.value), ERROR_MESSAGES_TRUNCATED_LENGTH);
+      hb_string_T truncated_closing_tag_value = hb_string_truncate(hb_string(error->data.tag_names_mismatch_error.closing_tag.value), ERROR_MESSAGES_TRUNCATED_LENGTH);
+
+      snprintf(
+        buffer,
+        MAX_ERROR_MESSAGE_LENGTH,
+        template_string,
+
+        truncated_opening_tag_value.length,
+        truncated_opening_tag_value.data,
+
+        error->data.tag_names_mismatch_error.opening_tag.location.start.line,
+        error->data.tag_names_mismatch_error.opening_tag.location.start.column,
+
+        truncated_closing_tag_value.length,
+        truncated_closing_tag_value.data,
+
+        error->location.start.line,
+        error->location.start.column
+      );
+    }
+    break;
+    case QUOTES_MISMATCH_ERROR: {
+      template_string = "String opened with %.*s but closed with %.*s at (%u:%u).";
+
+      hb_string_T opening_quote_value = hb_string(error->data.quotes_mismatch_error.opening_quote.value);
+      hb_string_T closing_quote_value = hb_string(error->data.quotes_mismatch_error.closing_quote.value);
+
+      snprintf(
+        buffer,
+        MAX_ERROR_MESSAGE_LENGTH,
+        template_string,
+
+        opening_quote_value.length,
+        opening_quote_value.data,
+
+        closing_quote_value.length,
+        closing_quote_value.data,
+
+        error->data.quotes_mismatch_error.closing_quote.location.start.line,
+        error->data.quotes_mismatch_error.closing_quote.location.start.column
+      );
+    }
+    break;
+    case VOID_ELEMENT_CLOSING_TAG_ERROR: {
+      template_string = "`%.*s` is a void element and should not be used as a closing tag. Use `<%.*s>` or `<%.*s />` instead of `</%.*s>`.";
+
+      hb_string_T truncated_tag_name = hb_string_truncate(hb_string(error->data.void_element_closing_tag_error.tag_name.value), ERROR_MESSAGES_TRUNCATED_LENGTH);
+
+      snprintf(
+        buffer,
+        MAX_ERROR_MESSAGE_LENGTH,
+        template_string,
+
+        truncated_tag_name.length,
+        truncated_tag_name.data,
+
+        truncated_tag_name.length,
+        truncated_tag_name.data,
+
+        truncated_tag_name.length,
+        truncated_tag_name.data,
+
+        truncated_tag_name.length,
+        truncated_tag_name.data
+      );
+    }
+    break;
+    case UNCLOSED_ELEMENT_ERROR: {
+      template_string = "Tag `<%.*s>` opened at (%u:%u) was never closed before the end of document.";
+
+      hb_string_T truncated_opening_tag_value = hb_string_truncate(hb_string(error->data.unclosed_element_error.opening_tag.value), ERROR_MESSAGES_TRUNCATED_LENGTH);
+
+      snprintf(
+        buffer,
+        MAX_ERROR_MESSAGE_LENGTH,
+        template_string,
+
+        truncated_opening_tag_value.length,
+        truncated_opening_tag_value.data,
+
+        error->data.unclosed_element_error.opening_tag.location.start.line,
+        error->data.unclosed_element_error.opening_tag.location.start.column
+      );
+    }
+    break;
+    case RUBY_PARSE_ERROR: {
+      template_string = "%.*s: %.*s";
+
+      hb_string_T truncated_diagnostic_id = hb_string_truncate(error->data.ruby_parse_error.diagnostic_id, ERROR_MESSAGES_TRUNCATED_LENGTH);
+      hb_string_T truncated_error_message = hb_string_truncate(error->data.ruby_parse_error.error_message, ERROR_MESSAGES_TRUNCATED_LENGTH);
+
+      snprintf(
+        buffer,
+        MAX_ERROR_MESSAGE_LENGTH,
+        template_string,
+
+        truncated_diagnostic_id.length,
+        truncated_diagnostic_id.data,
+
+        truncated_error_message.length,
+        truncated_error_message.data
+      );
+    }
+    break;
+  }
+
+  return hb_string(buffer);
 }
 
 hb_string_T error_type_to_string(error_T* error) {
@@ -54,11 +247,3 @@ hb_string_T error_human_type(error_T* error) {
 
   return hb_string("Unknown error_type_T");
 }
-
-hb_string_T error_message(error_T *error) {
-  char data[1000];
-  snprintf(data, 1000, "%d", error->data.missing_closing_tag_error.opening_tag.location.end.column);
-
-  return hb_string("");
-}
-
