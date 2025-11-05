@@ -231,7 +231,7 @@ module Parser
     end
 
     test "script tag with complex JavaScript containing multiple HTML-like patterns" do
-      assert_parsed_snapshot(<<-HTML)
+      assert_parsed_snapshot(<<~HTML)
         <script>
           function createElements() {
             const div = "<div class='container'>";
@@ -249,7 +249,7 @@ module Parser
     end
 
     test "style tag with complex CSS containing HTML-like selectors" do
-      assert_parsed_snapshot(<<-HTML)
+      assert_parsed_snapshot(<<~HTML)
         <style>
           /* CSS comment */
 
@@ -265,21 +265,21 @@ module Parser
     end
 
     test "closing tag with newline before >" do
-      assert_parsed_snapshot(<<-HTML)
+      assert_parsed_snapshot(<<~HTML)
         <a href="https://example.com/">Link Text</a
         >
       HTML
     end
 
     test "closing tag with whitespace and newline before >" do
-      assert_parsed_snapshot(<<-HTML)
+      assert_parsed_snapshot(<<~HTML)
         <div>Content</div
         >
       HTML
     end
 
     test "multiple closing tags with newlines before >" do
-      assert_parsed_snapshot(<<-HTML)
+      assert_parsed_snapshot(<<~HTML)
         <div>
           <span>Text</span
           >
@@ -289,7 +289,7 @@ module Parser
     end
 
     test "nested tags with newlines in closing tags from issue 312" do
-      assert_parsed_snapshot(<<-HTML)
+      assert_parsed_snapshot(<<~HTML)
         <div
           id="footer-img"
           class="d-flex align-items-start justify-content-lg-start"
@@ -304,7 +304,7 @@ module Parser
     end
 
     test "self-closing tag with closing tag having newline before >" do
-      assert_parsed_snapshot(<<-HTML)
+      assert_parsed_snapshot(<<~HTML)
         <img src="image.jpg" />
         <br></br
         >
