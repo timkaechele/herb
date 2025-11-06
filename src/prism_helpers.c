@@ -43,11 +43,16 @@ error_T* ruby_parse_error_from_prism_error(
   position_T start = position_from_source_with_offset(source, start_offset);
   position_T end = position_from_source_with_offset(source, end_offset);
 
-  return ruby_parse_error_init(
-    error->message,
-    pm_diagnostic_id_human(error->diag_id),
-    pm_error_level_to_string(error->level),
-    start,
-    end
-  );
+
+  error_T* ruby_parse_error;
+  {
+    ruby_parse_error = malloc(sizeof(*ruby_parse_error));
+    ruby_parse_error->type = RUBY_PARSE_ERROR;
+    ruby_parse_error->data.ruby_parse_error.diagnostic_id = hb_string(pm_diagnostic_id_human(error->diag_id));
+    ruby_parse_error->data.ruby_parse_error.level = hb_string(pm_error_level_to_string(error->level));
+    ruby_parse_error->location.start = start;
+    ruby_parse_error->location.end = end;
+  }
+
+  return ruby_parse_error;
 }
