@@ -249,6 +249,52 @@ hb_string_T error_human_type(error_T* error) {
   return hb_string("Unknown error_type_T");
 }
 
+
+void error_pretty_print_array(hb_string_T name, hb_array_T* array, size_t indent, size_t relative_indent, bool last_property, hb_buffer_T* buffer) {
+  if (array == NULL) {
+    return;
+  }
+
+  if (array->size == 0) {
+    pretty_print_property(name, hb_string("[]"), indent, relative_indent, last_property, buffer);
+
+    return;
+  }
+
+  pretty_print_label(name, indent, relative_indent, last_property, buffer);
+
+  {
+    hb_buffer_append_string(buffer, hb_string("("));
+
+    char size_string[16];
+    snprintf(size_string, 16, "%zu", array->size);
+    hb_buffer_append_string(buffer, hb_string(size_string));
+
+    hb_buffer_append_string(buffer, hb_string(")"));
+  }
+
+  if (indent < 20) {
+    for (size_t i = 0; i < array->size; ++i) {
+      error_T* error = hb_array_get(array, i);
+
+      pretty_print_indent(buffer, indent);
+      pretty_print_indent(buffer, relative_indent + 1);
+
+      if ((array->size - 1) == i) {
+        hb_buffer_append_string(buffer,  hb_string("└── "));
+      } else {
+        hb_buffer_append_string(buffer,  hb_string("├── "));
+      }
+
+      error_pretty_print(error, indent + 1, relative_indent + 1, buffer);
+
+      if ((array->size - 1) != i) {
+        pretty_print_newline(indent + 1, relative_indent, buffer);
+      }
+    }
+  }
+}
+
 static void error_pretty_print_message(error_T* error, size_t indent, size_t relative_indent, hb_buffer_T *buffer) {
   hb_string_T message = error_message(error);
   pretty_print_quoted_property(hb_string("message"),message, indent, relative_indent, false, buffer);
