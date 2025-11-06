@@ -64,14 +64,13 @@ export class Formatter {
 
     const resolvedOptions = resolveFormatOptions({ ...this.options, ...options })
 
-    const context: RewriteContext = {
-      filePath,
-      baseDir: process.cwd()
-    }
-
     let node = result.value
 
     if (resolvedOptions.preRewriters.length > 0) {
+      const context: RewriteContext = {
+        filePath,
+        baseDir: process.cwd() // TODO: format() shouldn't depend on node internals
+      }
 
       for (const rewriter of resolvedOptions.preRewriters) {
         try {
@@ -85,6 +84,11 @@ export class Formatter {
     let formatted = new FormatPrinter(source, resolvedOptions).print(node)
 
     if (resolvedOptions.postRewriters.length > 0) {
+      const context: RewriteContext = {
+        filePath,
+        baseDir: process.cwd() // TODO: format() shouldn't depend on node internals
+      }
+
       for (const rewriter of resolvedOptions.postRewriters) {
         try {
           formatted = rewriter.rewrite(formatted, context)
