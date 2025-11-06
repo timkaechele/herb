@@ -34,29 +34,29 @@ typedef struct ERROR_STRUCT {
     } unexpected_error;
     struct {
       token_type_T expected_type;
-      token_T found;
+      token_T* found;
     } unexpected_token_error;
     struct {
-      token_T closing_tag;
+      token_T* closing_tag;
     } missing_opening_tag_error;
     struct {
-      token_T opening_tag;
+      token_T* opening_tag;
     } missing_closing_tag_error;
     struct {
-      token_T opening_tag;
-      token_T closing_tag;
+      token_T* opening_tag;
+      token_T* closing_tag;
     } tag_names_mismatch_error;
     struct {
-      token_T opening_quote;
-      token_T closing_quote;
+      token_T* opening_quote;
+      token_T* closing_quote;
     } quotes_mismatch_error;
     struct {
-      token_T tag_name;
+      token_T* tag_name;
       hb_string_T expected;
       hb_string_T found;
     } void_element_closing_tag_error;
     struct {
-      token_T opening_tag;
+      token_T* opening_tag;
     } unclosed_element_error;
     struct {
       hb_string_T error_message;
@@ -73,7 +73,7 @@ hb_string_T error_human_type(error_T* error);
 
 void error_free(error_T* error);
 
-// void error_pretty_print(error_T* error, size_t indent, size_t relative_indent, hb_buffer_T* buffer);
+void error_pretty_print(error_T* error, size_t indent, size_t relative_indent, hb_buffer_T* buffer);
 
 // void error_pretty_print_array(
 //   hb_string_T name,

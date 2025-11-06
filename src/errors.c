@@ -8,6 +8,7 @@
 #include "include/token.h"
 #include "include/util.h"
 #include "include/util/hb_array.h"
+#include "include/util/hb_buffer.h"
 #include "include/util/hb_string.h"
 
 #include <stdio.h>
@@ -246,4 +247,72 @@ hb_string_T error_human_type(error_T* error) {
   }
 
   return hb_string("Unknown error_type_T");
+}
+
+static void error_pretty_print_message(error_T* error, size_t indent, size_t relative_indent, hb_buffer_T *buffer) {
+  hb_string_T message = error_message(error);
+  pretty_print_quoted_property(hb_string("message"),message, indent, relative_indent, false, buffer);
+  free(message.data);
+}
+
+void error_pretty_print(error_T* error, const size_t indent, const size_t relative_indent, hb_buffer_T* buffer) {
+  if (error == NULL) {
+    return;
+  }
+
+  hb_buffer_append_string(buffer, hb_string("@ "));
+  hb_buffer_append_string(buffer, error_human_type(error));
+  hb_buffer_append_string(buffer, hb_string(" "));
+
+  pretty_print_location(error->location, buffer);
+  hb_buffer_append_string(buffer, hb_string("\n"));
+
+  error_pretty_print_message(error, indent, relative_indent, buffer);
+
+  switch(error->type) {
+    case UNEXPECTED_ERROR: {
+      pretty_print_quoted_property(hb_string("description"), error->data.unexpected_error.description, indent, relative_indent, false, buffer);
+      pretty_print_quoted_property(hb_string("expected"), error->data.unexpected_error.expected, indent, relative_indent, false, buffer);
+      pretty_print_quoted_property(hb_string("found"), error->data.unexpected_error.found, indent, relative_indent, true, buffer);
+    }
+    break;
+    case UNEXPECTED_TOKEN_ERROR: {
+      pretty_print_property(hb_string(token_type_to_string(error->data.unexpected_token_error.expected_type)), hb_string("expected_type"), indent, relative_indent, false, buffer);
+      pretty_print_token_property(error->data.unexpected_token_error.found, hb_string("found"), indent, relative_indent, true, buffer);
+    }
+    break;
+    case MISSING_OPENING_TAG_ERROR: {
+      pretty_print_token_property(error->data.missing_opening_tag_error.closing_tag, hb_string("closing_tag"), indent, relative_indent, true, buffer);
+    }
+    break;
+    case MISSING_CLOSING_TAG_ERROR: {
+      pretty_print_token_property(error->data.missing_closing_tag_error.opening_tag, hb_string("opening_tag"), indent, relative_indent, true, buffer);
+    }
+    break;
+    case TAG_NAMES_MISMATCH_ERROR: {
+      pretty_print_token_property(error->data.tag_names_mismatch_error.opening_tag, hb_string("opening_tag"), indent, relative_indent, false, buffer);
+      pretty_print_token_property(error->data.tag_names_mismatch_error.closing_tag, hb_string("closing_tag"), indent, relative_indent, true, buffer);
+    }
+    break;
+    case QUOTES_MISMATCH_ERROR: {
+      pretty_print_token_property(error->data.quotes_mismatch_error.opening_quote, hb_string("opening_quote"), indent, relative_indent, false, buffer);
+      pretty_print_token_property(error->data.quotes_mismatch_error.closing_quote, hb_string("closing_quote"), indent, relative_indent, true, buffer);
+    }
+    break;
+    case VOID_ELEMENT_CLOSING_TAG_ERROR: {
+      pretty_print_token_property(error->data.void_element_closing_tag_error.tag_name, hb_string("tag_name"), indent, relative_indent, false, buffer);
+      pretty_print_quoted_property(hb_string("expected"), error->data.void_element_closing_tag_error.expected, indent, relative_indent, false, buffer);
+      pretty_print_quoted_property(hb_string("found"), error->data.void_element_closing_tag_error.found, indent, relative_indent, true, buffer);
+    }
+    break;
+    case UNCLOSED_ELEMENT_ERROR: {
+      pretty_print_token_property(error->data.unclosed_element_error.opening_tag, hb_string("opening_tag"), indent, relative_indent, true, buffer);
+    }
+    break;
+    case RUBY_PARSE_ERROR: {
+      pretty_print_quoted_property(hb_string("error_message"), error->data.ruby_parse_error.error_message, indent, relative_indent, false, buffer);
+      pretty_print_quoted_property(hb_string("diagnostic_id"), error->data.ruby_parse_error.diagnostic_id, indent, relative_indent, false, buffer);
+      pretty_print_quoted_property(hb_string("level"), error->data.ruby_parse_error.level, indent, relative_indent, true, buffer);
+    };
+  }
 }
