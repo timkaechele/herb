@@ -66,6 +66,16 @@ typedef struct ERROR_STRUCT {
   } data;
 } error_T;
 
+error_T* error_unexpected_error_new(hb_string_T description, hb_string_T expected, hb_string_T found, position_T start, position_T end);
+error_T* error_unexpected_token_error_new(token_type_T expected_type, token_T* found, position_T start, position_T end);
+error_T* error_missing_opening_tag_error_new(token_T* closing_tag, position_T start, position_T end);
+error_T* error_missing_closing_tag_error_new(token_T opening_tag, position_T start, position_T end);
+error_T* error_tag_names_mismatch_error_new(token_T* opening_tag, token_T* closing_tag, position_T start, position_T end);
+error_T* error_quotes_mismatch_error_error_new(token_T* opening_quote, token_T* closing_quote, position_T start, position_T end);
+error_T* error_void_element_closing_tag_error_new(token_T* tag_name, hb_string_T expected, hb_string_T found, position_T start, position_T end);
+error_T* error_unclosed_element_error_new(token_T* opening_tag, position_T start, position_T end);
+error_T* error_ruby_parser_error_new(hb_string_T error_message, hb_string_T diagnostic_id, hb_string_T level, position_T start, position_T end);
+
 hb_string_T error_message(error_T* error);
 
 hb_string_T error_type_to_string(error_T* error);
