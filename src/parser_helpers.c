@@ -12,6 +12,7 @@
 #include "include/util/hb_string.h"
 
 #include <stdio.h>
+#include <stdlib.h>
 
 void parser_push_open_tag(const parser_T* parser, token_T* tag_name) {
   token_T* copy = token_copy(tag_name);
@@ -101,14 +102,17 @@ void parser_append_unexpected_error(
 ) {
   token_T* token = parser_advance(parser);
 
-  append_unexpected_error(
-    description,
-    expected,
-    token_type_to_string(token->type),
-    token->location.start,
-    token->location.end,
-    errors
-  );
+  error_T *unexpected_error;
+  unexpected_error = malloc(sizeof(*unexpected_error));
+
+  unexpected_error->type = UNEXPECTED_ERROR;
+  unexpected_error->data.unexpected_error.description = hb_string(description);
+  unexpected_error->data.unexpected_error.expected = hb_string(expected);
+  unexpected_error->data.unexpected_error.found = hb_string(token_type_to_string(token->type));
+
+  unexpected_error->location.start = token->location.start;
+  unexpected_error->location.end = token->location.end;
+  hb_array_append(errors, unexpected_error);
 
   token_free(token);
 }
