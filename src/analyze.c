@@ -12,6 +12,7 @@
 #include "include/prism_helpers.h"
 #include "include/token_struct.h"
 #include "include/util.h"
+#include "include/util/hb_arena.h"
 #include "include/util/hb_array.h"
 #include "include/util/hb_string.h"
 #include "include/visitor.h"
@@ -1287,17 +1288,17 @@ static bool detect_invalid_erb_structures(const AST_NODE_T* node, void* data) {
   return result;
 }
 
-void herb_analyze_parse_tree(hb_arena_T *allocator, AST_DOCUMENT_NODE_T* document, const char* source) {
+void herb_analyze_parse_tree(hb_arena_T* allocator, AST_DOCUMENT_NODE_T* document, const char* source) {
   herb_visit_node((AST_NODE_T*) document, analyze_erb_content, NULL);
 
-  analyze_ruby_context_T* context = malloc(sizeof(analyze_ruby_context_T));
+  analyze_ruby_context_T* context = hb_arena_alloc(allocator, sizeof(analyze_ruby_context_T));
   context->document = document;
   context->parent = NULL;
   context->ruby_context_stack = hb_array_init(8);
 
   herb_visit_node((AST_NODE_T*) document, transform_erb_nodes, context);
 
-  invalid_erb_context_T* invalid_context = malloc(sizeof(invalid_erb_context_T));
+  invalid_erb_context_T* invalid_context = hb_arena_alloc(allocator, sizeof(invalid_erb_context_T));
   invalid_context->loop_depth = 0;
   invalid_context->rescue_depth = 0;
 
@@ -1308,12 +1309,9 @@ void herb_analyze_parse_tree(hb_arena_T *allocator, AST_DOCUMENT_NODE_T* documen
   herb_parser_match_html_tags_post_analyze(document);
 
   hb_array_free(&context->ruby_context_stack);
-
-  free(context);
-  free(invalid_context);
 }
 
-void herb_analyze_parse_errors(hb_arena_T *allocator, AST_DOCUMENT_NODE_T* document, const char* source) {
+void herb_analyze_parse_errors(hb_arena_T* allocator, AST_DOCUMENT_NODE_T* document, const char* source) {
   char* extracted_ruby = herb_extract_ruby_with_semicolons(allocator, source);
 
   if (!extracted_ruby) { return; }
