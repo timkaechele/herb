@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include "include/test.h"
+#include "../../src/include/macros.h"
 #include "../../src/include/herb.h"
 #include "../../src/include/token.h"
 
@@ -8,9 +9,12 @@ TEST(test_token)
 END
 
 TEST(test_token_to_string)
+  hb_arena_T allocator;
+  hb_arena_init(&allocator, MB(1));
+
   hb_buffer_T output;
   hb_buffer_init(&output, 1024);
-  herb_lex_to_buffer("hello", &output);
+  herb_lex_to_buffer(&allocator, "hello", &output);
 
   ck_assert_str_eq(
     output.value,
@@ -19,6 +23,7 @@ TEST(test_token_to_string)
   );
 
   free(output.value);
+  hb_arena_free(&allocator);
 END
 
 TCase *token_tests(void) {
