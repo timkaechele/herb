@@ -61,6 +61,7 @@ static bool hb_buffer_expand_if_needed(hb_buffer_T* buffer, const size_t require
 }
 
 bool hb_buffer_init(hb_buffer_T* buffer, const size_t capacity) {
+  buffer->allactor = NULL;
   buffer->capacity = capacity;
   buffer->length = 0;
   buffer->value = malloc(sizeof(char) * (buffer->capacity + 1));
@@ -71,6 +72,16 @@ bool hb_buffer_init(hb_buffer_T* buffer, const size_t capacity) {
     return false;
   }
 
+  buffer->value[0] = '\0';
+
+  return true;
+}
+
+bool hb_buffer_init_arena(hb_arena_T* allocator, hb_buffer_T* buffer, size_t capacity) {
+  buffer->allactor = allocator;
+  buffer->capacity = capacity;
+  buffer->length = 0;
+  buffer->value = hb_arena_alloc(allocator, sizeof(char) * (buffer->capacity + 1));
   buffer->value[0] = '\0';
 
   return true;
