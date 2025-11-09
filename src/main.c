@@ -1,3 +1,4 @@
+#include "include/util/hb_arena.h"
 #define _POSIX_C_SOURCE 199309L // Enables `clock_gettime()`
 
 #include "include/analyze.h"
@@ -7,6 +8,7 @@
 #include "include/extract.h"
 #include "include/herb.h"
 #include "include/io.h"
+#include "include/macros.h"
 #include "include/ruby_parser.h"
 #include "include/util/hb_buffer.h"
 
@@ -53,7 +55,8 @@ int main(const int argc, char* argv[]) {
   }
 
   hb_buffer_T output;
-
+  hb_arena_T allocator;
+  hb_arena_init(&allocator, MB(1));
   if (!hb_buffer_init(&output, 4096)) { return 1; }
 
   char* source = herb_read_file(argv[2]);
@@ -62,7 +65,7 @@ int main(const int argc, char* argv[]) {
   clock_gettime(CLOCK_MONOTONIC, &start);
 
   if (strcmp(argv[1], "visit") == 0) {
-    AST_DOCUMENT_NODE_T* root = herb_parse(source, NULL);
+    AST_DOCUMENT_NODE_T* root = herb_parse(&allocator, source, NULL);
     clock_gettime(CLOCK_MONOTONIC, &end);
 
     herb_analyze_parse_tree(root, source);
@@ -80,7 +83,7 @@ int main(const int argc, char* argv[]) {
   }
 
   if (strcmp(argv[1], "lex") == 0) {
-    herb_lex_to_buffer(source, &output);
+    herb_lex_to_buffer(&allocator, source, &output);
     clock_gettime(CLOCK_MONOTONIC, &end);
 
     printf("%s\n", output.value);
@@ -93,7 +96,7 @@ int main(const int argc, char* argv[]) {
   }
 
   if (strcmp(argv[1], "parse") == 0) {
-    AST_DOCUMENT_NODE_T* root = herb_parse(source, NULL);
+    AST_DOCUMENT_NODE_T* root = herb_parse(&allocator, source, NULL);
 
     herb_analyze_parse_tree(root, source);
 
@@ -117,7 +120,7 @@ int main(const int argc, char* argv[]) {
   }
 
   if (strcmp(argv[1], "ruby") == 0) {
-    herb_extract_ruby_to_buffer(source, &output);
+    herb_extract_ruby_to_buffer(&allocator, source, &output);
     clock_gettime(CLOCK_MONOTONIC, &end);
 
     printf("%s\n", output.value);
@@ -130,7 +133,7 @@ int main(const int argc, char* argv[]) {
   }
 
   if (strcmp(argv[1], "html") == 0) {
-    herb_extract_html_to_buffer(source, &output);
+    herb_extract_html_to_buffer(&allocator, source, &output);
     clock_gettime(CLOCK_MONOTONIC, &end);
 
     printf("%s\n", output.value);
@@ -145,13 +148,15 @@ int main(const int argc, char* argv[]) {
   if (strcmp(argv[1], "prism") == 0) {
     printf("HTML+ERB File: \n%s\n", source);
 
-    char* ruby_source = herb_extract(source, HERB_EXTRACT_LANGUAGE_RUBY);
+    char* ruby_source = herb_extract(&allocator, source, HERB_EXTRACT_LANGUAGE_RUBY);
     printf("Extracted Ruby: \n%s\n", ruby_source);
 
     herb_parse_ruby_to_stdout(ruby_source);
 
     return 0;
   }
+
+  hb_arena_free(&allocator);
 
   printf("Unknown Command: %s\n", argv[1]);
   return 1;
