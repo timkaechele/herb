@@ -35,7 +35,8 @@ size_t parser_sizeof(void) {
   return sizeof(struct PARSER_STRUCT);
 }
 
-void herb_parser_init(parser_T* parser, lexer_T* lexer, parser_options_T options) {
+void herb_parser_init(parser_T* parser, hb_arena_T* allocator, lexer_T* lexer, parser_options_T options) {
+  parser->allocator = allocator;
   parser->lexer = lexer;
   parser->current_token = lexer_next_token(lexer);
   parser->open_tags_stack = hb_array_init(16);

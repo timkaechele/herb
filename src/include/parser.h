@@ -22,6 +22,7 @@ typedef struct PARSER_OPTIONS_STRUCT {
 extern const parser_options_T HERB_DEFAULT_PARSER_OPTIONS;
 
 typedef struct PARSER_STRUCT {
+  hb_arena_T* allocator;
   lexer_T* lexer;
   token_T* current_token;
   hb_array_T* open_tags_stack;
@@ -32,7 +33,7 @@ typedef struct PARSER_STRUCT {
 
 size_t parser_sizeof(void);
 
-void herb_parser_init(parser_T* parser, lexer_T* lexer, parser_options_T options);
+void herb_parser_init(parser_T* parser, hb_arena_T* allocator, lexer_T* lexer, parser_options_T options);
 
 AST_DOCUMENT_NODE_T* herb_parser_parse(parser_T* parser);
 
