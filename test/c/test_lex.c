@@ -1,24 +1,33 @@
 #include "include/test.h"
 #include "../../src/include/herb.h"
+#include "../../src/include/macros.h"
 
 TEST(herb_lex_to_buffer_empty_file)
+  hb_arena_T allocator;
+  hb_arena_init(&allocator, MB(1));
+
   char* html = "";
   hb_buffer_T output;
   hb_buffer_init(&output, 1024);
 
-  herb_lex_to_buffer(html, &output);
+  herb_lex_to_buffer(&allocator, html, &output);
 
   ck_assert_str_eq(output.value, "#<Herb::Token type=\"TOKEN_EOF\" value=\"<EOF>\" range=[0, 0] start=(1:0) end=(1:0)>\n");
 
+
   free(output.value);
+  hb_arena_free(&allocator);
 END
 
 TEST(herb_lex_to_buffer_basic_tag)
+  hb_arena_T allocator;
+  hb_arena_init(&allocator, MB(1));
+
   char* html = "<html></html>";
   hb_buffer_T output;
   hb_buffer_init(&output, 1024);
 
-  herb_lex_to_buffer(html, &output);
+  herb_lex_to_buffer(&allocator, html, &output);
 
   ck_assert_str_eq(
     output.value,
@@ -32,6 +41,7 @@ TEST(herb_lex_to_buffer_basic_tag)
   );
 
   free(output.value);
+  hb_arena_free(&allocator);
 END
 
 TCase *lex_tests(void) {
