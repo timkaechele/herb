@@ -15,7 +15,7 @@ typedef struct HB_BUFFER_STRUCT {
 } hb_buffer_T;
 
 bool hb_buffer_init(hb_buffer_T* buffer, size_t capacity);
-bool hb_buffer_init_arena(hb_arena_T *allocator, hb_buffer_T* buffer, size_t capacity);
+bool hb_buffer_init_arena(hb_buffer_T* buffer, hb_arena_T* allocator, size_t capacity);
 
 void hb_buffer_append(hb_buffer_T* buffer, const char* text);
 void hb_buffer_append_with_length(hb_buffer_T* buffer, const char* text, size_t length);
