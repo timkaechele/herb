@@ -1332,5 +1332,4 @@ void herb_analyze_parse_errors(hb_arena_T* allocator, AST_DOCUMENT_NODE_T* docum
   pm_node_destroy(&parser, root);
   pm_parser_free(&parser);
   pm_options_free(&options);
-  free(extracted_ruby);
 }
