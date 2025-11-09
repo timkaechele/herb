@@ -3,6 +3,7 @@
 #include "include/lexer.h"
 #include "include/parser.h"
 #include "include/token.h"
+#include "include/util/hb_arena.h"
 #include "include/util/hb_array.h"
 #include "include/util/hb_buffer.h"
 #include "include/version.h"
@@ -10,7 +11,7 @@
 #include <prism.h>
 #include <stdlib.h>
 
-hb_array_T* herb_lex(const char* source) {
+hb_array_T* herb_lex(hb_arena_T* allocator, const char* source) {
   lexer_T lexer = { 0 };
   lexer_init(&lexer, source);
 
@@ -26,7 +27,7 @@ hb_array_T* herb_lex(const char* source) {
   return tokens;
 }
 
-AST_DOCUMENT_NODE_T* herb_parse(const char* source, parser_options_T* options) {
+AST_DOCUMENT_NODE_T* herb_parse(hb_arena_T* allocator, const char* source, parser_options_T* options) {
   if (!source) { source = ""; }
 
   lexer_T lexer = { 0 };
@@ -46,17 +47,17 @@ AST_DOCUMENT_NODE_T* herb_parse(const char* source, parser_options_T* options) {
   return document;
 }
 
-hb_array_T* herb_lex_file(const char* path) {
+hb_array_T* herb_lex_file(hb_arena_T* allocator, const char* path) {
   char* source = herb_read_file(path);
-  hb_array_T* tokens = herb_lex(source);
+  hb_array_T* tokens = herb_lex(allocator, source);
 
   free(source);
 
   return tokens;
 }
 
-void herb_lex_to_buffer(const char* source, hb_buffer_T* output) {
-  hb_array_T* tokens = herb_lex(source);
+void herb_lex_to_buffer(hb_arena_T* allocator, const char* source, hb_buffer_T* output) {
+  hb_array_T* tokens = herb_lex(allocator, source);
 
   for (size_t i = 0; i < hb_array_size(tokens); i++) {
     token_T* token = hb_array_get(tokens, i);

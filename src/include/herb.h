@@ -13,12 +13,12 @@
 extern "C" {
 #endif
 
-void herb_lex_to_buffer(const char* source, hb_buffer_T* output);
+void herb_lex_to_buffer(hb_arena_T* allocator, const char* source, hb_buffer_T* output);
 
-hb_array_T* herb_lex(const char* source);
-hb_array_T* herb_lex_file(const char* path);
+hb_array_T* herb_lex(hb_arena_T* allocator, const char* source);
+hb_array_T* herb_lex_file(hb_arena_T* allocator, const char* path);
 
-AST_DOCUMENT_NODE_T* herb_parse(const char* source, parser_options_T* options);
+AST_DOCUMENT_NODE_T* herb_parse(hb_arena_T* allocator, const char* source, parser_options_T* options);
 
 const char* herb_version(void);
 const char* herb_prism_version(void);
