@@ -68,7 +68,7 @@ int main(const int argc, char* argv[]) {
     AST_DOCUMENT_NODE_T* root = herb_parse(&allocator, source, NULL);
     clock_gettime(CLOCK_MONOTONIC, &end);
 
-    herb_analyze_parse_tree(root, source);
+    herb_analyze_parse_tree(&allocator, root, source);
 
     ast_pretty_print_node((AST_NODE_T*) root, 0, 0, &output);
     printf("%s\n", output.value);
@@ -98,7 +98,7 @@ int main(const int argc, char* argv[]) {
   if (strcmp(argv[1], "parse") == 0) {
     AST_DOCUMENT_NODE_T* root = herb_parse(&allocator, source, NULL);
 
-    herb_analyze_parse_tree(root, source);
+    herb_analyze_parse_tree(&allocator, root, source);
 
     clock_gettime(CLOCK_MONOTONIC, &end);
 

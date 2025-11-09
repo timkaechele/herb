@@ -1287,7 +1287,7 @@ static bool detect_invalid_erb_structures(const AST_NODE_T* node, void* data) {
   return result;
 }
 
-void herb_analyze_parse_tree(AST_DOCUMENT_NODE_T* document, const char* source) {
+void herb_analyze_parse_tree(hb_arena_T *allocator, AST_DOCUMENT_NODE_T* document, const char* source) {
   herb_visit_node((AST_NODE_T*) document, analyze_erb_content, NULL);
 
   analyze_ruby_context_T* context = malloc(sizeof(analyze_ruby_context_T));
@@ -1303,7 +1303,7 @@ void herb_analyze_parse_tree(AST_DOCUMENT_NODE_T* document, const char* source) 
 
   herb_visit_node((AST_NODE_T*) document, detect_invalid_erb_structures, invalid_context);
 
-  herb_analyze_parse_errors(document, source);
+  herb_analyze_parse_errors(allocator, document, source);
 
   herb_parser_match_html_tags_post_analyze(document);
 
@@ -1313,8 +1313,8 @@ void herb_analyze_parse_tree(AST_DOCUMENT_NODE_T* document, const char* source) 
   free(invalid_context);
 }
 
-void herb_analyze_parse_errors(AST_DOCUMENT_NODE_T* document, const char* source) {
-  char* extracted_ruby = herb_extract_ruby_with_semicolons(source);
+void herb_analyze_parse_errors(hb_arena_T *allocator, AST_DOCUMENT_NODE_T* document, const char* source) {
+  char* extracted_ruby = herb_extract_ruby_with_semicolons(allocator, source);
 
   if (!extracted_ruby) { return; }
 

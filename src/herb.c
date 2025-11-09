@@ -13,7 +13,7 @@
 
 hb_array_T* herb_lex(hb_arena_T* allocator, const char* source) {
   lexer_T lexer = { 0 };
-  lexer_init(&lexer, source);
+  lexer_init(&lexer, allocator, source);
 
   token_T* token = NULL;
   hb_array_T* tokens = hb_array_init(128);
@@ -31,14 +31,14 @@ AST_DOCUMENT_NODE_T* herb_parse(hb_arena_T* allocator, const char* source, parse
   if (!source) { source = ""; }
 
   lexer_T lexer = { 0 };
-  lexer_init(&lexer, source);
+  lexer_init(&lexer, allocator, source);
   parser_T parser = { 0 };
 
   parser_options_T parser_options = HERB_DEFAULT_PARSER_OPTIONS;
 
   if (options != NULL) { parser_options = *options; }
 
-  herb_parser_init(&parser, &lexer, parser_options);
+  herb_parser_init(&parser, allocator, &lexer, parser_options);
 
   AST_DOCUMENT_NODE_T* document = herb_parser_parse(&parser);
 
