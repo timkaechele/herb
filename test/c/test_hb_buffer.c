@@ -158,7 +158,7 @@ TEST(test_hb_buffer_append_utf8)
   // Append UTF-8 string
   hb_buffer_append(&buffer, "こんにちは"); // "Hello" in Japanese
   ck_assert_int_eq(strlen("こんにちは"), 15); // UTF-8 multibyte characters
-  ck_assert_int_eq(hb_buffer_length(&buffer), 15);
+  ck_assert_int_eq(buffer.length, 15);
   ck_assert_str_eq(hb_buffer_value(&buffer), "こんにちは");
 
   free(buffer.value);
@@ -170,11 +170,11 @@ TEST(test_hb_buffer_length_correctness)
   hb_buffer_init(&buffer, 1024);
 
   hb_buffer_append(&buffer, "Short");
-  size_t length = hb_buffer_length(&buffer);
+  size_t length = buffer.length;
   ck_assert_int_eq(length, 5);
 
   hb_buffer_append(&buffer, "er test");
-  length = hb_buffer_length(&buffer);
+  length = buffer.length;
   ck_assert_int_eq(length, 12);
 
   free(buffer.value);
@@ -186,7 +186,7 @@ TEST(test_buffer_null_termination)
   hb_buffer_init(&buffer, 1024);
 
   hb_buffer_append(&buffer, "Test");
-  ck_assert(hb_buffer_value(&buffer)[hb_buffer_length(&buffer)] == '\0'); // Ensure null termination
+  ck_assert(hb_buffer_value(&buffer)[buffer.length] == '\0'); // Ensure null termination
 
   free(buffer.value);
 END

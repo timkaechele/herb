@@ -80,10 +80,6 @@ char* hb_buffer_value(const hb_buffer_T* buffer) {
   return buffer->value;
 }
 
-size_t hb_buffer_length(const hb_buffer_T* buffer) {
-  return buffer->length;
-}
-
 size_t hb_buffer_capacity(const hb_buffer_T* buffer) {
   return buffer->capacity;
 }

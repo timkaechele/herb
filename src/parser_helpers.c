@@ -129,7 +129,7 @@ void parser_append_literal_node_from_buffer(
   hb_array_T* children,
   position_T start
 ) {
-  if (hb_buffer_length(buffer) == 0) { return; }
+  if (buffer->length == 0) { return; }
 
   AST_LITERAL_NODE_T* literal =
     ast_literal_node_init(hb_buffer_value(buffer), start, parser->current_token->location.start, NULL);

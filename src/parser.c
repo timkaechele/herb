@@ -266,7 +266,7 @@ static AST_HTML_TEXT_NODE_T* parser_parse_text_content(parser_T* parser, hb_arra
 
   AST_HTML_TEXT_NODE_T* text_node = NULL;
 
-  if (hb_buffer_length(&content) > 0) {
+  if (content.length > 0) {
     text_node =
       ast_html_text_node_init(hb_buffer_value(&content), start, parser->current_token->location.start, errors);
   } else {
