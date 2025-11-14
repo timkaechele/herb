@@ -1,7 +1,7 @@
 #include "include/analyze.h"
 #include "include/visitor.h"
 
-bool transform_erb_nodes(const AST_NODE_T* node, void* data) {
+bool transform_erb_nodes(AST_NODE_T* node, void* data) {
   analyze_ruby_context_T* context = (analyze_ruby_context_T*) data;
   context->parent = (AST_NODE_T*) node;
 
