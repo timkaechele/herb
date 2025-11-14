@@ -85,7 +85,7 @@ void pretty_print_token_property(
 
 void pretty_print_array(
   hb_string_T name,
-  hb_array_T* array,
+  hb_array_T array,
   size_t indent,
   size_t relative_indent,
   bool last_property,

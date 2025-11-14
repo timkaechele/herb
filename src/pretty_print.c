@@ -101,19 +101,13 @@ void pretty_print_size_t_property(
 
 void pretty_print_array(
   hb_string_T name,
-  hb_array_T* array,
+  hb_array_T array,
   const size_t indent,
   const size_t relative_indent,
   const bool last_property,
   hb_buffer_T* buffer
 ) {
-  if (array == NULL) {
-    pretty_print_property(name, hb_string("∅"), indent, relative_indent, last_property, buffer);
-
-    return;
-  }
-
-  if (array->size == 0) {
+  if (array.size == 0) {
     pretty_print_property(name, hb_string("[]"), indent, relative_indent, last_property, buffer);
 
     return;
@@ -124,17 +118,17 @@ void pretty_print_array(
   hb_buffer_append(buffer, "(");
 
   char count[16];
-  sprintf(count, "%zu", array->size);
+  sprintf(count, "%zu", array.size);
   hb_buffer_append(buffer, count);
   hb_buffer_append(buffer, ")\n");
 
   if (indent < 20) {
-    for (size_t i = 0; i < array->size; i++) {
-      AST_NODE_T* child = hb_array_get(array, i);
+    for (size_t i = 0; i < array.size; i++) {
+      AST_NODE_T* child = hb_array_get(&array, i);
       pretty_print_indent(buffer, indent);
       pretty_print_indent(buffer, relative_indent + 1);
 
-      if (i == array->size - 1) {
+      if (i == array.size - 1) {
         hb_buffer_append(buffer, "└── ");
       } else {
         hb_buffer_append(buffer, "├── ");
@@ -142,7 +136,7 @@ void pretty_print_array(
 
       ast_pretty_print_node(child, indent + 1, relative_indent + 1, buffer);
 
-      if (i != array->size - 1) { pretty_print_newline(indent + 1, relative_indent, buffer); }
+      if (i != array.size - 1) { pretty_print_newline(indent + 1, relative_indent, buffer); }
     }
   }
   hb_buffer_append(buffer, "\n");
