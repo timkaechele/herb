@@ -15,15 +15,15 @@ extern "C" {
 
 void herb_lex_to_buffer(const char* source, hb_buffer_T* output);
 
-hb_array_T* herb_lex(const char* source);
-hb_array_T* herb_lex_file(const char* path);
+hb_array_T herb_lex(const char* source);
+hb_array_T herb_lex_file(const char* path);
 
 AST_DOCUMENT_NODE_T* herb_parse(const char* source, parser_options_T* options);
 
 const char* herb_version(void);
 const char* herb_prism_version(void);
 
-void herb_free_tokens(hb_array_T** tokens);
+void herb_free_tokens(hb_array_T* tokens);
 
 #ifdef __cplusplus
 }

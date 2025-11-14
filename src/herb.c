@@ -10,18 +10,19 @@
 #include <prism.h>
 #include <stdlib.h>
 
-hb_array_T* herb_lex(const char* source) {
+hb_array_T herb_lex(const char* source) {
   lexer_T lexer = { 0 };
   lexer_init(&lexer, source);
 
   token_T* token = NULL;
-  hb_array_T* tokens = hb_array_init(128);
+  hb_array_T tokens;
+  hb_array_pointer_init(&tokens, 128);
 
   while ((token = lexer_next_token(&lexer))->type != TOKEN_EOF) {
-    hb_array_append(tokens, token);
+    hb_array_append(&tokens, token);
   }
 
-  hb_array_append(tokens, token);
+  hb_array_append(&tokens, token);
 
   return tokens;
 }
@@ -46,9 +47,9 @@ AST_DOCUMENT_NODE_T* herb_parse(const char* source, parser_options_T* options) {
   return document;
 }
 
-hb_array_T* herb_lex_file(const char* path) {
+hb_array_T herb_lex_file(const char* path) {
   char* source = herb_read_file(path);
-  hb_array_T* tokens = herb_lex(source);
+  hb_array_T tokens = herb_lex(source);
 
   free(source);
 
@@ -56,10 +57,10 @@ hb_array_T* herb_lex_file(const char* path) {
 }
 
 void herb_lex_to_buffer(const char* source, hb_buffer_T* output) {
-  hb_array_T* tokens = herb_lex(source);
+  hb_array_T tokens = herb_lex(source);
 
-  for (size_t i = 0; i < tokens->size; i++) {
-    token_T* token = hb_array_get(tokens, i);
+  for (size_t i = 0; i < tokens.size; i++) {
+    token_T* token = hb_array_get(&tokens, i);
 
     hb_string_T type = token_to_string(token);
     hb_buffer_append_string(output, type);
@@ -71,15 +72,14 @@ void herb_lex_to_buffer(const char* source, hb_buffer_T* output) {
   herb_free_tokens(&tokens);
 }
 
-void herb_free_tokens(hb_array_T** tokens) {
-  if (!tokens || !*tokens) { return; }
-
-  for (size_t i = 0; i < hb_array_size(*tokens); i++) {
-    token_T* token = hb_array_get(*tokens, i);
+void herb_free_tokens(hb_array_T* tokens) {
+  if (tokens == NULL) { return; }
+  for (size_t i = 0; i < tokens->size; i++) {
+    token_T* token = hb_array_get(tokens, i);
     if (token) { token_free(token); }
   }
 
-  hb_array_free(tokens);
+  hb_array_deinit(tokens);
 }
 
 const char* herb_version(void) {
