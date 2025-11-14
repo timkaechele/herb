@@ -3,7 +3,7 @@
 #include "include/util/hb_array.h"
 #include "include/visitor.h"
 
-bool match_tags_visitor(const AST_NODE_T* node, void* data) {
+bool match_tags_visitor(AST_NODE_T* node, void* data) {
   hb_array_T* errors = (hb_array_T*) data;
 
   if (node == NULL) { return false; }
@@ -15,7 +15,7 @@ bool match_tags_visitor(const AST_NODE_T* node, void* data) {
 
     <%- if array_fields.any? || single_node_fields.any? -%>
     case <%= node.type %>: {
-      const <%= node.struct_type %>* <%= node.human %> = (const <%= node.struct_type %>*) node;
+      <%= node.struct_type %>* <%= node.human %> = (<%= node.struct_type %>*) node;
 
       <%- array_fields.each do |field| -%>
       if (<%= node.human %>-><%= field.name %> != NULL) {
