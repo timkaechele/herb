@@ -41,7 +41,7 @@ typedef struct {
 void herb_analyze_parse_errors(AST_DOCUMENT_NODE_T* document, const char* source);
 void herb_analyze_parse_tree(AST_DOCUMENT_NODE_T* document, const char* source);
 
-hb_array_T* rewrite_node_array(AST_NODE_T* node, hb_array_T* array, analyze_ruby_context_T* context);
+hb_array_T rewrite_node_array(AST_NODE_T* node, hb_array_T array, analyze_ruby_context_T* context);
 bool transform_erb_nodes(const AST_NODE_T* node, void* data);
 
 #endif

@@ -1154,17 +1154,18 @@ static size_t process_block_children(
   return index;
 }
 
-hb_array_T* rewrite_node_array(AST_NODE_T* node, hb_array_T* array, analyze_ruby_context_T* context) {
-  hb_array_T* new_array = hb_array_init(array->size);
+hb_array_T rewrite_node_array(AST_NODE_T* node, hb_array_T array, analyze_ruby_context_T* context) {
+  hb_array_T new_array;
+  hb_array_pointer_init(&new_array, array->size);
   size_t index = 0;
 
-  while (index < array->size) {
-    AST_NODE_T* item = hb_array_get(array, index);
+  while (index < array.size) {
+    AST_NODE_T* item = hb_array_get(&array, index);
 
     if (!item) { break; }
 
     if (item->type != AST_ERB_CONTENT_NODE) {
-      hb_array_append(new_array, item);
+      hb_array_append(&new_array, item);
       index++;
       continue;
     }
@@ -1190,9 +1191,9 @@ hb_array_T* rewrite_node_array(AST_NODE_T* node, hb_array_T* array, analyze_ruby
 
         if (yield_node) {
           ast_node_free((AST_NODE_T*) erb_node);
-          hb_array_append(new_array, yield_node);
+          hb_array_append(&new_array, yield_node);
         } else {
-          hb_array_append(new_array, item);
+          hb_array_append(&new_array, item);
         }
 
         index++;
@@ -1200,7 +1201,7 @@ hb_array_T* rewrite_node_array(AST_NODE_T* node, hb_array_T* array, analyze_ruby
       }
 
       default:
-        hb_array_append(new_array, item);
+        hb_array_append(&new_array, item);
         index++;
         break;
     }
