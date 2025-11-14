@@ -18,9 +18,7 @@ bool match_tags_visitor(AST_NODE_T* node, void* data) {
       <%= node.struct_type %>* <%= node.human %> = (<%= node.struct_type %>*) node;
 
       <%- array_fields.each do |field| -%>
-      if (<%= node.human %>-><%= field.name %> != NULL) {
-        match_tags_in_node_array(<%= node.human %>-><%= field.name %>, errors);
-      }
+      match_tags_in_node_array(&<%= node.human %>-><%= field.name %>, errors);
       <%- end -%>
       <%- single_node_fields.each do |field| -%>
       if (<%= node.human %>-><%= field.name %> != NULL) {
