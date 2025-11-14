@@ -24,7 +24,7 @@ extern const parser_options_T HERB_DEFAULT_PARSER_OPTIONS;
 typedef struct PARSER_STRUCT {
   lexer_T* lexer;
   token_T* current_token;
-  hb_array_T* open_tags_stack;
+  hb_array_T open_tags_stack;
   parser_state_T state;
   foreign_content_type_T foreign_content_type;
   parser_options_T options;
