@@ -10,9 +10,9 @@ bool transform_erb_nodes(AST_NODE_T* node, void* data) {
   <%- if field.is_a?(Herb::Template::ArrayField) && field.name != "errors" -%>
   if (node->type == <%= node.type %>) {
     <%= node.struct_type %>* <%= node.human %> = (<%= node.struct_type %>*) node;
-    hb_array_T* old_array = <%= node.human %>-><%= field.name %>;
+    hb_array_T old_array = <%= node.human %>-><%= field.name %>;
     <%= node.human %>-><%= field.name %> = rewrite_node_array((AST_NODE_T*) node, <%= node.human %>-><%= field.name %>, context);
-    hb_array_free(&old_array);
+    hb_array_deinit(&old_array);
   }
 
   <%- end -%>
