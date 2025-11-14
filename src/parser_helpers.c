@@ -13,24 +13,27 @@
 
 #include <stdio.h>
 
-void parser_push_open_tag(const parser_T* parser, token_T* tag_name) {
+void parser_push_open_tag(parser_T* parser, token_T* tag_name) {
   token_T* copy = token_copy(tag_name);
-  hb_array_push(parser->open_tags_stack, copy);
+  hb_array_push(&parser->open_tags_stack, copy);
 }
 
-bool parser_check_matching_tag(const parser_T* parser, hb_string_T tag_name) {
-  if (parser->open_tags_stack->size == 0) { return false; }
+bool parser_check_matching_tag(parser_T* parser, hb_string_T tag_name) {
+  if (parser->open_tags_stack.size == 0) { return false; }
 
-  token_T* top_token = hb_array_last(parser->open_tags_stack);
+  token_T* top_token = hb_array_last(&parser->open_tags_stack);
   if (top_token == NULL || top_token->value == NULL) { return false; };
 
   return hb_string_equals(hb_string(top_token->value), tag_name);
 }
 
-token_T* parser_pop_open_tag(const parser_T* parser) {
-  if (parser->open_tags_stack->size == 0) { return NULL; }
+token_T* parser_pop_open_tag(parser_T* parser) {
+  if (parser->open_tags_stack.size == 0) { return NULL; }
 
-  return hb_array_pop(parser->open_tags_stack);
+  token_T* token;
+  hb_array_pop(&parser->open_tags_stack, &token);
+
+  return token;
 }
 
 /**
@@ -39,13 +42,13 @@ token_T* parser_pop_open_tag(const parser_T* parser) {
  * @param parser The parser containing the open tags stack.
  * @return true if an SVG tag is found in the stack, false otherwise.
  */
-bool parser_in_svg_context(const parser_T* parser) {
-  if (!parser || !parser->open_tags_stack) { return false; }
+bool parser_in_svg_context(parser_T* parser) {
+  if (!parser) { return false; }
 
-  size_t stack_size = parser->open_tags_stack->size;
+  size_t stack_size = parser->open_tags_stack.size;
 
   for (size_t i = 0; i < stack_size; i++) {
-    token_T* tag = (token_T*) hb_array_get(parser->open_tags_stack, i);
+    token_T* tag = (token_T*) hb_array_get(&parser->open_tags_stack, i);
 
     if (tag && tag->value) {
       hb_string_T tag_value_string = hb_string(tag->value);
@@ -131,8 +134,10 @@ void parser_append_literal_node_from_buffer(
 ) {
   if (hb_buffer_length(buffer) == 0) { return; }
 
+  hb_array_T errors;
+  hb_array_pointer_init(&errors, 0);
   AST_LITERAL_NODE_T* literal =
-    ast_literal_node_init(hb_buffer_value(buffer), start, parser->current_token->location.start, NULL);
+    ast_literal_node_init(hb_buffer_value(buffer), start, parser->current_token->location.start, errors);
 
   if (children != NULL) { hb_array_append(children, literal); }
   hb_buffer_clear(buffer);
@@ -176,23 +181,23 @@ AST_HTML_ELEMENT_NODE_T* parser_handle_missing_close_tag(
   return ast_html_element_node_init(
     open_tag,
     open_tag->tag_name,
-    body,
+    *body,
     NULL,
     false,
     ELEMENT_SOURCE_HTML,
     open_tag->base.location.start,
     open_tag->base.location.end,
-    errors
+    *errors
   );
 }
 
 void parser_handle_mismatched_tags(
-  const parser_T* parser,
+  parser_T* parser,
   const AST_HTML_CLOSE_TAG_NODE_T* close_tag,
   hb_array_T* errors
 ) {
-  if (parser->open_tags_stack->size > 0) {
-    token_T* expected_tag = hb_array_last(parser->open_tags_stack);
+  if (parser->open_tags_stack.size > 0) {
+    token_T* expected_tag = hb_array_last(&parser->open_tags_stack);
     token_T* actual_tag = close_tag->tag_name;
 
     append_tag_names_mismatch_error(

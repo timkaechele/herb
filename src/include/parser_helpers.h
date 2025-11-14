@@ -9,9 +9,9 @@
 #include "util/hb_buffer.h"
 #include "util/hb_string.h"
 
-void parser_push_open_tag(const parser_T* parser, token_T* tag_name);
-bool parser_check_matching_tag(const parser_T* parser, hb_string_T tag_name);
-token_T* parser_pop_open_tag(const parser_T* parser);
+void parser_push_open_tag(parser_T* parser, token_T* tag_name);
+bool parser_check_matching_tag(parser_T* parser, hb_string_T tag_name);
+token_T* parser_pop_open_tag(parser_T* parser);
 
 void parser_append_unexpected_error(
   parser_T* parser,
@@ -28,7 +28,7 @@ void parser_append_literal_node_from_buffer(
   position_T start
 );
 
-bool parser_in_svg_context(const parser_T* parser);
+bool parser_in_svg_context(parser_T* parser);
 
 foreign_content_type_T parser_get_foreign_content_type(hb_string_T tag_name);
 bool parser_is_foreign_content_tag(hb_string_T tag_name);
@@ -49,7 +49,7 @@ AST_HTML_ELEMENT_NODE_T* parser_handle_missing_close_tag(
   hb_array_T* errors
 );
 void parser_handle_mismatched_tags(
-  const parser_T* parser,
+  parser_T* parser,
   const AST_HTML_CLOSE_TAG_NODE_T* close_tag,
   hb_array_T* errors
 );
