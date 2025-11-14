@@ -48,11 +48,11 @@ static analyzed_ruby_T* herb_analyze_ruby(hb_string_T source) {
   return analyzed;
 }
 
-static bool analyze_erb_content(const AST_NODE_T* node, void* data) {
+static bool analyze_erb_content(AST_NODE_T* node, void* data) {
   if (node->type == AST_ERB_CONTENT_NODE) {
     AST_ERB_CONTENT_NODE_T* erb_content_node = (AST_ERB_CONTENT_NODE_T*) node;
 
-    const char* opening = erb_content_node->tag_opening->value;
+    char* opening = erb_content_node->tag_opening->value;
 
     if (strcmp(opening, "<%%") != 0 && strcmp(opening, "<%%=") != 0 && strcmp(opening, "<%#") != 0) {
       analyzed_ruby_T* analyzed = herb_analyze_ruby(hb_string(erb_content_node->content->value));
@@ -1209,7 +1209,7 @@ hb_array_T* rewrite_node_array(AST_NODE_T* node, hb_array_T* array, analyze_ruby
   return new_array;
 }
 
-static bool detect_invalid_erb_structures(const AST_NODE_T* node, void* data) {
+static bool detect_invalid_erb_structures(AST_NODE_T* node, void* data) {
   invalid_erb_context_T* context = (invalid_erb_context_T*) data;
 
   if (node->type == AST_HTML_ATTRIBUTE_NAME_NODE) { return false; }
@@ -1225,7 +1225,7 @@ static bool detect_invalid_erb_structures(const AST_NODE_T* node, void* data) {
   if (is_begin_node) { context->rescue_depth++; }
 
   if (node->type == AST_ERB_CONTENT_NODE) {
-    const AST_ERB_CONTENT_NODE_T* content_node = (const AST_ERB_CONTENT_NODE_T*) node;
+    AST_ERB_CONTENT_NODE_T* content_node = (AST_ERB_CONTENT_NODE_T*) node;
 
     if (content_node->parsed && !content_node->valid && content_node->analyzed_ruby != NULL) {
       analyzed_ruby_T* analyzed = content_node->analyzed_ruby;

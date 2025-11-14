@@ -3,6 +3,7 @@
 #include "include/errors.h"
 #include "include/token.h"
 #include "include/util.h"
+#include "include/util/hb_array.h"
 
 #include <prism.h>
 #include <stdio.h>
@@ -12,24 +13,23 @@ size_t ast_node_sizeof(void) {
   return sizeof(struct AST_NODE_STRUCT);
 }
 
-void ast_node_init(AST_NODE_T* node, const ast_node_type_T type, position_T start, position_T end, hb_array_T* errors) {
+void ast_node_init(AST_NODE_T* node, ast_node_type_T type, position_T start, position_T end, hb_array_T errors) {
   if (!node) { return; }
 
   node->type = type;
   node->location.start = start;
   node->location.end = end;
 
-  if (errors == NULL) {
-    node->errors = hb_array_init(8);
-  } else {
-    node->errors = errors;
-  }
+  node->errors = errors;
 }
 
 AST_LITERAL_NODE_T* ast_literal_node_init_from_token(const token_T* token) {
   AST_LITERAL_NODE_T* literal = malloc(sizeof(AST_LITERAL_NODE_T));
 
-  ast_node_init(&literal->base, AST_LITERAL_NODE, token->location.start, token->location.end, NULL);
+  hb_array_T errors;
+  hb_array_pointer_init(&errors, 0);
+
+  ast_node_init(&literal->base, AST_LITERAL_NODE, token->location.start, token->location.end, errors);
 
   literal->content = herb_strdup(token->value);
 
@@ -41,15 +41,15 @@ ast_node_type_T ast_node_type(const AST_NODE_T* node) {
 }
 
 size_t ast_node_errors_count(const AST_NODE_T* node) {
-  return node->errors->size;
+  return node->errors.size;
 }
 
-hb_array_T* ast_node_errors(const AST_NODE_T* node) {
+hb_array_T ast_node_errors(const AST_NODE_T* node) {
   return node->errors;
 }
 
-void ast_node_append_error(const AST_NODE_T* node, ERROR_T* error) {
-  hb_array_append(node->errors, error);
+void ast_node_append_error(AST_NODE_T* node, ERROR_T* error) {
+  hb_array_append(&node->errors, error);
 }
 
 void ast_node_set_start(AST_NODE_T* node, position_T position) {
