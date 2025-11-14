@@ -155,8 +155,8 @@ void pretty_print_errors(
   const bool last_property,
   hb_buffer_T* buffer
 ) {
-  if (node->errors != NULL && node->errors->size > 0) {
-    error_pretty_print_array("errors", node->errors, indent, relative_indent, last_property, buffer);
+  if (node->errors.size > 0) {
+    error_pretty_print_array("errors", &node->errors, indent, relative_indent, last_property, buffer);
     hb_buffer_append(buffer, "\n");
   }
 }
