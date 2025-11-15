@@ -12,7 +12,7 @@ size_t ast_node_sizeof(void) {
   return sizeof(struct AST_NODE_STRUCT);
 }
 
-void ast_node_init(AST_NODE_T* node, const ast_node_type_T type, position_T start, position_T end, hb_array_T* errors) {
+void ast_node_init(AST_NODE_T* node, ast_node_type_T type, position_T start, position_T end, hb_array_T* errors) {
   if (!node) { return; }
 
   node->type = type;
@@ -48,7 +48,7 @@ hb_array_T* ast_node_errors(const AST_NODE_T* node) {
   return node->errors;
 }
 
-void ast_node_append_error(const AST_NODE_T* node, ERROR_T* error) {
+void ast_node_append_error(AST_NODE_T* node, ERROR_T* error) {
   hb_array_append(node->errors, error);
 }
 
