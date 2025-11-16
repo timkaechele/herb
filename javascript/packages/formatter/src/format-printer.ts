@@ -1179,6 +1179,14 @@ export class FormatPrinter extends Printer {
         }
       }).join("")
 
+      const trimmedInner = inner.trim()
+
+      if (trimmedInner.startsWith('[if ') && trimmedInner.endsWith('<![endif]')) {
+        this.pushWithIndent(open + inner + close)
+
+        return
+      }
+
       const hasNewlines = inner.includes('\n')
 
       if (hasNewlines) {
