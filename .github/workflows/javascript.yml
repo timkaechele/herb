@@ -86,9 +86,7 @@ jobs:
           retention-days: 1
 
       - name: Upload docs artifact
-        if: |
-          github.event_name == 'pull_request' ||
-          (github.event_name == 'push' && github.ref == 'refs/heads/main')
+        if: github.event_name == 'pull_request'
         uses: actions/upload-artifact@v4
         with:
           name: docs-preview
@@ -227,7 +225,9 @@ jobs:
   deploy-preview:
     name: Deploy docs preview to Cloudflare Pages
     needs: [main, preview-check]
-    if: needs.preview-check.outputs.has-permissions == 'true'
+    if: |
+      github.event_name == 'pull_request' &&
+      needs.preview-check.outputs.has-permissions == 'true'
     runs-on: ubuntu-latest
 
     permissions:
