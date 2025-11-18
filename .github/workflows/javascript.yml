@@ -138,7 +138,7 @@ jobs:
               fi
 
               echo "Publishing $package..."
-              (cd "$package_dir" && npm publish --provenance --access public)
+              (cd "$package_dir" && npm publish --provenance --access public --ignore-scripts)
             fi
           done
 
@@ -213,14 +213,14 @@ jobs:
           VSCE_PAT: ${{ secrets.VSCE_PAT }}
         run: |
           cd javascript/packages/vscode
-          npx @vscode/vsce publish
+          npx @vscode/vsce publish --no-dependencies
 
       - name: Publish to Open VSX Registry
         env:
           OVSX_PAT: ${{ secrets.OVSX_PAT }}
         run: |
           cd javascript/packages/vscode
-          npx ovsx publish -p $OVSX_PAT
+          npx ovsx publish --no-dependencies -p $OVSX_PAT
 
   deploy-preview:
     name: Deploy docs preview to Cloudflare Pages
