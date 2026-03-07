@@ -1,5 +1,6 @@
 #include <stdint.h>
 #include <stdio.h>
+#include <string.h>
 
 #include "../include/macros.h"
 #include "../include/util/hb_array.h"
@@ -8,17 +9,18 @@ size_t hb_array_sizeof(void) {
   return sizeof(hb_array_T);
 }
 
-hb_array_T* hb_array_init(const size_t capacity) {
-  hb_array_T* array = malloc(hb_array_sizeof());
+hb_array_T* hb_array_init(const size_t capacity, hb_allocator_T* allocator) {
+  hb_array_T* array = hb_allocator_alloc(allocator, hb_array_sizeof());
 
   if (!array) { return NULL; }
 
+  array->allocator = allocator;
   array->size = 0;
   array->capacity = capacity;
-  array->items = malloc(capacity * sizeof(void*));
+  array->items = hb_allocator_alloc(allocator, capacity * sizeof(void*));
 
   if (!array->items) {
-    free(array);
+    hb_allocator_dealloc(allocator, array);
     return NULL;
   }
 
@@ -48,7 +50,9 @@ bool hb_array_append(hb_array_T* array, void* item) {
     }
 
     size_t new_size_bytes = new_capacity * sizeof(void*);
-    void* new_items = realloc(array->items, new_size_bytes);
+    void* new_items = hb_allocator_alloc(array->allocator, new_size_bytes);
+
+
 
     if (unlikely(new_items == NULL)) { return false; }
 
